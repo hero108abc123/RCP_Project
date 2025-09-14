@@ -20,3 +20,16 @@ dotnet ef database update --context AuthenticationDbContext
 - Đảm bảo đã cài đặt Entity Framework CLI tools
 - Kiểm tra connection string trong appsettings.json
 - Chạy các lệnh từ thư mục root của project
+
+---
+
+# Swagger
+
+## Truy cập API Documentation
+
+Sau khi chạy project, truy cập Swagger UI tại:
+
+```
+https://localhost:7144/swagger/index.html
+```
+

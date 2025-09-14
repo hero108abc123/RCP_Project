@@ -26,7 +26,7 @@ namespace RCP.Authentication.ApplicationService.Startup
                             options.MigrationsAssembly(assemblyName);
                             options.MigrationsHistoryTable(
                                 DbSchema.TableMigrationsHistory,
-                                DbSchema.Authenticaiton
+                                DbSchema.Authentication 
                             );
                         }
                     );

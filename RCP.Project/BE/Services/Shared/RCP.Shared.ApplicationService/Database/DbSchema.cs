@@ -10,6 +10,6 @@ namespace RCP.Shared.ApplicationService.Database
     {
         public const string TableMigrationsHistory = "__EFMigrationsHistory";
         public const string Default = "dbo";
-        public const string Authenticaiton = "auth";
+        public const string Authentication = "auth";
     }
 }

@@ -1,6 +1,14 @@
+using NLog;
+using NLog.Web;
 using RCP.Authentication.ApplicationService.Startup;
 
+
+var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+logger.Info("Starting application...");
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Logging.ClearProviders();
+builder.Host.UseNLog();
 
 // Add services to the container.
 

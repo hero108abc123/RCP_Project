@@ -1,4 +1,0 @@
-C:\Users\Bop\Desktop\Github\RCP_Project\RCP.Project\Services\Authentication\RCP.Authentication.ApplicationServices\obj\Debug\net8.0\RCP.Authentication.ApplicationService.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Bop\Desktop\Github\RCP_Project\RCP.Project\Services\Authentication\RCP.Authentication.ApplicationServices\obj\Debug\net8.0\RCP.Authentication.ApplicationService.AssemblyInfoInputs.cache
-C:\Users\Bop\Desktop\Github\RCP_Project\RCP.Project\Services\Authentication\RCP.Authentication.ApplicationServices\obj\Debug\net8.0\RCP.Authentication.ApplicationService.AssemblyInfo.cs
-C:\Users\Bop\Desktop\Github\RCP_Project\RCP.Project\Services\Authentication\RCP.Authentication.ApplicationServices\obj\Debug\net8.0\RCP.Authentication.ApplicationService.csproj.CoreCompileInputs.cache

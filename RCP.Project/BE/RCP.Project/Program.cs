@@ -112,6 +112,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 //app.UseHangfireDashboard();
-app.MapHealthChecks("/health");
+//app.MapHealthChecks("/health");
 
 app.Run();

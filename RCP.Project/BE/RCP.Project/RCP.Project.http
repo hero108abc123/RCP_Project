@@ -1,0 +1,6 @@
+@RCP.Project_HostAddress = http://localhost:5025
+
+GET {{RCP.Project_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

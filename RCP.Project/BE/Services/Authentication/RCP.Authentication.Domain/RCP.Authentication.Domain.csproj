@@ -10,6 +10,7 @@
 		<PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.19" />
 	</ItemGroup>
 	<ItemGroup>
+		<ProjectReference Include="..\..\Shared\RCP.Shared.ApplicationService\RCP.Shared.ApplicationService.csproj" />
 		<ProjectReference Include="..\..\Shared\RCP.Shared.Constant\RCP.Shared.Constant.csproj" />
 	</ItemGroup>
 

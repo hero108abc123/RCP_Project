@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace RCP.Shared.ApplicationService.Database
 {
-    public static class DbSchema
+    public static class DbSchemas
     {
         public const string TableMigrationsHistory = "__EFMigrationsHistory";
         public const string Default = "dbo";
         public const string Authentication = "auth";
+        public const string Core = "core";
     }
 }

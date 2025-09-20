@@ -11,9 +11,17 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="AutoMapper" Version="15.0.1" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <ProjectReference Include="..\..\Shared\RCP.Shared.ApplicationService\RCP.Shared.ApplicationService.csproj" />
 	  <ProjectReference Include="..\..\Shared\RCP.Shared.Constant\RCP.Shared.Constant.csproj" />
 	  <ProjectReference Include="..\RCP.Authentication.Infrastructure\RCP.Authentication.Infrastructure.csproj" />
+	  <ProjectReference Include="..\RCP.Authentication.Dtos\RCP.Authentication.Dtos.csproj" />
+	 
+	 
 	</ItemGroup>
 	
 </Project>
+

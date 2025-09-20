@@ -31,7 +31,6 @@
   <ItemGroup>
     <Folder Include="Log\Logs\" />
     <Folder Include="Log\Archive\" />
-    <Folder Include="Controller\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 

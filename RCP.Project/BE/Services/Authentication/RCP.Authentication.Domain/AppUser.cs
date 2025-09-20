@@ -12,6 +12,7 @@ namespace RCP.Authentication.Domain
     {
         [MaxLength(250)]
         public string FullName { get; set; } = String.Empty;
+        public DateTime BirthDay { get; set; }
 
     }
 }

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RCP.Shared.Constant
+namespace RCP.Shared.Constant.Constants.Auth
 {
-    public static class ProgramExtensions
+    public static class PermissionKeys
     {
-        public const string CorsPolicy = "cors_policy";
+        public const int PasswordLength = 8;
     }
 }

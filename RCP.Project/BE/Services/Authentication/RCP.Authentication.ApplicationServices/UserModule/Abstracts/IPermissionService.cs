@@ -1,5 +1,4 @@
-﻿using RCP.Authentication.Dtos.User;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,9 +6,7 @@ using System.Threading.Tasks;
 
 namespace RCP.Authentication.ApplicationService.UserModule.Abstracts
 {
-     public interface IUserService
+    internal interface IPermissionService
     {
-        public  Task RegisterUser(RegisterDto dto);
     }
 }
-

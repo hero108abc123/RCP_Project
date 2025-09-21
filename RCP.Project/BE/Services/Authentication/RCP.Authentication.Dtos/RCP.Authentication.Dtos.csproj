@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Folder Include="Permission\" />
-    <Folder Include="Role\" />
   </ItemGroup>
   <ItemGroup>
 	<ProjectReference Include="..\..\Shared\RCP.Shared.Constant\RCP.Shared.Constant.csproj" />

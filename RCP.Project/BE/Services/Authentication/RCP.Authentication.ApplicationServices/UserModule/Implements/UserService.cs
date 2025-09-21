@@ -1,14 +1,16 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using RCP.Authentication.ApplicationService.Common;
 using RCP.Authentication.ApplicationService.UserModule.Abstracts;
-using RCP.Shared.Constant.Constants.Auth;
 using RCP.Authentication.Domain;
 using RCP.Authentication.Dtos.User;
 using RCP.Authentication.Infrastructure;
 using RCP.Project.HttpRequest.AppException;
+using RCP.Project.HttpRequest.BaseRequest;
+using RCP.Shared.Constant.Constants.Auth;
 using RCP.Shared.Constant.HttpRequest.Error;
 using System.Net.Mail;
 using System.Text.Json;
@@ -96,6 +98,129 @@ namespace RCP.Authentication.ApplicationService.UserModule.Implements
 
             var roleResult = await _userManager.AddToRoleAsync(newUser, "CUSTOMER");
             _logger.LogInformation("User {UserName} registered successfully with ID {UserId}", dto.UserName, newUser.Id);
+        }
+
+
+        public async Task<ViewUserDto> FindById(string id)
+        {
+            _logger.LogInformation($"{nameof(FindById)} id={id}");
+
+            var user = await (from u in _userManager.Users.AsNoTracking()
+                              where u.Id == id
+                              select new ViewUserDto
+                              {
+                                  Id = u.Id,
+                                  UserName = u.UserName ?? "",
+                                  Email = u.Email ?? "",
+                                  PhoneNumber = u.PhoneNumber ?? "",
+                                  FullName = u.FullName ?? "",
+                                  BirthDay = u.BirthDay,
+                                  EmailConfirmed = u.EmailConfirmed,
+                                  PhoneNumberConfirmed = u.PhoneNumberConfirmed,
+                                  Roles = (from ur in _authDbContext.UserRoles
+                                           join r in _authDbContext.Roles on ur.RoleId equals r.Id
+                                           where ur.UserId == u.Id
+                                           select new ViewUserRoleDto
+                                           {
+                                               Id = r.Id,
+                                               Name = r.Name ?? "",
+                                               NormalizedName = r.NormalizedName ?? "",
+                                               Permissions = (from rp in _authDbContext.RolePermissions
+                                                              join p in _authDbContext.Permissions on rp.PermissionId equals p.Id
+                                                              where rp.RoleId == r.Id
+                                                              select new ViewUserPermissionDto
+                                                              {
+                                                                  Id = p.Id,
+                                                                  Category = p.Category ?? "",
+                                                                  Key = p.Key ?? "",
+                                                                  Name = p.Name ?? ""
+                                                              }).ToList()
+                                           }).ToList()
+                              }).FirstOrDefaultAsync();
+
+            return _mapper.Map<ViewUserDto>(user);
+        }
+        public async Task<BaseResponsePagingDto<ViewUserDto>> FindPaging(FindPagingUserDto dto)
+        {
+            _logger.LogInformation($"{nameof(FindPaging)} dto={JsonSerializer.Serialize(dto)}");
+
+            var query = from u in _userManager.Users.AsNoTracking()
+                        select new ViewUserDto
+                        {
+                            Id = u.Id,
+                            UserName = u.UserName ?? "",
+                            Email = u.Email ?? "",
+                            PhoneNumber = u.PhoneNumber,
+                            FullName = u.FullName,
+                            BirthDay = u.BirthDay,
+                            EmailConfirmed = u.EmailConfirmed,
+                            PhoneNumberConfirmed = u.PhoneNumberConfirmed,
+                            Roles = (from ur in _authDbContext.UserRoles
+                                     join r in _authDbContext.Roles on ur.RoleId equals r.Id
+                                     where ur.UserId == u.Id
+                                     select new ViewUserRoleDto
+                                     {
+                                         Id = r.Id,
+                                         Name = r.Name ?? "",
+                                         NormalizedName = r.NormalizedName ?? "",
+                                         Permissions = (from rp in _authDbContext.RolePermissions
+                                                        join p in _authDbContext.Permissions on rp.PermissionId equals p.Id
+                                                        where rp.RoleId == r.Id
+                                                        select new ViewUserPermissionDto
+                                                        {
+                                                            Id = p.Id,
+                                                            Category = p.Category ?? "",
+                                                            Key = p.Key ?? "",
+                                                            Name = p.Name ?? ""
+                                                        }).ToList()
+                                     }).ToList()
+                        };
+
+            var totalCount = await query.CountAsync();
+            var users = await query
+                .OrderBy(x => x.UserName)
+                .Paging(dto)
+                .ToListAsync();
+
+            return new BaseResponsePagingDto<ViewUserDto>
+            {
+                Items = users,
+                TotalItems = totalCount,
+            };
+        }
+        public async Task Update(string id, UpdateUserDto dto)
+        {
+            _logger.LogInformation($"{nameof(Update)} dto={JsonSerializer.Serialize(dto)}");
+
+            var user = await _userManager.FindByIdAsync(id)
+                ?? throw new UserFriendlyException(ErrorCodes.AuthErrorUserNotFound);
+
+            var transaction = await _authDbContext.Database.BeginTransactionAsync();
+            user.UserName = dto.UserName ?? user.UserName;
+            user.FullName = dto.FullName ?? user.FullName;
+            user.PhoneNumber = dto.PhoneNumber ?? user.PhoneNumber;
+            user.Email = dto.Email ?? user.Email;
+            user.BirthDay = dto.BirthDay;
+
+            await _userManager.UpdateAsync(user);
+            await _userManager.RemoveFromRolesAsync(user, (await _userManager.GetRolesAsync(user)).ToArray());
+            await _userManager.AddToRolesAsync(user, dto.RoleNames);
+
+            await _authDbContext.SaveChangesAsync();
+            await transaction.CommitAsync();
+        }
+        public async Task SetRoleForUser(string id,SetRoleForUserDto dto)
+        {
+            _logger.LogInformation($"{nameof(SetRoleForUser)} dto={JsonSerializer.Serialize(dto)}");
+
+            var transaction = await _authDbContext.Database.BeginTransactionAsync();
+            var user = await _userManager.FindByIdAsync(id)
+                ?? throw new UserFriendlyException(ErrorCodes.AuthErrorUserNotFound);
+
+            await _userManager.RemoveFromRolesAsync(user, (await _userManager.GetRolesAsync(user)).ToArray());
+            await _userManager.AddToRolesAsync(user, dto.RoleNames);
+            await _authDbContext.SaveChangesAsync();
+            await transaction.CommitAsync();
         }
 
         public bool IsValidEmail(string email)

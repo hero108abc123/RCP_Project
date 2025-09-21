@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using RCP.Authentication.ApplicationService.UserModule.Abstracts;
 using RCP.Authentication.ApplicationService.UserModule.Implements;
 using RCP.Authentication.Dtos.User;
+using RCP.Project.Attributes;
 using RCP.Project.Controller.Base;
 using RCP.Project.HttpRequest;
 using RCP.Shared.Constant.Constants.Auth;
@@ -34,5 +35,62 @@ namespace RCP.Project.Controller.Auth
                 return OkException(ex);
             }
         }
+        [HttpGet("")]
+        [Permission(PermissionKeys.UserView)]
+        public async Task<ApiResponse> Find([FromQuery] FindPagingUserDto dto)
+        {
+            try
+            {
+                var data = await _userService.FindPaging(dto);
+                return new(data);
+            }
+            catch (Exception ex)
+            {
+                return OkException(ex);
+            }
+        }
+        [HttpGet("{id}")]
+        [Permission(PermissionKeys.UserView)]
+        public async Task<ApiResponse> GetById([FromRoute] string id)
+        {
+            try
+            {
+                var data = await _userService.FindById(id);
+                return new(data);
+            }
+            catch (Exception ex)
+            {
+                return OkException(ex);
+            }
+        }
+        [HttpPut("{id}")]
+        [Permission(PermissionKeys.UserUpdate)]
+        public async Task<ApiResponse> UpdateUser([FromRoute] string id,[FromBody] UpdateUserDto dto)
+        {
+            try
+            {
+                await _userService.Update(id,dto);
+                return new();
+            }
+            catch (Exception ex)
+            {
+                return OkException(ex);
+            }
+        }
+        [HttpPut("{id}/set-to-role")]
+        [Permission(PermissionKeys.UserSetRoles)]
+        public async Task<ApiResponse> SetToRole([FromRoute] string id,[FromBody] SetRoleForUserDto dto)
+        {
+            try
+            {
+                await _userService.SetRoleForUser(id,dto);
+                return new();
+            }
+            catch (Exception ex)
+            {
+                return OkException(ex);
+            }
+        }
+
     }
 }

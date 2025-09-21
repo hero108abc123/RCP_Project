@@ -5,13 +5,14 @@ using Microsoft.IdentityModel.Tokens;
 using NLog;
 using NLog.Web;
 using OpenIddict.Abstractions;
+using RCP.Authentication.ApplicationService.Common;
 using RCP.Authentication.ApplicationService.Startup;
 using RCP.Authentication.ApplicationService.UserModule.Abstracts;
 using RCP.Authentication.ApplicationService.UserModule.Implements;
 using RCP.Authentication.Domain;
 using RCP.Authentication.Infrastructure;
 using RCP.Authentication.Infrastructure.Seeder;
-using RCP.Authentication.Shared.Constants;
+
 using RCP.Shared.ApplicationService.Database;
 using RCP.Shared.Constant.Constants.Auth;
 using System.Text;

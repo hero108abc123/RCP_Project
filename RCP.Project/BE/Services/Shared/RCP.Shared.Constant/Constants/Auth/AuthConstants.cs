@@ -11,4 +11,10 @@ namespace RCP.Shared.Constant.Constants.Auth
 
         public const int PasswordLength = 8;
     }
+
+    public static class CustomClaimTypes
+    {
+        public const string Permission = "Permission";
+        public const string UserType = "user_type";
+    }
 }

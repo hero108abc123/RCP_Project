@@ -31,16 +31,16 @@ namespace thongbao.be.Workers
                 {
                     Permissions.Endpoints.Token,
                     Permissions.GrantTypes.ClientCredentials,
-                    Permissions.GrantTypes.Password,           // ✅ Thêm dòng này
-                    Permissions.GrantTypes.RefreshToken,       // ✅ Thêm dòng này
-                    Permissions.Scopes.Email,                  // ✅ Thêm dòng này
-                    Permissions.Scopes.Profile,                // ✅ Thêm dòng này
+                    Permissions.GrantTypes.Password,           
+                    Permissions.GrantTypes.RefreshToken,       
+                    Permissions.Scopes.Email,                 
+                    Permissions.Scopes.Profile,              
                     Permissions.Scopes.Roles
                 }
                 });
             }
 
-            /* if (await manager.FindByClientIdAsync("client-web") is null)
+             if (await manager.FindByClientIdAsync("client-web") is null)
              {
                  await manager.CreateAsync(new OpenIddictApplicationDescriptor
                  {
@@ -87,7 +87,7 @@ namespace thongbao.be.Workers
 
                      }
                  });
-             }*/
+             }
         }
 
         public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;

@@ -151,6 +151,8 @@ builder.Services.AddAuthorization();
 
 #region service
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddHostedService<thongbao.be.Workers.AuthWorker>();
 #endregion
 // Add services to the container.

@@ -1,0 +1,33 @@
+.profile-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 30px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  text-align: center;
+}
+
+.profile-card {
+  text-align: left;
+  margin-top: 20px;
+}
+
+.profile-card p {
+  margin: 8px 0;
+  font-size: 16px;
+}
+
+.back-btn {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 18px;
+  background: #007bff;
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+.back-btn:hover {
+  background: #0056b3;
+}

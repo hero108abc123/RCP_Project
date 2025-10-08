@@ -25,6 +25,12 @@ namespace RCP.Shared.Constant.Constants.Auth
         public const string RoleDelete = Function + "Delete";
         public const string RoleView = Function + "View";
 
+        public const string CategoryPermission = "QL Permission";
+        public const string PermissionCreate = Function + "Add";
+        public const string PermissionUpdate = Function + "Update";
+        public const string PermissionDelete = Function + "Delete";
+        public const string PermissionView = Function + "View";
+
         public static readonly (string Key, string Name, string Category)[] All =
         {
             (UserAdd, "Thêm user", CategoryUser),
@@ -36,6 +42,10 @@ namespace RCP.Shared.Constant.Constants.Auth
             (RoleUpdate, "Cập nhật Role", CategoryRole),
             (RoleDelete, "Xoá Role", CategoryRole),
             (RoleView, "Xem Role", CategoryRole),
+            (PermissionCreate, "Thêm Permission", CategoryPermission),
+            (PermissionUpdate, "Cập nhật Permission", CategoryPermission),
+            (PermissionDelete, "Xoá Permission", CategoryPermission),
+            (PermissionView, "Xem Permission", CategoryPermission),
         };
     }
 }

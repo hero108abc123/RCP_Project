@@ -26,7 +26,8 @@
             { ErrorCodes.AuthErrorEmailRequired, "Email là bắt buộc" },
             { ErrorCodes.AuthErrorPhoneNumberRequired, "Số điện thoại là bắt buộc" },
             { ErrorCodes.AuthErrorPasswordRequired, "Mật khẩu là bắt buộc" },
-            { ErrorCodes.AuthErrorInvalidBirthDay, "Ngày sinh không hợp lệ" }
+            { ErrorCodes.AuthErrorInvalidBirthDay, "Ngày sinh không hợp lệ" },
+            { ErrorCodes.AuthErrorPermissionKeyExists, "Khóa quyền đã tồn tại trong hệ thống" }
         };
         public static string GetMessage(int code)
         {

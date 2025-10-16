@@ -6,7 +6,6 @@ using NLog;
 using NLog.Web;
 using OpenIddict.Abstractions;
 using RCP.Authentication.ApplicationService.Common;
-using RCP.Authentication.ApplicationService.Startup;
 using RCP.Authentication.ApplicationService.UserModule.Abstracts;
 using RCP.Authentication.ApplicationService.UserModule.Implements;
 using RCP.Authentication.Domain;

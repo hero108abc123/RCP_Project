@@ -190,8 +190,6 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-builder.ConfigureAuth(typeof(Program).Namespace);
-
 var app = builder.Build();
 #region Seed data
 // Run seeding inside scope

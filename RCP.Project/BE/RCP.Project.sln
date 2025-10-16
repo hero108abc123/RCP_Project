@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCP.Shared.Constant", "Serv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCP.Shared.ApplicationService", "Services\Shared\RCP.Shared.ApplicationService\RCP.Shared.ApplicationService.csproj", "{14AF476E-6137-46C8-A111-C94944D33B3F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NewFolder1", "NewFolder1", "{CAA61A13-F3A1-459E-8DC2-BE1BF0B2E19C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -70,6 +72,7 @@ Global
 		{8AAEE007-0AAE-45FA-B88C-2F25FF70F5B4} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{E82CF292-B80F-4989-B674-1E53D2606AF8} = {8AAEE007-0AAE-45FA-B88C-2F25FF70F5B4}
 		{14AF476E-6137-46C8-A111-C94944D33B3F} = {8AAEE007-0AAE-45FA-B88C-2F25FF70F5B4}
+		{CAA61A13-F3A1-459E-8DC2-BE1BF0B2E19C} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8C5B4BDE-4A30-4D3A-90C7-3EF5A9157634}

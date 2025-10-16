@@ -1,0 +1,38 @@
+/* Sidebar cố định bên trái */
+.sidebar {
+  width: 170px;
+  background: #252525;
+  color: white;
+  height: calc(100vh - 60px); /* full chiều cao trừ Navbar */
+  position: fixed;
+  top: 40px; /* bằng chiều cao Navbar */
+  left: 0;
+  padding: 20px;
+  overflow-y: auto; /* nếu menu dài thì scroll */
+}
+
+/* Menu bên trong */
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar li {
+  margin: 15px 0;
+  padding: 0 20px;
+}
+
+.sidebar li a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  display: block;
+  transition: background 0.3s, color 0.3s;
+}
+
+.sidebar li a:hover {
+  background-color: #333;
+  border-radius: 4px;
+  color: #f50d05;
+}

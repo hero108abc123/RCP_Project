@@ -16,6 +16,7 @@ namespace RCP.Authentication.ApplicationService.Common
 {
     public class BaseAuthService
     {
+        private static readonly TimeZoneInfo VietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
         public readonly AuthenticationDbContext _authDbContext;
         public readonly ILogger<BaseAuthService> _logger;
         public readonly IHttpContextAccessor _httpContextAccessor;
@@ -53,6 +54,10 @@ namespace RCP.Authentication.ApplicationService.Common
             var roles = _httpContextAccessor.HttpContext?.User.FindAll(ClaimTypes.Role).ToList();
             var isSuperAdmin = roles?.Any(r => r.Value == RoleConstants.ROLE_ADMIN) ?? false;
             return isSuperAdmin;
+        }
+        protected static DateTime GetVietnamTime()
+        {
+            return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, VietnamTimeZone);
         }
     }
 }

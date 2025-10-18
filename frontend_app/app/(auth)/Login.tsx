@@ -1,27 +1,60 @@
-import Button from '@/components/button';
-import DividerWithText from '@/components/divider-with-text';
-import InputField from '@/components/input-filed';
-import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { login } from '@/api/auth-api'
+import Button from '@/components/button'
+import DividerWithText from '@/components/divider-with-text'
+import InputField from '@/components/input-filed'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useRouter } from 'expo-router'
+import React, { useState } from 'react'
+import { ActivityIndicator, Alert, Image, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+
 
 export default function Login() {
-  const scheme = useColorScheme();
-  const router = useRouter();
 
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [secureTextEntry, setSecureTextEntry] = useState(true);
 
-  const isDark = scheme === 'dark';
-  const backgroundColor = isDark ? '#0b1220' : '#fff';
-  const textColor = isDark ? '#fff' : '#000';
+  const [userName, setUserName] = useState('')
+  const [password, setPassword] = useState('')
+  const [secureTextEntry, setSecureTextEntry] = useState(true)
+  const [loading, setLoading] = useState(false)
 
   const handleLogin = () => {
 
-    router.replace('/' as any);
+  const isDark = scheme === 'dark'
+
+  const backgroundColor = isDark ? '#000' : '#fff'
+  const textColor = isDark ? '#fff' : '#000'
+
+  const handleLogin = async () => {
+    if (!userName || !password) {
+      Alert.alert("Lỗi", "Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const data = await login(userName, password);
+
+      // Lưu token để sử dụng cho các request tiếp theo
+      await AsyncStorage.setItem("access_token", data.access_token);
+      await AsyncStorage.setItem("refresh_token", data.refresh_token);
+
+      Alert.alert("Thành công", "Đăng nhập thành công!");
+      router.replace("/home"); // điều hướng sang trang chính
+
+    } catch (error) {
+      console.error("❌ Lỗi đăng nhập:", error);
+      Alert.alert("Đăng nhập thất bại", "Sai tài khoản hoặc mật khẩu.");
+    } finally {
+      setLoading(false);
+    }
   };
+
+
+    
+  
 
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor }]}>
@@ -51,14 +84,19 @@ export default function Login() {
           onToggleSecure={() => setSecureTextEntry(!secureTextEntry)}
         />
 
-        
-        <View style={styles.loginBtn}>
-          <Button title="Đăng nhập" onPress={handleLogin} />
-        </View>
-
+        <Button
+          title={loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
+          onPress={() => {
+            if (loading) return;
+            handleLogin();
+          }}
+        />
+        {loading && (
+          <ActivityIndicator size="large" color="#C64747" style={{ marginTop: 10 }} />
+        )}
         <TouchableOpacity onPress={() => console.log('Forgot Password')}>
-          <Text style={styles.forgot}>Quên mật khẩu?</Text>
-        </TouchableOpacity>
+          <Text>Quên mật khẩu?</Text>
+        </TouchableOpacity> 
 
         <DividerWithText text="hoặc" />
 

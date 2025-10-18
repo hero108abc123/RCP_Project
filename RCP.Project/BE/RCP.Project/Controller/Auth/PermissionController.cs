@@ -53,7 +53,7 @@ namespace RCP.Project.Controller.Auth
             }
         }
 
-        [Permission(PermissionKeys.PermissionCreate)]
+        [Permission(PermissionKeys.PermissionAdd)]
         [HttpPost("")]
         public async Task<ApiResponse> Create([FromBody] CreatePermissionDto dto)
         {

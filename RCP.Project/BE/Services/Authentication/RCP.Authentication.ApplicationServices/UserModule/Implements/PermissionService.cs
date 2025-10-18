@@ -110,10 +110,7 @@ namespace RCP.Authentication.ApplicationService.UserModule.Implements
             if (exists)
                 throw new UserFriendlyException(ErrorCodes.AuthErrorPermissionKeyExists);
 
-            var currentUserId = _httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated == true
-                ? int.Parse(_httpContextAccessor.HttpContext.User.Claims
-                    .First(c => c.Type == "userId").Value)
-                : (int?)null;
+            var currentUserId = getCurrentUserId();
 
             if (currentUserId == null)
                 throw new UserFriendlyException(ErrorCodes.Unauthorized);
@@ -167,10 +164,7 @@ namespace RCP.Authentication.ApplicationService.UserModule.Implements
             if (permission == null)
                 throw new UserFriendlyException(ErrorCodes.NotFound);
 
-            var currentUserId = _httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated == true
-                ? int.Parse(_httpContextAccessor.HttpContext.User.Claims
-                    .First(c => c.Type == "userId").Value)
-                : (int?)null;
+            var currentUserId = getCurrentUserId();
             if (currentUserId == null)
                 throw new UserFriendlyException(ErrorCodes.Unauthorized);
 

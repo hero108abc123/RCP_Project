@@ -78,7 +78,11 @@ namespace RCP.Project.Controller.Auth
                     identity.SetClaim(Claims.Name, user.FullName);
                     identity.SetClaim(Claims.Username, user.UserName);
                     identity.SetClaim("user_type", "Customer");
-
+                    var roles = await userManager.GetRolesAsync(user);
+                    foreach (var role in roles)
+                    {
+                        identity.AddClaim(new Claim(ClaimTypes.Role, role));
+                    }
                     identity.SetScopes(new[]
                     {
                         Scopes.OpenId,
@@ -121,7 +125,11 @@ namespace RCP.Project.Controller.Auth
                     identity.SetClaim(Claims.Subject, user.Id);
                     identity.SetClaim(Claims.Name, user.FullName);
                     identity.SetClaim(Claims.Username, user.UserName);
-
+                    var roles = await userManager.GetRolesAsync(user);
+                    foreach (var role in roles)
+                    {
+                        identity.AddClaim(new Claim(ClaimTypes.Role, role));
+                    }
                     identity.SetScopes(new[]
                     {
                         Scopes.OpenId,
@@ -162,15 +170,21 @@ namespace RCP.Project.Controller.Auth
                     identity.SetClaim(Claims.Subject, user.Id);
                     identity.SetClaim(Claims.Name, user.FullName);
                     identity.SetClaim(Claims.Username, user.UserName);
-
-                    identity.SetScopes(new[]
+                    var roles = await userManager.GetRolesAsync(user);
+                    foreach (var role in roles)
                     {
-                        Scopes.OpenId,
-                        Scopes.Email,
-                        Scopes.Profile,
-                        Scopes.Roles,
-                        Scopes.OfflineAccess
-                    }.Intersect(request.GetScopes()));
+                        identity.AddClaim(new Claim(ClaimTypes.Role, role));
+                    }
+                    identity.SetScopes(
+                            new[]
+                            {
+                            Scopes.OpenId,
+                            Scopes.Email,
+                            Scopes.Profile,
+                            Scopes.Roles,
+                            Scopes.OfflineAccess
+                            }.Intersect(request.GetScopes())
+                        );
 
                     identity.SetDestinations(static claim => claim.Type switch
                     {

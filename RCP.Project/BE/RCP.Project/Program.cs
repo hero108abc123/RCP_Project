@@ -11,7 +11,7 @@ using RCP.Authentication.ApplicationService.UserModule.Implements;
 using RCP.Authentication.Domain;
 using RCP.Authentication.Infrastructure;
 using RCP.Authentication.Infrastructure.Seeder;
-
+using RCP.Movie.Infrastructure;
 using RCP.Shared.ApplicationService.Database;
 using RCP.Shared.Constant.Constants.Auth;
 using System.Text;
@@ -32,7 +32,7 @@ string connectionString = builder.Configuration.GetConnectionString("RCP_DB_DEV"
 
 string hangfireConnectionString = builder.Configuration.GetConnectionString("HANGFIRE")
     ?? throw new InvalidOperationException("Không tìm thấy connection string \"HANGFIRE\" trong appsettings.json");
-
+//Authentication DbContext
 builder.Services.AddDbContext<AuthenticationDbContext>(options =>
 {
     options.UseSqlServer(connectionString, options =>
@@ -41,6 +41,15 @@ builder.Services.AddDbContext<AuthenticationDbContext>(options =>
         options.MigrationsHistoryTable(DbSchemas.TableMigrationsHistory, DbSchemas.Authentication);
     });
     options.UseOpenIddict(); // Register OpenIddict entities
+}, ServiceLifetime.Scoped);
+//Phim DbContext
+builder.Services.AddDbContext<PhimDbContext>(options =>
+{
+    options.UseSqlServer(connectionString, options =>
+    {
+        options.MigrationsAssembly(typeof(Program).Assembly.GetName().Name);
+        options.MigrationsHistoryTable(DbSchemas.TableMigrationsHistory, DbSchemas.Movie);
+    });
 }, ServiceLifetime.Scoped);
 #endregion
 

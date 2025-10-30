@@ -5,9 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Folder Include="Phim\" />
-  </ItemGroup>
-
+	<ItemGroup>
+		<ProjectReference Include="..\..\Shared\RCP.Shared.Constant\RCP.Shared.Constant.csproj" />
+	</ItemGroup>
 </Project>

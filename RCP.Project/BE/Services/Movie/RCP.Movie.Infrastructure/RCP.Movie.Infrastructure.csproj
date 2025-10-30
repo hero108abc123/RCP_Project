@@ -17,4 +17,9 @@
 		<PackageReference Include="OpenIddict.EntityFrameworkCore" Version="7.0.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\..\Shared\RCP.Shared.Constant\RCP.Shared.Constant.csproj" />
+	  <ProjectReference Include="..\RCP.Movie.Domain\RCP.Movie.Domain.csproj" />
+	</ItemGroup>
+
 </Project>

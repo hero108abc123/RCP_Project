@@ -13,10 +13,12 @@
 	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="15.0.1" />
 	</ItemGroup>
-	
+
   <ItemGroup>
-    <Folder Include="Common\" />
-    <Folder Include="PhimModule\" />
+    <ProjectReference Include="..\..\Shared\RCP.Shared.ApplicationService\RCP.Shared.ApplicationService.csproj" />
+    <ProjectReference Include="..\..\Shared\RCP.Shared.Constant\RCP.Shared.Constant.csproj" />
+    <ProjectReference Include="..\RCP.Movie.Dtos\RCP.Movie.Dtos.csproj" />
+    <ProjectReference Include="..\RCP.Movie.Infrastructure\RCP.Movie.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

@@ -106,7 +106,7 @@ namespace RCP.Authentication.ApplicationService.UserModule.Implements
             if (exists)
                 throw new UserFriendlyException(ErrorCodes.AuthErrorPermissionKeyExists);
 
-            var currentUserId = GetCurrentUserId();
+            var currentUserId = getCurrentUserId();
 
             if (currentUserId == null)
                 throw new UserFriendlyException(ErrorCodes.Unauthorized);
@@ -160,7 +160,7 @@ namespace RCP.Authentication.ApplicationService.UserModule.Implements
             if (permission == null)
                 throw new UserFriendlyException(ErrorCodes.NotFound);
 
-            var currentUserId = GetCurrentUserId();
+            var currentUserId = getCurrentUserId();
             if (currentUserId == null)
                 throw new UserFriendlyException(ErrorCodes.Unauthorized);
 
@@ -192,21 +192,6 @@ namespace RCP.Authentication.ApplicationService.UserModule.Implements
                     Description = x.Description
                 })
                 .ToListAsync();
-        }
-
-
-        private string? GetCurrentUserId()
-        {
-            var user = _httpContextAccessor.HttpContext?.User;
-            if (user == null || !user.Identity?.IsAuthenticated == true)
-                return null;
-
-            // Thử lấy theo claim "sub" (chuẩn JWT) hoặc "userId"
-            var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                      ?? user.FindFirst("sub")?.Value
-                      ?? user.FindFirst("userId")?.Value;
-
-            return userId;
         }
 
     }

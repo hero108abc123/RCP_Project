@@ -20,7 +20,7 @@ namespace RCP.Authentication.Domain
         public string Key { get; set; } = String.Empty;
         public string Name { get; set; } = String.Empty;
         public string Category { get; set; } = String.Empty;
-        public string? Description { get; set; } = String.Empty;
+        public string? Description { get; set; } = String.Empty ;
         public string? CreatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? DeletedDate { get; set; }

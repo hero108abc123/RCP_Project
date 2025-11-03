@@ -12,5 +12,6 @@ namespace RCP.Authentication.Dtos.Permission
         public string Key { get; set; } = String.Empty;
         public string Name { get; set; } = String.Empty;
         public string Description { get; set; } = String.Empty;
+
     }
 }

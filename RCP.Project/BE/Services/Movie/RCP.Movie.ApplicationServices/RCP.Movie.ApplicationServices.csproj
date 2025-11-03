@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AutoMapper" Version="15.0.1" />
+	</ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\RCP.Shared.ApplicationService\RCP.Shared.ApplicationService.csproj" />
+    <ProjectReference Include="..\..\Shared\RCP.Shared.Constant\RCP.Shared.Constant.csproj" />
+    <ProjectReference Include="..\RCP.Movie.Dtos\RCP.Movie.Dtos.csproj" />
+    <ProjectReference Include="..\RCP.Movie.Infrastructure\RCP.Movie.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

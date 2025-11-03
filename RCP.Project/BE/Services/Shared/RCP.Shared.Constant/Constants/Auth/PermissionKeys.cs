@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RCP.Shared.Constant.Constants.Auth
+﻿namespace RCP.Shared.Constant.Constants.Auth
 {
     public static class PermissionKeys
     {
@@ -31,6 +25,14 @@ namespace RCP.Shared.Constant.Constants.Auth
         public const string PermissionDelete = Function + "PermissionDelete";
         public const string PermissionView = Function + "PermissionView";
 
+        public const string CategoryPhim = "QL Phim";
+        public const string PhimView = Function + "View";
+        public const string PhimCreate = Function + "Create";
+        public const string PhimUpdate = Function + "Update";
+        public const string PhimDelete = Function + "Delete";
+
+
+
         public static readonly (string Key, string Name, string Category)[] All =
         {
             (UserAdd, "Thêm user", CategoryUser),
@@ -49,6 +51,10 @@ namespace RCP.Shared.Constant.Constants.Auth
             (PermissionUpdate, "Cập nhật Permission", CategoryPermission),
             (PermissionDelete, "Xoá Permission", CategoryPermission),
             (PermissionView, "Xem Permission", CategoryPermission),
+            (PhimView, "Xem Phim", CategoryPhim),
+            (PhimCreate, "Thêm Phim", CategoryPhim),
+            (PhimUpdate, "Cập nhật Phim", CategoryPhim),
+            (PhimDelete, "Xóa Phim", CategoryPhim ),
         };
     }
 }

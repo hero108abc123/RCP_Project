@@ -9,21 +9,17 @@ using RCP.Authentication.Infrastructure;
 using RCP.Project.HttpRequest.AppException;
 using RCP.Project.HttpRequest.BaseRequest;
 using RCP.Shared.Constant.HttpRequest.Error;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Security.Claims;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace RCP.Authentication.ApplicationService.UserModule.Implements
 {
     public class PermissionService : BaseAuthService, IPermissionService
     {
         public PermissionService(
-            AuthenticationDbContext authDbContext, 
-            ILogger<PermissionService> logger, 
-            IHttpContextAccessor httpContextAccessor, 
+            AuthenticationDbContext authDbContext,
+            ILogger<PermissionService> logger,
+            IHttpContextAccessor httpContextAccessor,
             IMapper mapper
             ) : base(authDbContext, logger, httpContextAccessor, mapper)
         {
@@ -121,7 +117,7 @@ namespace RCP.Authentication.ApplicationService.UserModule.Implements
                 Key = dto.Key,
                 Category = dto.Category,
                 Description = dto.Description,
-                CreatedBy =  currentUserId,
+                CreatedBy = currentUserId,
                 CreatedDate = DateTime.UtcNow
             };
 

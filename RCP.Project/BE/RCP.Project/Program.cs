@@ -6,13 +6,14 @@ using NLog;
 using NLog.Web;
 using OpenIddict.Abstractions;
 using RCP.Authentication.ApplicationService.Common;
-using RCP.Authentication.ApplicationService.Startup;
 using RCP.Authentication.ApplicationService.UserModule.Abstracts;
 using RCP.Authentication.ApplicationService.UserModule.Implements;
 using RCP.Authentication.Domain;
 using RCP.Authentication.Infrastructure;
 using RCP.Authentication.Infrastructure.Seeder;
-
+using RCP.Movie.ApplicationServices.PhimModule.Abstracts;
+using RCP.Movie.ApplicationServices.PhimModule.Implements;
+using RCP.Movie.Infrastructure;
 using RCP.Shared.ApplicationService.Database;
 using RCP.Shared.Constant.Constants.Auth;
 using System.Text;
@@ -33,7 +34,7 @@ string connectionString = builder.Configuration.GetConnectionString("RCP_DB_DEV"
 
 string hangfireConnectionString = builder.Configuration.GetConnectionString("HANGFIRE")
     ?? throw new InvalidOperationException("Không tìm thấy connection string \"HANGFIRE\" trong appsettings.json");
-
+//Authentication DbContext
 builder.Services.AddDbContext<AuthenticationDbContext>(options =>
 {
     options.UseSqlServer(connectionString, options =>
@@ -42,6 +43,15 @@ builder.Services.AddDbContext<AuthenticationDbContext>(options =>
         options.MigrationsHistoryTable(DbSchemas.TableMigrationsHistory, DbSchemas.Authentication);
     });
     options.UseOpenIddict(); // Register OpenIddict entities
+}, ServiceLifetime.Scoped);
+//Phim DbContext
+builder.Services.AddDbContext<PhimDbContext>(options =>
+{
+    options.UseSqlServer(connectionString, options =>
+    {
+        options.MigrationsAssembly(typeof(Program).Assembly.GetName().Name);
+        options.MigrationsHistoryTable(DbSchemas.TableMigrationsHistory, DbSchemas.Movie);
+    });
 }, ServiceLifetime.Scoped);
 #endregion
 
@@ -157,6 +167,10 @@ builder.Services.AddHostedService<thongbao.be.Workers.AuthWorker>();
 #endregion
 // Add services to the container.
 
+#region phim
+builder.Services.AddScoped<IPhimService, PhimService>();
+#endregion
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -213,6 +227,8 @@ app.UseCors(ProgramExtensions.CorsPolicy);
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+app.UseStaticFiles(); // Cho phép truy cập file trong wwwroot
+
 
 app.MapControllers();
 //app.UseHangfireDashboard();

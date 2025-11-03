@@ -1,14 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RCP.Shared.ApplicationService.Database;
 using RCP.Shared.ApplicationService.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace RCP.Authentication.Domain
 {
@@ -18,7 +12,7 @@ namespace RCP.Authentication.Domain
       IsUnique = false,
       Name = $"IX_{nameof(Permission)}"
     )]
-    public class Permission: ISoftDeleted
+    public class Permission : ISoftDeleted
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

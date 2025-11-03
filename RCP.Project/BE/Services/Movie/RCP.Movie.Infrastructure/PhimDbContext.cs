@@ -59,7 +59,7 @@ namespace RCP.Movie.Infrastructure
             // 🔹 Thiết lập giá trị mặc định cho bảng Phim
             modelBuilder.Entity<Phim>(entity =>
             {
-                entity.Property(p => p.IsDeleted)
+                entity.Property(p => p.Deleted)
                     .HasDefaultValue(false);
 
                 entity.Property(p => p.CreatedDate)

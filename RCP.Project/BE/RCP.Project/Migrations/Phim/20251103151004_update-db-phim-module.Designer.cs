@@ -12,8 +12,8 @@ using RCP.Movie.Infrastructure;
 namespace RCP.Project.Migrations.Phim
 {
     [DbContext(typeof(PhimDbContext))]
-    [Migration("20251030012631_add-phim-module")]
-    partial class addphimmodule
+    [Migration("20251103151004_update-db-phim-module")]
+    partial class updatedbphimmodule
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,10 +33,10 @@ namespace RCP.Project.Migrations.Phim
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CreatedBy")
-                        .HasColumnType("int");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETUTCDATE()");
@@ -48,8 +48,13 @@ namespace RCP.Project.Migrations.Phim
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int?>("DeleteBy")
-                        .HasColumnType("int");
+                    b.Property<bool>("Deleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("datetime2");
@@ -58,17 +63,12 @@ namespace RCP.Project.Migrations.Phim
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
                     b.Property<string>("MoTa")
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<int?>("ModifiedBy")
-                        .HasColumnType("int");
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");

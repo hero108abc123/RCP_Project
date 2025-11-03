@@ -11,6 +11,8 @@ using RCP.Authentication.ApplicationService.UserModule.Implements;
 using RCP.Authentication.Domain;
 using RCP.Authentication.Infrastructure;
 using RCP.Authentication.Infrastructure.Seeder;
+using RCP.Movie.ApplicationServices.PhimModule.Abstracts;
+using RCP.Movie.ApplicationServices.PhimModule.Implements;
 using RCP.Movie.Infrastructure;
 using RCP.Shared.ApplicationService.Database;
 using RCP.Shared.Constant.Constants.Auth;
@@ -165,6 +167,10 @@ builder.Services.AddHostedService<thongbao.be.Workers.AuthWorker>();
 #endregion
 // Add services to the container.
 
+#region phim
+builder.Services.AddScoped<IPhimService, PhimService>();
+#endregion
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -221,6 +227,8 @@ app.UseCors(ProgramExtensions.CorsPolicy);
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+app.UseStaticFiles(); // Cho phép truy cập file trong wwwroot
+
 
 app.MapControllers();
 //app.UseHangfireDashboard();

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace RCP.Project.Migrations.Phim
 {
     /// <inheritdoc />
-    public partial class addphimmodule : Migration
+    public partial class updatedbphimmodule : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,13 +30,13 @@ namespace RCP.Project.Migrations.Phim
                     NgonNgu = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     PhanLoaiDoTuoi = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
                     DangChieu = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
-                    CreatedBy = table.Column<int>(type: "int", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValueSql: "GETUTCDATE()"),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ModifiedBy = table.Column<int>(type: "int", nullable: true),
-                    DeleteBy = table.Column<int>(type: "int", nullable: true),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DeletedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DeletedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
+                    Deleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {

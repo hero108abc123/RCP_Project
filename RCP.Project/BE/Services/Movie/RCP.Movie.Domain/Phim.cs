@@ -1,11 +1,12 @@
 ﻿using RCP.Shared.ApplicationService.Database;
+using RCP.Shared.ApplicationService.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RCP.Movie.Domain
 {
     [Table(nameof(Phim), Schema = DbSchemas.Movie)]
-    public class Phim
+    public class Phim : IFullAudited
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -36,19 +37,19 @@ namespace RCP.Movie.Domain
         public bool DangChieu { get; set; }
 
         // 🔹 Audit fields
-        public DateTime CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
 
-        public int? CreatedBy { get; set; }
+        public string? CreatedBy { get; set; }
 
         public DateTime? ModifiedDate { get; set; }
 
-        public int? ModifiedBy { get; set; }
+        public string? ModifiedBy { get; set; }
 
-        public int? DeleteBy { get; set; }
+        public string? DeletedBy { get; set; }
         public DateTime? DeletedDate { get; set; }
 
         // 🔹 Soft delete
-        public bool IsDeleted { get; set; }
+        public bool Deleted { get; set; }
 
         // 🔹 Quan hệ nhiều-nhiều với thể loại
         public ICollection<PhimTheLoai> PhimTheLoais { get; set; } = new List<PhimTheLoai>();

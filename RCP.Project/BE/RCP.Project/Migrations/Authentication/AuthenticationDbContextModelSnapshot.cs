@@ -451,8 +451,8 @@ namespace RCP.Project.Migrations.Authentication
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("CreatedBy")
-                        .HasColumnType("int");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .ValueGeneratedOnAdd()
@@ -464,8 +464,8 @@ namespace RCP.Project.Migrations.Authentication
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("datetime2");
@@ -496,8 +496,8 @@ namespace RCP.Project.Migrations.Authentication
                     b.Property<int>("PermissionId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CreatedBy")
-                        .HasColumnType("int");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .ValueGeneratedOnAdd()
@@ -509,8 +509,8 @@ namespace RCP.Project.Migrations.Authentication
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("datetime2");

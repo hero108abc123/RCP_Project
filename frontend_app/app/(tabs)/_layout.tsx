@@ -1,7 +1,7 @@
-import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { Slot, useSegments, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { Slot, useRouter, useSegments } from "expo-router";
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function TabsLayout() {
   const segments = useSegments() as string[];
@@ -43,9 +43,10 @@ export default function TabsLayout() {
           <TouchableOpacity
             style={styles.iconWrap}
             onPress={() => {
-              const isLoggedIn = false; // sau này thay bằng check token/AsyncStorage
-              if (isLoggedIn) router.push("/(tabs)/profile" as any);
-              else router.push("/(auth)/Login" as any);
+              router.push("/profile/profile");
+              // const isLoggedIn = true; // sau này thay bằng check token/AsyncStorage
+              // if (isLoggedIn) router.push("/profile/profile" as any);
+              // else router.push("/(auth)/Login");
             }}
             activeOpacity={0.8}
           >

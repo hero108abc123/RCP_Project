@@ -7,18 +7,25 @@ interface ButtonProps {
   onPress?: () => void;
   backgroundColor?: string;
   textColor?: string;
+  borderRadius?: number;
+  paddingVertical?: number;
+  marginVertical?: number;
+  marginHorizontal?: number;
+  paddingHorizontal?: number;
 }
 
-export default function Button({ title, onPress, backgroundColor  = "#C64747", textColor }: ButtonProps) {
+export default function ButtonCustom({ title, onPress, backgroundColor  = "#C64747", textColor, borderRadius, paddingVertical, marginVertical, marginHorizontal, paddingHorizontal }: ButtonProps) {
   return (
     <TouchableOpacity
       onPress={onPress}
       style={{
         backgroundColor,
-        paddingVertical: 12,
-        borderRadius: 20,
+        paddingVertical: paddingVertical ||12,
+        borderRadius: borderRadius || 20,
         alignItems: "center",
-        marginVertical: 6,
+        marginVertical: marginVertical ||6,
+        marginHorizontal: marginHorizontal || 10,
+        paddingHorizontal: paddingHorizontal ,
       }}
     >
       <Text style={{ color: textColor, fontWeight: "bold" }}>{title}</Text>

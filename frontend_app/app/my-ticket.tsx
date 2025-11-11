@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
@@ -11,7 +12,10 @@ export default function MyTicket() {
         <Text style={{ color: '#ddd', marginTop: 6 }}>Ngày: 2025-11-01</Text>
         <Text style={{ color: '#ddd' }}>Ghế: D5</Text>
 
-        <TouchableOpacity style={styles.btn} onPress={() => alert('Xem vé (demo)')}>
+        <TouchableOpacity style={styles.btn} onPress={() => {
+          console.log('Xem Vé pressed');
+          router.push('/ticket/ticket-detail');
+        }}>
           <Text style={{ color: '#fff', fontWeight: '700' }}>Xem Vé</Text>
         </TouchableOpacity>
       </View>

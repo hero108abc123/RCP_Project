@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { ActivityIndicator, Alert, Image, StyleSheet, Text, View, KeyboardAvoidingView, ScrollView, Platform } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { register } from '../../api/auth-api'
+import { auth } from '@/api/auth'
 
 export default function Register() {    
 

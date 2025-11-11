@@ -24,7 +24,11 @@ export default function MovieDetail() {
 
         <TouchableOpacity
           style={styles.ticketBtn}
-          onPress={() => alert('Test: mua vé')}>
+          onPress={() => {
+            router.push('/ticket/movie-schedule');
+            console.log('Đi đến trang chi tiết vé');
+          }
+          }>
           <Text style={{ color: '#fff', fontWeight: '700' }}>Get Ticket</Text>
         </TouchableOpacity>
       </View>

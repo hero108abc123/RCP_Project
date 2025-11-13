@@ -1,17 +1,36 @@
-import api from "../services/api.jsx";
+import api from "../services/api-config";
+import qs from "qs";
 
 export const AuthController = {
   login: async (username, password) => {
-    const res = await api.post("/auth/login", { username, password });
-    localStorage.setItem("token", res.data.token);
+    const data = qs.stringify({
+      username,
+      password,
+      grant_type: "password",
+      client_id: "web_admin",
+      client_secret: "mBSQUHmZ4be5bQYfhwS7hjJZ2zFOCU2e",
+      scope: "openid profile",
+    });
+
+    const headers = {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Accept: "text/plain",
+    };
+
+    const res = await api.post("/connect/token", data, { headers });
+
+    if (res.data?.access_token) {
+      localStorage.setItem("token", res.data.access_token);
+    }
+
     return res.data;
   },
-  register: async (data) => {
-    const res = await api.post("/auth/register", data);
-    return res.data;
-  },
+
   getProfile: async () => {
-    const res = await api.get("/auth/profile");
+    const token = localStorage.getItem("token");
+    const res = await api.get("/api/app/user", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     return res.data;
   },
 };

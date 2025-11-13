@@ -1,32 +1,43 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthController } from "../controllers/AuthController.jsx";
-import "../styles/components.css";   
+import { auth } from "../services/auth-api";
+import "../styles/login.css";
 
 function LoginAdmin() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      await AuthController.login(username, password);
-      navigate("/"); // chuyển đến Dashboard admin
+      const res = await auth.login(username, password);
+      if (res.access_token) {
+        localStorage.setItem("access_token", res.access_token);
+        localStorage.setItem("refresh_token", res.refresh_token || "");
+        navigate("/"); // Chuyển tới Dashboard
+      } else {
+        alert("❌ Sai thông tin đăng nhập hoặc không nhận được token.");
+      }
     } catch (err) {
-      setError(err.response?.data?.message || "Đăng nhập thất bại");
+      alert(
+        "Đăng nhập thất bại: " +
+          (err.response?.data?.error_description || err.message)
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="login-container">
-      <form className="login-form" onSubmit={handleSubmit}>
-        <h2>Admin Login</h2>
-        {error && <p className="error">{error}</p>}
+    <div className="login-page">
+      <h2>Admin Login</h2>
+      <form onSubmit={handleLogin} className="login-form">
         <input
           type="text"
-          placeholder="Username"
+          placeholder="Tên đăng nhập"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
@@ -38,7 +49,9 @@ function LoginAdmin() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit">Đăng nhập</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Đang đăng nhập..." : "Đăng nhập"}
+        </button>
       </form>
     </div>
   );

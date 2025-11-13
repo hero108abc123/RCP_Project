@@ -6,7 +6,7 @@
 /* Main content nằm bên phải sidebar */
 .main-content {
   margin-left: 200px; /* chiều rộng sidebar */
-  margin-top: 60px;   /* chiều cao navbar */
+  margin-top: 70px;   /* chiều cao navbar */
   padding: 20px;
   min-height: calc(100vh); /* full màn trừ navbar */
   background-color: #f4f4f4;

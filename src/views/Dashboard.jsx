@@ -9,7 +9,7 @@ function Dashboard() {
   const [stats, setStats] = useState({ users: 0, movies: 0, schedules: 0 });
 
   useEffect(() => {
-    setStats({ users: 42, movies: 15, schedules: 10 });
+    setStats({ users: 10, movies: 15, schedules: 10 });
   }, []);
 
   return (

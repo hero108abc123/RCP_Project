@@ -1,33 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import UsersController from "../controllers/UserController.jsx";
 import "../styles/users.css";
 
 function Users() {
-  const [users, setUsers] = useState([
-    { id: 1, username: "admin", fullname: "Admin User", email: "admin@example.com", role: "Admin" },
-    { id: 2, username: "staff1", fullname: "Staff One", email: "staff1@example.com", role: "Staff" },
-    { id: 3, username: "user1", fullname: "User One", email: "user1@example.com", role: "User" },
-  ]);
-
+  const [users, setUsers] = useState([]);
   const [selected, setSelected] = useState([]);
-  const [form, setForm] = useState({ username: "", fullname: "", email: "", role: "User" });
 
-  const handleChange = e => {
-    const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
-  };
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
-  const handleAdd = e => {
-    e.preventDefault();
-    const newUser = { ...form, id: Date.now() };
-    setUsers(prev => [...prev, newUser]);
-    setForm({ username: "", fullname: "", email: "", role: "User" });
-  };
-
-  const handleDeleteSelected = () => {
-    if (!selected.length) return;
-    if (!window.confirm(`Xóa ${selected.length} user đã chọn?`)) return;
-    setUsers(prev => prev.filter(u => !selected.includes(u.id)));
-    setSelected([]);
+  const fetchUsers = async () => {
+    try {
+      const data = await UsersController.getAllUsers();
+      // đảm bảo data là mảng
+      if (Array.isArray(data)) setUsers(data);
+      else setUsers([]);
+    } catch (error) {
+      console.error("Không lấy được user:", error);
+    }
   };
 
   const handleSelect = id => {
@@ -35,29 +26,34 @@ function Users() {
     else setSelected(prev => [...prev, id]);
   };
 
-  const handleRoleChange = (id, newRole) => {
-    setUsers(prev => prev.map(u => u.id === id ? { ...u, role: newRole } : u));
+  const handleDeleteSelected = async () => {
+    if (!selected.length) return;
+    if (!window.confirm(`Xóa ${selected.length} user đã chọn?`)) return;
+
+    try {
+      await UsersController.deleteUsersByIds(selected);
+      fetchUsers();
+      setSelected([]);
+    } catch (error) {
+      console.error("Xóa thất bại:", error);
+    }
+  };
+
+  const handleRoleChange = async (id, role) => {
+    try {
+      await UsersController.updateRole(id, role);
+      fetchUsers();
+    } catch (error) {
+      console.error("Cập nhật role thất bại:", error);
+    }
   };
 
   return (
-    <div className="user-management">
+    <div className="page-content">
       <h2>Quản lý Người dùng</h2>
-      <p>Tổng số user: <strong>{users.length}</strong></p>
-
-      <form className="user-form" onSubmit={handleAdd}>
-        <input type="text" name="username" placeholder="Username" value={form.username} onChange={handleChange} required />
-        <input type="text" name="fullname" placeholder="Full Name" value={form.fullname} onChange={handleChange} required />
-        <input type="email" name="email" placeholder="Email" value={form.email} onChange={handleChange} required />
-        <select name="role" value={form.role} onChange={handleChange}>
-          <option value="User">User</option>
-          <option value="Admin">Admin</option>
-          <option value="Staff">Staff</option>
-        </select>
-        <button type="submit">Thêm User</button>
-      </form>
 
       {selected.length > 0 && (
-        <button className="btn-delete-selected" onClick={handleDeleteSelected}>
+        <button onClick={handleDeleteSelected}>
           Xóa {selected.length} user đã chọn
         </button>
       )}
@@ -76,14 +72,14 @@ function Users() {
               />
             </th>
             <th>Username</th>
-            <th>Full Name</th>
+            <th>Fullname</th>
             <th>Email</th>
             <th>Role</th>
           </tr>
         </thead>
         <tbody>
           {users.map(u => (
-            <tr key={u.id}>
+            <tr key={u.id} className={selected.includes(u.id) ? "selected" : ""}>
               <td>
                 <input
                   type="checkbox"
@@ -95,10 +91,12 @@ function Users() {
               <td>{u.fullname}</td>
               <td>{u.email}</td>
               <td>
-                <select value={u.role} onChange={e => handleRoleChange(u.id, e.target.value)}>
-                  <option value="User">User</option>
+                <select
+                  value={u.role}
+                  onChange={e => handleRoleChange(u.id, e.target.value)}
+                >
                   <option value="Admin">Admin</option>
-                  <option value="Staff">Staff</option>
+                  <option value="User">User</option>
                 </select>
               </td>
             </tr>

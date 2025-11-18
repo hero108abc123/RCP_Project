@@ -9,7 +9,7 @@ import { useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { ActivityIndicator, Alert, Image, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import Toast from 'react-native-toast-message'; // ✅ Thay đổi import
+import Toast from 'react-native-toast-message'; 
 import * as yup from 'yup'
 
 import { $login, setUser } from '@/redux/slices/userSlice'
@@ -75,7 +75,6 @@ function Login() {
         }),
       )
 
-      // ✅ Thay đổi cách gọi toast
       Toast.show({
         type: 'success',
         text1: 'Đăng nhập thành công',

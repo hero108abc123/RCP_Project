@@ -91,7 +91,8 @@ namespace RCP.Authentication.ApplicationService.UserModule.Implements
                 PhoneNumber = dto.PhoneNumBer,
                 BirthDay = dto.BirthDay,
                 EmailConfirmed = true,
-                SecurityStamp = Guid.NewGuid().ToString()
+                SecurityStamp = Guid.NewGuid().ToString(),
+                CreatedDate = vietnamNow,
             };
 
             var result = await _userManager.CreateAsync(newUser, dto.Password);
@@ -104,87 +105,29 @@ namespace RCP.Authentication.ApplicationService.UserModule.Implements
         public async Task<ViewUserDto> FindById(string id)
         {
             _logger.LogInformation($"{nameof(FindById)} id={id}");
-
-            var user = await (from u in _userManager.Users.AsNoTracking()
-                              where u.Id == id
-                              select new ViewUserDto
-                              {
-                                  Id = u.Id,
-                                  UserName = u.UserName ?? "",
-                                  Email = u.Email ?? "",
-                                  PhoneNumber = u.PhoneNumber ?? "",
-                                  FullName = u.FullName ?? "",
-                                  BirthDay = u.BirthDay,
-                                  EmailConfirmed = u.EmailConfirmed,
-                                  PhoneNumberConfirmed = u.PhoneNumberConfirmed,
-                                  Roles = (from ur in _authDbContext.UserRoles
-                                           join r in _authDbContext.Roles on ur.RoleId equals r.Id
-                                           where ur.UserId == u.Id
-                                           select new ViewUserRoleDto
-                                           {
-                                               Id = r.Id,
-                                               Name = r.Name ?? "",
-                                               NormalizedName = r.NormalizedName ?? "",
-                                               Permissions = (from rp in _authDbContext.RolePermissions
-                                                              join p in _authDbContext.Permissions on rp.PermissionId equals p.Id
-                                                              where rp.RoleId == r.Id
-                                                              select new ViewUserPermissionDto
-                                                              {
-                                                                  Id = p.Id,
-                                                                  Category = p.Category ?? "",
-                                                                  Key = p.Key ?? "",
-                                                                  Name = p.Name ?? ""
-                                                              }).ToList()
-                                           }).ToList()
-                              }).FirstOrDefaultAsync();
-
-            return _mapper.Map<ViewUserDto>(user);
+            var user = await _userManager.FindByIdAsync(id);
+            var roles = await _userManager.GetRolesAsync(user);
+            var data = _mapper.Map<ViewUserDto>(user);
+            data.Roles = roles.Select(r => new ViewUserRoleDto { Name = r }).ToList();
+            return data;
         }
         public async Task<BaseResponsePagingDto<ViewUserDto>> FindPaging(FindPagingUserDto dto)
         {
             _logger.LogInformation($"{nameof(FindPaging)} dto={JsonSerializer.Serialize(dto)}");
 
-            var query = from u in _userManager.Users.AsNoTracking()
-                        select new ViewUserDto
-                        {
-                            Id = u.Id,
-                            UserName = u.UserName ?? "",
-                            Email = u.Email ?? "",
-                            PhoneNumber = u.PhoneNumber,
-                            FullName = u.FullName,
-                            BirthDay = u.BirthDay,
-                            EmailConfirmed = u.EmailConfirmed,
-                            PhoneNumberConfirmed = u.PhoneNumberConfirmed,
-                            Roles = (from ur in _authDbContext.UserRoles
-                                     join r in _authDbContext.Roles on ur.RoleId equals r.Id
-                                     where ur.UserId == u.Id
-                                     select new ViewUserRoleDto
-                                     {
-                                         Id = r.Id,
-                                         Name = r.Name ?? "",
-                                         NormalizedName = r.NormalizedName ?? "",
-                                         Permissions = (from rp in _authDbContext.RolePermissions
-                                                        join p in _authDbContext.Permissions on rp.PermissionId equals p.Id
-                                                        where rp.RoleId == r.Id
-                                                        select new ViewUserPermissionDto
-                                                        {
-                                                            Id = p.Id,
-                                                            Category = p.Category ?? "",
-                                                            Key = p.Key ?? "",
-                                                            Name = p.Name ?? ""
-                                                        }).ToList()
-                                     }).ToList()
-                        };
+            var query = _userManager.Users.AsNoTracking().AsQueryable();
 
             var totalCount = await query.CountAsync();
+
             var users = await query
-                .OrderBy(x => x.UserName)
-                .Paging(dto)
-                .ToListAsync();
+                    .OrderBy(x => x.UserName)
+                    .Paging(dto)
+                    .ToListAsync();
+            var items = _mapper.Map<List<ViewUserDto>>(users);
 
             return new BaseResponsePagingDto<ViewUserDto>
             {
-                Items = users,
+                Items = items,
                 TotalItems = totalCount,
             };
         }
@@ -223,6 +166,79 @@ namespace RCP.Authentication.ApplicationService.UserModule.Implements
             await transaction.CommitAsync();
         }
 
+        public async Task<GetAuthMeDto> GetAuthMe()
+        {
+            _logger.LogInformation($"{nameof(GetAuthMe)}");
+            var currentUserId = getCurrentUserId();
+
+            var currentUser = await _authDbContext.Users.FirstOrDefaultAsync(x => x.Id == currentUserId && !x.Deleted)
+                ?? throw new UserFriendlyException(ErrorCodes.AuthErrorUserNotFound);
+
+            var roles = await _userManager.GetRolesAsync(currentUser);
+
+            var result = new GetAuthMeDto
+            {
+                Id = Guid.Parse(currentUser.Id),
+                FullName = currentUser.FullName,
+                UserName = currentUser.UserName,
+                Email = currentUser.Email,
+                PhoneNumber = currentUser.PhoneNumber,
+                BirthDay = currentUser.BirthDay,
+                Roles = new List<GetRoleAuthMeDto>()
+            };
+
+
+            foreach (var roleName in roles)
+            {
+                var role = await _roleManager.FindByNameAsync(roleName);
+                if (role != null)
+                {
+
+                    var permissions = await _authDbContext.RoleClaims
+                        .Where(rc => rc.RoleId == role.Id && rc.ClaimType == CustomClaimTypes.Permission)
+                        .Select(rc => rc.ClaimValue)
+                        .ToListAsync();
+
+                    var roleDto = new GetRoleAuthMeDto
+                    {
+                        Id = Guid.Parse(role.Id),
+                        Name = role.Name,
+                        Permissions = new List<GetPermissionAuthMeDto>()
+                    };
+
+                    foreach (var permissionKey in permissions)
+                    {
+                        var permissionInfo = PermissionKeys.All
+                            .FirstOrDefault(p => p.Key == permissionKey);
+
+                        if (permissionInfo != default)
+                        {
+                            roleDto.Permissions.Add(new GetPermissionAuthMeDto
+                            {
+                                Key = permissionInfo.Key,
+                                Name = permissionInfo.Name,
+                                Category = permissionInfo.Category
+                            });
+                        }
+                        else
+                        {
+
+                            roleDto.Permissions.Add(new GetPermissionAuthMeDto
+                            {
+                                Key = permissionKey,
+                                Name = permissionKey,
+                                Category = "Other"
+                            });
+                        }
+                    }
+
+                    result.Roles.Add(roleDto);
+                }
+            }
+
+            return result;
+        }
+
         public bool IsValidEmail(string email)
         {
             try
@@ -241,6 +257,8 @@ namespace RCP.Authentication.ApplicationService.UserModule.Implements
             var pattern = @"^(0[3|5|7|8|9])+([0-9]{8})$";
             return Regex.IsMatch(phoneNumber, pattern);
         }
+
+
         private static DateTime GetVietnamTime()
         {
             return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, VietnamTimeZone);

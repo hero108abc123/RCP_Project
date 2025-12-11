@@ -9,12 +9,13 @@ import { useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { ActivityIndicator, Alert, Image, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import Toast from 'react-native-toast-message'; 
+import Toast from 'react-native-toast-message'
 import * as yup from 'yup'
 
 import { $login, setUser } from '@/redux/slices/userSlice'
 import { AppDispatch } from '@/redux/store'
 import { useDispatch } from 'react-redux'
+
 
 const schema = yup
   .object({
@@ -94,55 +95,64 @@ function Login() {
           source={require("../../assets/images/image 2.png")}
           style={{ width: "100%", height: 250, resizeMode: "cover" }}
         />
-        <Text style={{
-          textAlign: "center",
-          fontWeight: "bold",
-          fontSize: 20,
-          marginVertical: 12,
-          color: '#C64747'
-        }}>Đăng Nhập</Text>
+        <View style={{ padding: 16 }}>
+          <Text style={{
+            textAlign: "center",
+            fontWeight: "bold",
+            fontSize: 20,
+            marginVertical: 12,
+            color: '#C64747'
+          }}>Đăng Nhập</Text>
 
-        <InputField 
-          label='Username hoặc Email'
-          placeholder='Nhập username hoặc email'
-          value={userName}
-          onChangeText={setUserName}
-        />
+          <InputField 
+            label='Username hoặc Email'
+            placeholder='Nhập username hoặc email'
+            value={userName}
+            onChangeText={setUserName}
+          />
 
-        <InputField
-          label='Mật khẩu'
-          placeholder='Nhập mật khẩu'
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry={secureTextEntry}
-          showToggle
-          onToggleSecure={() => setSecureTextEntry(!secureTextEntry)}
-        />
+          <InputField
+            label='Mật khẩu'
+            placeholder='Nhập mật khẩu'
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={secureTextEntry}
+            showToggle
+            onToggleSecure={() => setSecureTextEntry(!secureTextEntry)}
+          />
 
-        <Button
-          title={loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
-          onPress={() => {
-            if (loading) return
-            handleLogin({ username: userName, password: password })
-          }}
-        />
-        
-        {loading && (
-          <ActivityIndicator size="large" color="#C64747" style={{ marginTop: 10 }} />
-        )}
-        
-        <TouchableOpacity onPress={() => console.log('Forgot Password')}>
-          <Text>Quên mật khẩu?</Text>
-        </TouchableOpacity> 
+          <Button
+            title={loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
+            onPress={() => {
+              try {
+                console.log("🔵 Bắt đầu điều hướng...");
+                router.replace('/(screen)/home');
+                console.log("✅ Điều hướng thành công");
+              } catch (error) {
+                console.error("❌ Lỗi điều hướng:", error);
+                Alert.alert("Lỗi", JSON.stringify(error));
+              }
+            }}
+          />
+          
+          {loading && (
+            <ActivityIndicator size="large" color="#C64747" style={{ marginTop: 10 }} />
+          )}
+          
+          <TouchableOpacity onPress={() => console.log('Forgot Password')}>
+            <Text style={{textAlign: "center"}}>Quên mật khẩu?</Text>
+          </TouchableOpacity> 
 
-        <DividerWithText text="hoặc" />
+          <DividerWithText text="hoặc" />
 
-        <Button 
-          title="Đăng Ký" 
-          onPress={() => {
-            console.log("Register")
-          }}
-        />
+          <Button 
+            title="Đăng Ký" 
+            onPress={() => {
+              router.push('/register');
+              console.log("register")
+            }}
+          />
+        </View>
       </View>
     </SafeAreaView>
   )

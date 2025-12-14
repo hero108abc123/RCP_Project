@@ -35,7 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Services\Authentication\RCP.Authentication.ApplicationServices\RCP.Authentication.ApplicationService.csproj" />
+    <ProjectReference Include="..\Services\Authentication\RCP.Authentication.ApplicationServices\RCP.Authentication.ApplicationServices.csproj" />
     <ProjectReference Include="..\Services\Movie\RCP.Movie.ApplicationServices\RCP.Movie.ApplicationServices.csproj" />
   </ItemGroup>
 

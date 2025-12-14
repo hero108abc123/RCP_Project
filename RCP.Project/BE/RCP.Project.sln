@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Authentication", "Authentic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCP.Authentication.Domain", "Services\Authentication\RCP.Authentication.Domain\RCP.Authentication.Domain.csproj", "{DA131959-CD46-46CE-9931-B776F873152C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCP.Authentication.ApplicationService", "Services\Authentication\RCP.Authentication.ApplicationServices\RCP.Authentication.ApplicationService.csproj", "{AD0D85D2-3A45-44BF-B9DA-693458B093FC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCP.Authentication.ApplicationServices", "Services\Authentication\RCP.Authentication.ApplicationServices\RCP.Authentication.ApplicationServices.csproj", "{AD0D85D2-3A45-44BF-B9DA-693458B093FC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCP.Authentication.Dtos", "Services\Authentication\RCP.Authentication.Dtos\RCP.Authentication.Dtos.csproj", "{F6AC2780-98E4-4D2B-8341-C437051208C5}"
 EndProject
@@ -33,6 +33,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCP.Movie.Dtos", "Services\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCP.Movie.Infrastructure", "Services\Movie\RCP.Movie.Infrastructure\RCP.Movie.Infrastructure.csproj", "{31304B2D-945F-98A2-22DD-5A6B49FBEF2D}"
 EndProject
+<<<<<<< Updated upstream
+=======
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cinema", "Cinema", "{84B014B9-A566-4FA4-AFE4-66C7A8DB56C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCP.Cinema.ApplicationServices", "Services\Cinema\RCP.Cinema.ApplicationServices\RCP.Cinema.ApplicationServices.csproj", "{8B53339A-7967-43C7-84BF-36E048EED474}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCP.Cinema.Domain", "Services\Cinema\RCP.Cinema.Domain\RCP.Cinema.Domain.csproj", "{0E373B37-2A21-48A2-BDFC-14F61DA0EF36}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCP.Cinema.Dtos", "Services\Cinema\RCP.Cinema.Dtos\RCP.Cinema.Dtos.csproj", "{59107E26-C9DD-495C-8F24-6F129056D57B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCP.Cinema.Infrastructure", "RCP.Cinema.Infrastructure\RCP.Cinema.Infrastructure.csproj", "{39D294B6-8C0E-474B-871B-F5D8E084640F}"
+EndProject
+>>>>>>> Stashed changes
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +96,25 @@ Global
 		{31304B2D-945F-98A2-22DD-5A6B49FBEF2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31304B2D-945F-98A2-22DD-5A6B49FBEF2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31304B2D-945F-98A2-22DD-5A6B49FBEF2D}.Release|Any CPU.Build.0 = Release|Any CPU
+<<<<<<< Updated upstream
+=======
+		{8B53339A-7967-43C7-84BF-36E048EED474}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B53339A-7967-43C7-84BF-36E048EED474}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B53339A-7967-43C7-84BF-36E048EED474}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B53339A-7967-43C7-84BF-36E048EED474}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E373B37-2A21-48A2-BDFC-14F61DA0EF36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E373B37-2A21-48A2-BDFC-14F61DA0EF36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E373B37-2A21-48A2-BDFC-14F61DA0EF36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E373B37-2A21-48A2-BDFC-14F61DA0EF36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59107E26-C9DD-495C-8F24-6F129056D57B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59107E26-C9DD-495C-8F24-6F129056D57B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59107E26-C9DD-495C-8F24-6F129056D57B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59107E26-C9DD-495C-8F24-6F129056D57B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39D294B6-8C0E-474B-871B-F5D8E084640F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39D294B6-8C0E-474B-871B-F5D8E084640F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39D294B6-8C0E-474B-871B-F5D8E084640F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39D294B6-8C0E-474B-871B-F5D8E084640F}.Release|Any CPU.Build.0 = Release|Any CPU
+>>>>>>> Stashed changes
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -101,6 +133,14 @@ Global
 		{92237F8D-270E-99ED-2100-45E69D158EFF} = {C16183EF-3C90-44A7-891C-29594C9496A4}
 		{AAF633D7-5B55-804B-87B1-7032EDE63134} = {C16183EF-3C90-44A7-891C-29594C9496A4}
 		{31304B2D-945F-98A2-22DD-5A6B49FBEF2D} = {C16183EF-3C90-44A7-891C-29594C9496A4}
+<<<<<<< Updated upstream
+=======
+		{84B014B9-A566-4FA4-AFE4-66C7A8DB56C3} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{8B53339A-7967-43C7-84BF-36E048EED474} = {84B014B9-A566-4FA4-AFE4-66C7A8DB56C3}
+		{0E373B37-2A21-48A2-BDFC-14F61DA0EF36} = {84B014B9-A566-4FA4-AFE4-66C7A8DB56C3}
+		{59107E26-C9DD-495C-8F24-6F129056D57B} = {84B014B9-A566-4FA4-AFE4-66C7A8DB56C3}
+		{39D294B6-8C0E-474B-871B-F5D8E084640F} = {84B014B9-A566-4FA4-AFE4-66C7A8DB56C3}
+>>>>>>> Stashed changes
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8C5B4BDE-4A30-4D3A-90C7-3EF5A9157634}

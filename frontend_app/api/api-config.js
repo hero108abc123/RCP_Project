@@ -1,5 +1,5 @@
 export const apiConfig = {
-    baseUrl: "http://10.0.2.2:5025",
+    baseUrl: "http://192.168.100.245:5025",
 
   endpoints: {
     register: "/api/app/user/register",

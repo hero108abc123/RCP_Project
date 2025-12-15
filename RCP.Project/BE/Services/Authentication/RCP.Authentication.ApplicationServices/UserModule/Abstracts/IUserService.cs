@@ -15,6 +15,7 @@ namespace RCP.Authentication.ApplicationService.UserModule.Abstracts
         public Task<BaseResponsePagingDto<ViewUserDto>> FindPaging(FindPagingUserDto dto);
         public  Task Update(string id,UpdateUserDto dto);
         public  Task SetRoleForUser(string id, SetRoleForUserDto dto);
+        public  Task<GetAuthMeDto> GetAuthMe();
 
     }
 } 

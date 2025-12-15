@@ -1,0 +1,43 @@
+.admin-layout {
+  display: flex;
+}
+
+.main-area {
+  margin-left: 50px; /* bằng width của sidebar */
+  width: calc(100% - 220px);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.navbar {
+  height: 60px;
+  background-color: #1e1e20;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-logout {
+  background-color: #f87171;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.btn-logout:hover {
+  background-color: #ef4444;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+  background-color: #f5f5f5;
+}

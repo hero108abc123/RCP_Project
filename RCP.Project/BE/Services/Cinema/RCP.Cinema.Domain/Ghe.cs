@@ -12,21 +12,25 @@ using System.Xml.Linq;
 
 namespace RCP.Cinema.Domain
 {
-    [Table(nameof(CinemaRoom), Schema = DbSchemas.Cinema)]
+    [Table(nameof(Ghe), Schema = DbSchemas.Cinema)]
     [Index(
       nameof(Id),
       IsUnique = false,
-      Name = $"IX_{nameof(CinemaRoom)}"
+      Name = $"IX_{nameof(Ghe)}"
     )]
-    public class CinemaRoom: ISoftDeleted
+    public class Ghe:ISoftDeleted
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string Name { get; set; } = String.Empty;
-        public string Description { get; set; } = String.Empty;
-        public string Location { get; set; } = String.Empty;
 
+        public int IdCinema { get; set; }
+        public int IdRoom { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Hang { get; set; } = string.Empty;
+        public string KhuVuc { get; set; } = string.Empty;
+        //public string GiaVe { get; set; } = string.Empty;
+        public int HangGhe { get; set; }
         public string? CreatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }
         public string? ModifiedBy { get; set; }

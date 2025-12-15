@@ -31,12 +31,14 @@
   <ItemGroup>
     <Folder Include="Log\Logs\" />
     <Folder Include="Log\Archive\" />
+    <Folder Include="Migrations\Cinema\" />
     <Folder Include="Migrations\Phim\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Services\Authentication\RCP.Authentication.ApplicationServices\RCP.Authentication.ApplicationServices.csproj" />
     <ProjectReference Include="..\Services\Movie\RCP.Movie.ApplicationServices\RCP.Movie.ApplicationServices.csproj" />
+	  <ProjectReference Include="..\Services\Cinema\RCP.Cinema.ApplicationServices\RCP.Cinema.ApplicationServices.csproj" />
   </ItemGroup>
 
 </Project>

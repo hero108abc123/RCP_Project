@@ -26,7 +26,7 @@ namespace RCP.Authentication.ApplicationService.UserModule.Implements
 
         public UserService(
             AuthenticationDbContext authDbContext,
-            ILogger<BaseAuthService> logger,
+            ILogger<UserService> logger,
             IHttpContextAccessor httpContextAccessor,
             IMapper mapper,
             UserManager<AppUser> userManager,

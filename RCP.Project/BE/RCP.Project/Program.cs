@@ -11,9 +11,13 @@ using RCP.Authentication.ApplicationService.UserModule.Implements;
 using RCP.Authentication.Domain;
 using RCP.Authentication.Infrastructure;
 using RCP.Authentication.Infrastructure.Seeder;
+using RCP.Cinema.ApplicationServices.Cinema.Implements;
+using RCP.Cinema.ApplicationServices.Cinema.Interfaces;
+using RCP.Cinema.Infrastructure;
 using RCP.Movie.ApplicationServices.PhimModule.Abstracts;
 using RCP.Movie.ApplicationServices.PhimModule.Implements;
 using RCP.Movie.Infrastructure;
+
 using RCP.Shared.ApplicationService.Database;
 using RCP.Shared.Constant.Constants.Auth;
 using System.Text;
@@ -53,6 +57,16 @@ builder.Services.AddDbContext<PhimDbContext>(options =>
         options.MigrationsHistoryTable(DbSchemas.TableMigrationsHistory, DbSchemas.Movie);
     });
 }, ServiceLifetime.Scoped);
+//Cinema DbContext
+builder.Services.AddDbContext<CinemaDbContext>(options =>
+{
+    options.UseSqlServer(connectionString, options =>
+    {
+        options.MigrationsAssembly(typeof(Program).Assembly.GetName().Name);
+        options.MigrationsHistoryTable(DbSchemas.TableMigrationsHistory, DbSchemas.Cinema);
+    });
+}, ServiceLifetime.Scoped);
+
 #endregion
 
 #region cors
@@ -163,6 +177,8 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
+builder.Services.AddScoped<ICinemaService, CinemaService>();
+builder.Services.AddScoped<IRoomService, RoomService>();
 builder.Services.AddHostedService<thongbao.be.Workers.AuthWorker>();
 #endregion
 // Add services to the container.

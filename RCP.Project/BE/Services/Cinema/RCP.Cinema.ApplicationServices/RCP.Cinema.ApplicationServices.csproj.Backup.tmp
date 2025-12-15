@@ -19,7 +19,6 @@
 		<ProjectReference Include="..\..\Shared\RCP.Shared.Constant\RCP.Shared.Constant.csproj" />
 		<ProjectReference Include="..\RCP.Cinema.Infrastructure\RCP.Cinema.Infrastructure.csproj" />
 		<ProjectReference Include="..\RCP.Cinema.Dtos\RCP.Cinema.Dtos.csproj" />
-					
 
 
 	</ItemGroup>

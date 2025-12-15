@@ -27,7 +27,14 @@
             { ErrorCodes.AuthErrorPhoneNumberRequired, "Số điện thoại là bắt buộc" },
             { ErrorCodes.AuthErrorPasswordRequired, "Mật khẩu là bắt buộc" },
             { ErrorCodes.AuthErrorInvalidBirthDay, "Ngày sinh không hợp lệ" },
-            { ErrorCodes.AuthErrorPermissionKeyExists, "Khóa quyền đã tồn tại trong hệ thống" }
+            { ErrorCodes.AuthErrorPermissionKeyExists, "Khóa quyền đã tồn tại trong hệ thống" },
+
+
+
+
+
+            //Message mã lỗi cinema
+            { ErrorCodes.CinemaErrorNotFound, "Rạp chiếu không tồn tại" },
         };
         public static string GetMessage(int code)
         {

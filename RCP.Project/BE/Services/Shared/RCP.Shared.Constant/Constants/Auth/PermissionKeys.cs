@@ -26,10 +26,22 @@
         public const string PermissionView = Function + "PermissionView";
 
         public const string CategoryPhim = "QL Phim";
-        public const string PhimView = Function + "View";
-        public const string PhimCreate = Function + "Create";
-        public const string PhimUpdate = Function + "Update";
-        public const string PhimDelete = Function + "Delete";
+        public const string PhimView = Function + "PhimView";
+        public const string PhimCreate = Function + "PhimCreate";
+        public const string PhimUpdate = Function + "PhimUpdate";
+        public const string PhimDelete = Function + "PhimDelete";
+
+        public const string CategoryCinema = "QL Rạp chiếu";
+        public const string CinemaView = Function + "CinemaView";
+        public const string CinemaAdd = Function + "CinemaCreate";
+        public const string CinemaUpdate = Function + "CinemaUpdate";
+        public const string CinemaDelete = Function + "CinemaDelete";
+
+        public const string CategoryRoom = "QL Phòng chiếu";
+        public const string RoomView = Function + "RoomView";
+        public const string RoomAdd = Function + "RoomCreate";
+        public const string RoomUpdate = Function + "RoomUpdate";
+        public const string RoomDelete = Function + "CinemaDelete";
 
 
 
@@ -51,10 +63,23 @@
             (PermissionUpdate, "Cập nhật Permission", CategoryPermission),
             (PermissionDelete, "Xoá Permission", CategoryPermission),
             (PermissionView, "Xem Permission", CategoryPermission),
+
+
             (PhimView, "Xem Phim", CategoryPhim),
             (PhimCreate, "Thêm Phim", CategoryPhim),
             (PhimUpdate, "Cập nhật Phim", CategoryPhim),
             (PhimDelete, "Xóa Phim", CategoryPhim ),
+
+            (CinemaView, "Xem Rạp chiếu", CategoryCinema),
+            (CinemaAdd, "Thêm Rạp chiếu", CategoryCinema),
+            (CinemaUpdate, "Cập nhật Rạp chiếu", CategoryCinema),
+            (CinemaDelete, "Xóa Rạp chiếu", CategoryCinema ),
+
+
+            (RoomView, "Xem Phòng chiếu", CategoryRoom),
+            (RoomAdd, "Thêm Phòng chiếu", CategoryRoom),
+            (RoomUpdate, "Cập nhật Phòng chiếu", CategoryRoom),
+            (RoomDelete, "Xóa Phòng chiếu", CategoryRoom ),
         };
     }
 }

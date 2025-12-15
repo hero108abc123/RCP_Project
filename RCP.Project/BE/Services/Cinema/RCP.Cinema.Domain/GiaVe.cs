@@ -12,24 +12,23 @@ using System.Xml.Linq;
 
 namespace RCP.Cinema.Domain
 {
-    [Table(nameof(Cinema), Schema = DbSchemas.Cinema)]
+    [Table(nameof(GiaVe), Schema = DbSchemas.Cinema)]
     [Index(
       nameof(Id),
       IsUnique = false,
-      Name = $"IX_{nameof(Cinema)}"
+      Name = $"IX_{nameof(GiaVe)}"
     )]
-    public class Cinema : ISoftDeleted
+    public class GiaVe: ISoftDeleted
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string Name { get; set; } = String.Empty;
-        //Vị trí
-        public string Location { get; set; } = String.Empty;
-        //public string District { get; set; } = String.Empty;
-        public string City { get; set; } = String.Empty;
-        public int SoLuongPhongChieu { get; set; }
-        //public string ViTriPhongChieu { get; set; } = String.Empty ;
+
+        public int IdCinema { get; set; }
+        public int IdRoom { get; set; }
+        public int IdPhim { get; set; }
+        public int IdGhe {  get; set; }
+        public string Gia { get; set; } = string.Empty;
         public string? CreatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }
         public string? ModifiedBy { get; set; }

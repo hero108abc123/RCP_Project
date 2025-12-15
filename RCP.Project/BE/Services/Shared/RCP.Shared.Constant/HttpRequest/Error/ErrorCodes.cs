@@ -30,5 +30,11 @@
         public const int AuthErrorInvalidBirthDay = 514;
         public const int AuthErrorPermissionKeyExists = 515;
 
+
+        //Mã lỗi Cinema
+        public const int CinemaErrorNotFound = 1001;
+        public const int RoomErrorNotFound = 1002;
+
+
     }
 }

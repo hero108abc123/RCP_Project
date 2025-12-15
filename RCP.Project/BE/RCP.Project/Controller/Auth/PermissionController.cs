@@ -23,91 +23,17 @@ namespace RCP.Project.Controller.Auth
             _permissionService = permissionService;
         }
 
-        [Permission(PermissionKeys.PermissionView)]
-        [HttpGet("")]
-        public async Task<ApiResponse> Find([FromQuery] FindPagingPermissionDto dto)
-        {
-            try
-            {
-                var data = await _permissionService.FindPaging(dto);
-                return new(data);
-            }
-            catch (Exception ex)
-            {
-                return OkException(ex);
-            }
-        }
 
-        [Permission(PermissionKeys.PermissionView)]
-        [HttpGet("{id:int}")]
-        public async Task<ApiResponse> GetById([FromRoute] int id)
-        {
-            try
-            {
-                var data = await _permissionService.FindById(id);
-                return new(data);
-            }
-            catch (Exception ex)
-            {
-                return OkException(ex);
-            }
-        }
 
-        [Permission(PermissionKeys.PermissionAdd)]
-        [HttpPost("")]
-        public async Task<ApiResponse> Create([FromBody] CreatePermissionDto dto)
-        {
-            try
-            {
-                await _permissionService.Create(dto);
-                return new("Create permission successfully");
-            }
-            catch (Exception ex)
-            {
-                return OkException(ex);
-            }
-        }
 
-        [Permission(PermissionKeys.PermissionUpdate)]
-        [HttpPut("{id:int}")]
-        public async Task<ApiResponse> Update([FromRoute] int id, [FromBody] UpdatePermissionDto dto)
-        {
-            try
-            {
-                await _permissionService.Update(id, dto);
-                return new("Update permission successfully");
-            }
-            catch (Exception ex)
-            {
-                return OkException(ex);
-            }
-        }
-
-        [Permission(PermissionKeys.PermissionDelete)]
-        [HttpDelete("{id:int}")]
-        public async Task<ApiResponse> Delete([FromRoute] int id)
-        {
-            try
-            {
-                var result = await _permissionService.Delete(id);
-                if (!result)
-                    return new("Permission not found or could not be deleted");
-
-                return new("Delete permission successfully");
-            }
-            catch (Exception ex)
-            {
-                return OkException(ex);
-            }
-        }
 
         [Permission(PermissionKeys.PermissionView)]
         [HttpGet("all")]
-        public async Task<ApiResponse> GetAll()
+        public  ApiResponse GetAll()
         {
             try
             {
-                var data = await _permissionService.GetAll();
+                var data =  _permissionService.GetAllPermissions();
                 return new(data);
             }
             catch (Exception ex)

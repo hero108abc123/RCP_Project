@@ -34,63 +34,50 @@ namespace RCP.Authentication.ApplicationService.UserModule.Implements
         public async Task<ViewRoleDto> FindById(string id)
         {
             _logger.LogInformation($"{nameof(FindById)} id={id}");
+
             var role = await _roleManager.FindByIdAsync(id);
-            if (role == null)
+            var data = _mapper.Map<ViewRoleDto>(role);
+
+            if (role != null)
             {
-                return new ViewRoleDto();
+                var claims = await _roleManager.GetClaimsAsync(role);
+                data.PermissionKey = claims
+                                        .Where(c => c.Type == CustomClaimTypes.Permission)
+                                        .Select(c => c.Value)
+                                        .ToList();
             }
-
-            var permissions = await (from rp in _authDbContext.RolePermissions
-                                     join p in _authDbContext.Permissions on rp.PermissionId equals p.Id
-                                     where rp.RoleId == role.Id
-                                     select new ViewRolePermissionDto
-                                     {
-                                         Id = p.Id,
-                                         Category = p.Category ?? "",
-                                         Key = p.Key ?? "",
-                                         Name = p.Name ?? ""
-                                     }).ToListAsync();
-
-            var data = new ViewRoleDto
-            {
-                Id = role.Id,
-                Name = role.Name ?? "",
-                Permissions = permissions
-            };
 
             return data;
         }
+
         public async Task<BaseResponsePagingDto<ViewRoleDto>> FindPaging(FindPagingRoleDto dto)
         {
             _logger.LogInformation($"{nameof(FindPaging)} dto={JsonSerializer.Serialize(dto)}");
-            var query = from r in _roleManager.Roles.AsNoTracking()
-                        select new ViewRoleDto
-                        {
-                            Id = r.Id,
-                            Name = r.Name ?? "",
-                            Permissions = (from rp in _authDbContext.RolePermissions
-                                           join p in _authDbContext.Permissions on rp.PermissionId equals p.Id
-                                           where rp.RoleId == r.Id
-                                           select new ViewRolePermissionDto
-                                           {
-                                               Id = p.Id,
-                                               Category = p.Category ?? "",
-                                               Key = p.Key ?? "",
-                                               Name = p.Name ?? ""
-                                           }).ToList()
-                        };
 
-            var totalCount = await query.CountAsync();
-            var items = await query
-                .OrderBy(x => x.Name)
-                .Paging(dto)
-                .ToListAsync();
+            var query = _roleManager.Roles.AsNoTracking().AsQueryable();
+            var data = await query.OrderBy(x => x.Name)
+                        .Paging(dto)
+                        .ToListAsync();
+
+            var items = _mapper.Map<List<ViewRoleDto>>(data);
+            foreach (var item in items)
+            {
+                var roleClaims = _authDbContext.RoleClaims
+                                    .Where(rc => rc.RoleId == item.Id && rc.ClaimType == CustomClaimTypes.Permission)
+                                    .Select(rc => rc.ClaimValue)
+                                    .ToList();
+                if (roleClaims != null)
+                {
+                    item.PermissionKey = roleClaims!;
+                }
+            }
 
             return new BaseResponsePagingDto<ViewRoleDto>
             {
                 Items = items,
-                TotalItems = totalCount,
+                TotalItems = query.Count(),
             };
         }
+
     }
 }

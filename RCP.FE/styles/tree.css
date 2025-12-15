@@ -1,0 +1,55 @@
+.app-tree-checkbox {
+  user-select: none;
+  min-height: 320px;
+  box-sizing: content-box;
+}
+
+.app-tree-checkbox .tree,
+.app-tree-checkbox .tree-node,
+.app-tree-checkbox .tree-node-group {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.app-tree-checkbox .tree-branch-wrapper,
+.app-tree-checkbox .tree-node__leaf {
+  outline: none;
+}
+
+.app-tree-checkbox .tree-node {
+  cursor: pointer;
+}
+
+.app-tree-checkbox .tree-node .name:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.app-tree-checkbox .tree-node--focused .name {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.app-tree-checkbox .tree-node {
+  display: flex;
+  align-items: center;
+}
+
+.app-tree-checkbox .checkbox-icon {
+  margin: 0 5px;
+  vertical-align: middle;
+}
+
+.app-tree-checkbox button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.app-tree-checkbox .arrow {
+  margin-left: 5px;
+  vertical-align: middle;
+}
+
+.app-tree-checkbox .arrow--open {
+  transform: rotate(90deg);
+}

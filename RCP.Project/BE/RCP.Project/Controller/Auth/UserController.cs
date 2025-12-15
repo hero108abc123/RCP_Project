@@ -92,5 +92,18 @@ namespace RCP.Project.Controller.Auth
             }
         }
 
+        [HttpGet("me")]
+        public async Task<ApiResponse> GetAuthMe()
+        {
+            try
+            {
+                var data = await _userService.GetAuthMe();
+                return new(data);
+            }catch(Exception ex)
+            {
+                return OkException(ex);
+            }
+        }
+
     }
 }

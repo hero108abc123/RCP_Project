@@ -48,14 +48,15 @@ namespace RCP.Project.Attributes
 
                 // Check permission through Permission and RolePermission tables
                 var isPermit = (
-                    from u in dbContext.Users
-                    join userRole in dbContext.UserRoles on u.Id equals userRole.UserId
-                    join role in dbContext.Roles on userRole.RoleId equals role.Id
-                    join rolePermission in dbContext.RolePermissions on role.Id equals rolePermission.RoleId
-                    join permission in dbContext.Permissions on rolePermission.PermissionId equals permission.Id
-                    where u.UserName == username
-                      && permission.Name == Permission
-                    select permission.Name).Any();
+                      from u in dbContext.Users
+                      join userRole in dbContext.UserRoles on u.Id equals userRole.UserId
+                      join role in dbContext.Roles on userRole.RoleId equals role.Id
+                      join roleClaims in dbContext.RoleClaims on role.Id equals roleClaims.RoleId
+                      where u.UserName == username
+                          && roleClaims.ClaimType == CustomClaimTypes.Permission
+                          && roleClaims.ClaimValue == Permission
+                      select roleClaims.ClaimValue).Any();
+
 
                 if (isPermit)
                 {

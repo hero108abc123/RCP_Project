@@ -31,6 +31,7 @@
   <ItemGroup>
     <Folder Include="Log\Logs\" />
     <Folder Include="Log\Archive\" />
+    <Folder Include="Migrations\Cinema\" />
     <Folder Include="Migrations\Phim\" />
   </ItemGroup>
 

@@ -1,4 +1,10 @@
-﻿namespace RCP.Shared.ApplicationService.Interfaces
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace RCP.Shared.ApplicationService.Interfaces
 {
     public interface IFullAudited : ICreatedBy, IModifiedBy, ISoftDeleted
     {
@@ -15,7 +21,7 @@
     {
         public DateTime? CreatedDate { get; set; }
         public string? CreatedBy { get; set; }
-    }
+    } 
 
     public interface IModifiedBy
     {

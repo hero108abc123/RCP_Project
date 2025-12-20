@@ -66,8 +66,7 @@ namespace RCP.Cinema.Dtos.Cinema
         [MaxLength(100)]
         public string? LoaiAnh { get; set; } 
 
-        public bool LaAnhChinh { get; set; } = false;
-
+        public bool LaAnhChinh { get; set; } = false; 
     }
 
     public class ViewPhimVideoCinemaDto

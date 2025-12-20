@@ -241,9 +241,10 @@ if (app.Environment.IsDevelopment())
 }
 app.UseCors(ProgramExtensions.CorsPolicy);
 app.UseHttpsRedirection();
-
-app.UseAuthorization();
 app.UseStaticFiles(); // Cho phép truy cập file trong wwwroot
+app.UseAuthentication();
+app.UseAuthorization();
+
 
 
 app.MapControllers();

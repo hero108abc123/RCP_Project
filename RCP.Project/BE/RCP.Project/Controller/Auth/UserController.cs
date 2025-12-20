@@ -11,7 +11,7 @@ using RCP.Shared.Constant.Constants.Auth;
 
 namespace RCP.Project.Controller.Auth
 {
-    [Route("api/app/user")]
+    [Route("api/app/users")]
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class UserController: BaseController

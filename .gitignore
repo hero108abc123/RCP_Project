@@ -1,0 +1,29 @@
+@"
+# Visual Studio
+.vs/
+.vscode/
+*.slnx.sqlite
+slnx.sqlite
+
+
+# Build results
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+"@ | Out-File -Encoding UTF8 .gitignore

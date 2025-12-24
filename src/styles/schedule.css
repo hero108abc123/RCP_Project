@@ -1,0 +1,46 @@
+.schedule-page {
+  padding: 20px;
+}
+
+.schedule-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.schedule-form input {
+  padding: 8px;
+}
+
+.schedule-form button {
+  padding: 8px 12px;
+  background: #1976d2;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.schedule-table th,
+.schedule-table td {
+  border-bottom: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+.btn-delete {
+  background: #d32f2f;
+  color: white;
+  border: none;
+  padding: 5px 8px;
+  cursor: pointer;
+}
+
+.empty {
+  text-align: center;
+  color: #888;
+}

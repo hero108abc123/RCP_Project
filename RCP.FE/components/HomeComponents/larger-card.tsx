@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, Image } from 'react-native'
 import React from 'react'
+import { Image, StyleSheet, Text, View } from 'react-native'
 
 export default function LargerCard() {
   return (
@@ -11,7 +11,7 @@ export default function LargerCard() {
 
       {/* Layout title */}
       <View>
-        <Text>Larger Card Title</Text>
+        <Text style={styles.textImage}>Larger Card Title</Text>
       </View>
 
     </View>
@@ -21,7 +21,7 @@ export default function LargerCard() {
 const styles = StyleSheet.create({
     bigCardContainer: {
         width: 300,
-        height: 250,
+        height: 200,
         borderRadius: 15,
         marginRight: 15,
         overflow: 'hidden',
@@ -30,5 +30,15 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
         resizeMode: 'cover',
+    },
+    textImage:{
+        position: 'absolute',
+        color: 'white',
+        fontSize: 20,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        zIndex: 3,
+        bottom: 150,
+        right: 80,
     }
 })

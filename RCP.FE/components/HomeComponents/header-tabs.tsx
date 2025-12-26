@@ -1,3 +1,5 @@
+import AllMovies from "@/app/(screen)/all-movie";
+import MyTickets from "@/app/(screen)/my-ticket";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -9,7 +11,6 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { SceneMap, TabView } from "react-native-tab-view";
-import AllMovies from "@/app/(screen)/all-movie";
 
 // ------- Screens -------
 const AllMovie = () => (
@@ -26,7 +27,7 @@ const ForKids = () => (
 
 const MyTicket = () => (
   <View style={styles.scene}>
-    <Text style={{ color: "#fff" }}>My Ticket</Text>
+    <MyTickets/>
   </View>
 );
 

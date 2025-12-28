@@ -46,7 +46,7 @@ export class AppMenu {
                                 label: 'Phim',
                                 visible: this._sharedService.isGranted(PermissionConstants.MenuRapChieuPhim),
                                 heroIcon: 'heroVideoCamera',
-                                routerLink: ['/user-management/role']
+                                routerLink: ['/rcp-management/movie']
                             }
                         ]
                     }
@@ -76,10 +76,10 @@ export class AppMenu {
                 ],
                 visible: this._sharedService.isGranted(PermissionConstants.MenuUserManagement),
             },
-            
-           
-                    
+
+
+
         ];
-  
+
     }
 }

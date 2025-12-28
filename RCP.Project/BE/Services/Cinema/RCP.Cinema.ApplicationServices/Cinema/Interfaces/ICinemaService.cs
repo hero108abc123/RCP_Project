@@ -10,9 +10,10 @@ namespace RCP.Cinema.ApplicationServices.Cinema.Interfaces
 {
     public interface ICinemaService
     {
-        public void Create(CreateCinemaDto dto);
-        public void Update(UpdateCinemaDto dto);
+        public  Task Create(CreateCinemaDto dto);
+        public  Task Update(UpdateCinemaDto dto);
         public BaseResponsePagingDto<ViewCinemaDto> Find(FindPagingDto dto);
+        public ViewCinemaDto FindById(int id);
         public void Delete(int id);
         public void AddPhimToCinemaRoom(AddPhimToCinemaRoomDto dto);
         public void UpdatePhimToCinemaRoom(UpdatePhimToCinemaRoomDto dto);

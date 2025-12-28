@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,8 @@ namespace RCP.Cinema.Dtos.Cinema
         public string Name { get; set; } = String.Empty;
         public string Location { get; set; } = String.Empty;
         public string City { get; set; } = String.Empty;
+        public string District { get; set; } = String.Empty;
         public int SoLuongPhongChieu { get; set; }
+        public IFormFile? FileAnhCinema { get; set; }
     }
 }

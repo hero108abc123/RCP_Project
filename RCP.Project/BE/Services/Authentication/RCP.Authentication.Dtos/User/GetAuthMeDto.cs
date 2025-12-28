@@ -8,27 +8,18 @@ namespace RCP.Authentication.Dtos.User
 {
     public class GetAuthMeDto
     {
-        public Guid Id { get; set; }
-        public string FullName { get; set; } = String.Empty;
-        public string UserName { get; set; } = String.Empty;
-        public string Email { get; set; } = String.Empty;
-        public string PhoneNumber { get; set; } = String.Empty;
-        public DateTime BirthDay { get; set; }
-        public List<GetRoleAuthMeDto> Roles { get; set; } = new List<GetRoleAuthMeDto>();
-    }
+        public string Id { get; set; } = default!;
+        public string UserName { get; set; } = default!;
+        public string Email { get; set; } = default!;
+        public string? PhoneNumber { get; set; }
+        public string? MsAccount { get; set; }
+        public string? FullName { get; set; }
+        public string? PasswordRandom { get; set; }
+        public bool EmailConfirmed { get; set; }
+        public bool PhoneNumberConfirmed { get; set; }
 
-
-    public class GetRoleAuthMeDto
-    {
-        public Guid Id { get; set; }
-        public string Name { get; set; } = String.Empty;
-        public List<GetPermissionAuthMeDto> Permissions { get; set; } = new List<GetPermissionAuthMeDto>();
-    }
-
-    public class GetPermissionAuthMeDto
-    {
-        public string Key { get; set; } = String.Empty;
-        public string Name { get; set; } = String.Empty;
-        public string Category { get; set; } = String.Empty;
+        // Optional: include roles
+        public IList<string> Roles { get; set; } = new List<string>();
+        public IList<string> Permissions { get; set; } = new List<string>();
     }
 }

@@ -13,7 +13,10 @@ using RCP.Authentication.Infrastructure;
 using RCP.Authentication.Infrastructure.Seeder;
 using RCP.Cinema.ApplicationServices.Cinema.Implements;
 using RCP.Cinema.ApplicationServices.Cinema.Interfaces;
+using RCP.Cinema.ApplicationServices.Common;
 using RCP.Cinema.Infrastructure;
+using RCP.Lib.ApplicationService.Cloudinary.Implements;
+using RCP.Lib.ApplicationService.Cloudinary.Interfaces;
 using RCP.Movie.ApplicationServices.PhimModule.Abstracts;
 using RCP.Movie.ApplicationServices.PhimModule.Implements;
 using RCP.Movie.Infrastructure;
@@ -102,6 +105,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole>()
 #region mapper
 // Build mapper configuration
 builder.Services.AddAutoMapper(cfg => { }, typeof(MappingProfile));
+builder.Services.AddAutoMapper(cfg => { }, typeof(MappingCinemaProfile));
 #endregion
 #region auth
 string secretKey = builder.Configuration.GetSection("AuthServer:SecretKey").Value!;
@@ -180,6 +184,7 @@ builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<ICinemaService, CinemaService>();
 builder.Services.AddScoped<IRoomService, RoomService>();
 builder.Services.AddHostedService<thongbao.be.Workers.AuthWorker>();
+builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 #endregion
 // Add services to the container.
 

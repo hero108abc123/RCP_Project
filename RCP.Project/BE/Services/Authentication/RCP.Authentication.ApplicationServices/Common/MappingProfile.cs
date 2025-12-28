@@ -14,6 +14,7 @@ namespace RCP.Authentication.ApplicationService.Common
         public MappingProfile()
         {
             CreateMap<AppUser, ViewUserDto>();
+            CreateMap<AppUser, GetAuthMeDto>();
         }
     }
 }

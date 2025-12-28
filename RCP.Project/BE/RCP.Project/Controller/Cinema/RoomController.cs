@@ -24,7 +24,7 @@ namespace RCP.Project.Controller.Room
 
         [Permission(PermissionKeys.RoomAdd)]
         [HttpPost("")]
-        public ApiResponse Create(CreateRoomDto dto)
+        public ApiResponse Create([FromBody] CreateRoomDto dto)
         {
             try
             {
@@ -39,7 +39,7 @@ namespace RCP.Project.Controller.Room
 
         [Permission(PermissionKeys.RoomView)]
         [HttpGet("")]
-        public ApiResponse Find(FindPagingRoomDto dto)
+        public ApiResponse Find([FromQuery]FindPagingRoomDto dto)
         {
             try
             {
@@ -52,9 +52,24 @@ namespace RCP.Project.Controller.Room
             }
         }
 
+        [Permission(PermissionKeys.RoomView)]
+        [HttpGet("{id}/cinema/{idCinema}")]
+        public ApiResponse FindById([FromRoute]int idCinema, [FromRoute]int id)
+        {
+            try
+            {
+                var data = _roomService.FindById(idCinema,id);
+                return new(data);
+            }
+            catch (Exception ex)
+            {
+                return OkException(ex);
+            }
+        }
+
         [Permission(PermissionKeys.RoomUpdate)]
         [HttpPut("")]
-        public ApiResponse Update(UpdateRoomDto dto)
+        public ApiResponse Update([FromBody]UpdateRoomDto dto)
         {
             try
             {

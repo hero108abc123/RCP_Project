@@ -14,11 +14,12 @@ export const appRoutes: Routes = [
         component: AppLayout,
         canActivate: [authGuard],
         children: [
-            { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+            { path: '', redirectTo: 'rcp-management/rcp', pathMatch: 'full' },
 
             { path: 'user-management', loadChildren: () => import('./app/pages/user-management/user-management.routes') },
             //{ path: 'trao-bang', loadChildren: () => import('./app/pages/trao-bang/trao-bang.routes') },
             { path: 'uikit', loadChildren: () => import('./app/pages/uikit/uikit.routes') },
+            { path: 'rcp-management', loadChildren: () => import('./app/pages/rcp-management/rcp-management.routes') },
             { path: 'documentation', component: Documentation },
             { path: 'pages', loadChildren: () => import('./app/pages/pages.routes') }
         ]

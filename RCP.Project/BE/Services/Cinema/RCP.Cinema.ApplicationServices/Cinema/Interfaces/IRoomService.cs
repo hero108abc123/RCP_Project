@@ -14,5 +14,6 @@ namespace RCP.Cinema.ApplicationServices.Cinema.Interfaces
         public void Update(UpdateRoomDto dto);
         public void Delete(int idCinema,int id);
         public BaseResponsePagingDto<ViewRoomDto> Find(FindPagingRoomDto dto);
+        public ViewRoomDto FindById(int idCinema,int id);
     }
 }

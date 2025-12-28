@@ -17,7 +17,7 @@ export class SharedService {
     }
 
     public isGranted(permission: string) {
-        return this._roles.includes(AuthConstants.SUPER_ADMIN_ROLE) || this._permissions.includes(permission);
+        return this._roles.includes(AuthConstants.ADMIN_ROLE) || this._permissions.includes(permission);
     }
 
     public setPermissions(data: string[]) {

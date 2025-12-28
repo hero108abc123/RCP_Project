@@ -1,0 +1,51 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+        <label for="fileAnhCinema" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Ảnh rạp chiếu</label>
+        <p-fileupload id="fileAnhCinema" mode="basic" (onSelect)="onSelectFile($event)" chooseLabel="Chọn ảnh" chooseIcon="pi pi-image" accept="image/*" maxFileSize="10000000" />
+    </div>
+    <div class="mb-3">
+        <label for="name" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Tên Rạp chiếu <span class="text-red-500">*</span></label>
+        <input pInputText id="name" formControlName="name" placeholder="Nhập tên RCP" class="w-full" />
+        @if (form.get('name')?.hasError('required') && form.get('name')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('name') }}</p-message>
+        }
+    </div>
+    
+
+    <div class="mb-3">
+        <label for="city" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Tỉnh/Thành phố <span class="text-red-500">*</span></label>
+        <p-select id="city" formControlName="city" [options]="provinceOptions" placeholder="Chọn tỉnh/thành phố" [filter]="true" filterPlaceholder="Tìm kiếm" (onChange)="onCityChange($event)" styleClass="w-full" appendTo="body" />
+        @if (form.get('city')?.hasError('required') && form.get('city')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('city') }}</p-message>
+        }
+    </div>
+
+    <div class="mb-3">
+        <label for="location" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Quận/Huyện <span class="text-red-500">*</span></label>
+        <p-select id="location" formControlName="location" [options]="districtOptions" placeholder="Chọn quận/huyện" [filter]="true" filterPlaceholder="Tìm kiếm" styleClass="w-full" appendTo="body" />
+        @if (form.get('location')?.hasError('required') && form.get('location')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('location') }}</p-message>
+        }
+    </div>
+    <div class="mb-3">
+        <label for="district" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Địa chỉ <span class="text-red-500">*</span></label>
+        <input pInputText id="district" formControlName="district" placeholder="Nhập địa chỉ" class="w-full" />
+        @if (form.get('district')?.hasError('required') && form.get('district')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('district') }}</p-message>
+        }
+    </div>
+
+    <div class="mb-3">
+        <label for="soLuongPhongChieu" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Số lượng phòng chiếu <span class="text-red-500">*</span></label>
+        <p-inputNumber id="soLuongPhongChieu" formControlName="soLuongPhongChieu" [min]="1" placeholder="Nhập số lượng" styleClass="w-full" />
+        @if (form.get('soLuongPhongChieu')?.hasError('required') && form.get('soLuongPhongChieu')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('soLuongPhongChieu') }}</p-message>
+        }
+    </div>
+    
+
+    <div class="flex gap-2 mt-4" style="justify-content: flex-end;">
+        <p-button label="Hủy" icon="pi pi-times" severity="secondary" [outlined]="true" (onClick)="onCancel()" />
+        <p-button label="Lưu" icon="pi pi-save" type="submit" [loading]="loading" />
+    </div>
+</form>

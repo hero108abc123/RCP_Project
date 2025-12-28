@@ -122,5 +122,27 @@ namespace RCP.Cinema.ApplicationServices.Cinema.Implements
             _cinemaDbContext.SaveChanges();
 
         }
+
+        public ViewRoomDto FindById (int idCinema,int id)
+        {
+            _logger.LogInformation($"{nameof(FindById)}");
+            var room = _cinemaDbContext.Rooms.FirstOrDefault (r => r.Id == id && r.IdCinema == idCinema && !r.Deleted)
+                ?? throw new UserFriendlyException(ErrorCodes.RoomErrorNotFound);
+
+            var result = new ViewRoomDto
+            {
+                Id = room.Id,
+                Name = room.Name,
+                Description = room.Description,
+                Location = room.Location,
+                TongSoLuongGhe = room.TongSoLuongGhe,
+                SoLuongGheThuong = room.SoLuongGheThuong,
+                SoLuongGheDoi = room.SoLuongGheDoi,
+                SoLuongGheVip = room.SoLuongGheVip,
+
+            };
+
+            return result;
+        }
     }
 }

@@ -53,6 +53,10 @@ namespace RCP.Project.Migrations.Cinema
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("District")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Location")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -69,6 +73,10 @@ namespace RCP.Project.Migrations.Cinema
 
                     b.Property<int>("SoLuongPhongChieu")
                         .HasColumnType("int");
+
+                    b.Property<string>("UrlAnhCinema")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

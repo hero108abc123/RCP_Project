@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace RCP.Cinema.ApplicationServices.Common
 {
-    public class MappingProfile : Profile
+    public class MappingCinemaProfile : Profile
     {
-        public MappingProfile()
+        public MappingCinemaProfile()
         {
             CreateMap<Domain.Cinema,ViewCinemaDto>();
             CreateMap<Domain.Room, ViewRoomDto>();

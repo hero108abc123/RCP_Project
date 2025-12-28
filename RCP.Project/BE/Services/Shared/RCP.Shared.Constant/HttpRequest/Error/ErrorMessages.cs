@@ -35,6 +35,13 @@
 
             //Message mã lỗi cinema
             { ErrorCodes.CinemaErrorNotFound, "Rạp chiếu không tồn tại" },
+
+            //Msg mã lỗi cloudinary
+            { ErrorCodes.CloudinaryUploadFailed, "Upload file lên Cloudinary thất bại" },
+            { ErrorCodes.CloudinaryFileEmpty, "File không được để trống" },
+            { ErrorCodes.CloudinaryInvalidFileType, "Định dạng file không hợp lệ" },
+            { ErrorCodes.CloudinaryFileTooLarge, "Kích thước file vượt quá giới hạn cho phép" },
+            { ErrorCodes.CloudinaryConfigMissing, "Thiếu cấu hình Cloudinary" },
         };
         public static string GetMessage(int code)
         {

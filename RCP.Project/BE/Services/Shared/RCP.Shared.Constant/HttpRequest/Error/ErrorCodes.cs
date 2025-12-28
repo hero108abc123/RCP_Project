@@ -36,6 +36,13 @@
         public const int CinemaErrorNotFound = 1001;
         public const int RoomErrorNotFound = 1002;
 
+        //Mã lỗi Cloudinary 
+        public const int CloudinaryUploadFailed = 2001;
+        public const int CloudinaryFileEmpty = 2002;
+        public const int CloudinaryInvalidFileType = 2003;
+        public const int CloudinaryFileTooLarge = 2004;
+        public const int CloudinaryConfigMissing = 2005;
+
 
     }
 }

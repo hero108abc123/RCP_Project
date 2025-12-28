@@ -8,6 +8,9 @@ using RCP.Cinema.ApplicationServices.Common;
 using RCP.Cinema.Domain;
 using RCP.Cinema.Dtos.Cinema;
 using RCP.Cinema.Infrastructure;
+using RCP.Lib.ApplicationService.Cloudinary.Implements;
+using RCP.Lib.ApplicationService.Cloudinary.Interfaces;
+using RCP.Lib.Domain.Dtos.Cloudinary;
 using RCP.Movie.Infrastructure;
 using RCP.Project.HttpRequest.AppException;
 using RCP.Project.HttpRequest.BaseRequest;
@@ -25,32 +28,49 @@ namespace RCP.Cinema.ApplicationServices.Cinema.Implements
     public class CinemaService: BaseCinemaService, ICinemaService
     {
         private readonly PhimDbContext _phimDbContext;
+        private readonly ICloudinaryService _cloudinaryService;
         public CinemaService(
             CinemaDbContext cinemaDbContext,
             PhimDbContext phimDbContext,
             ILogger<CinemaService> logger,
             IHttpContextAccessor httpContextAccessor,
+            ICloudinaryService cloudinaryService,
             IMapper mapper)
             : base(cinemaDbContext, logger, httpContextAccessor, mapper)
         {
-            phimDbContext = _phimDbContext;
+            _phimDbContext = phimDbContext ;
+            _cloudinaryService = cloudinaryService;
         }
 
 
 
-        public void Create(CreateCinemaDto dto)
+        public async Task Create(CreateCinemaDto dto)
         {
             _logger.LogInformation($"{nameof(Create)} dto = {JsonSerializer.Serialize(dto)}");
 
             var vietNamNow = GetVietnamTime();
             var currentUserId = getCurrentUserId();
 
+            string urlAnhCinema = string.Empty;
+
+            if (dto.FileAnhCinema != null)
+            {
+                var uploadResult = await _cloudinaryService.UploadImageAsync(new UploadFileDto
+                {
+                    File = dto.FileAnhCinema,
+                    Folder = "cinemas"
+                });
+                urlAnhCinema = uploadResult.SecureUrl;
+            }
+
             var cinema = new Domain.Cinema
             {
                 Name = dto.Name,
                 Location = dto.Location,
                 City = dto.City,
+                District = dto.District,
                 SoLuongPhongChieu = dto.SoLuongPhongChieu,
+                UrlAnhCinema = urlAnhCinema,
                 CreatedBy = currentUserId,
                 CreatedDate = vietNamNow,
             };
@@ -59,11 +79,23 @@ namespace RCP.Cinema.ApplicationServices.Cinema.Implements
             _cinemaDbContext.SaveChanges();
         }
 
-        public void Update(UpdateCinemaDto dto)
+
+        public async Task Update(UpdateCinemaDto dto)
         {
             _logger.LogInformation($"{nameof(Update)}  dto = {JsonSerializer.Serialize(dto)}");
             var currentUserId = getCurrentUserId();
             var vietNamNow = GetVietnamTime();
+            string urlAnhCinema = string.Empty;
+
+            if (dto.FileAnhCinema != null)
+            {
+                var uploadResult = await _cloudinaryService.UploadImageAsync(new UploadFileDto
+                {
+                    File = dto.FileAnhCinema,
+                    Folder = "cinemas"
+                });
+                urlAnhCinema = uploadResult.SecureUrl;
+            }
 
             var cinema = _cinemaDbContext.Cinemas.FirstOrDefault(x => x.Id == dto.Id && !x.Deleted)
                 ?? throw new UserFriendlyException(ErrorCodes.CinemaErrorNotFound);
@@ -74,6 +106,8 @@ namespace RCP.Cinema.ApplicationServices.Cinema.Implements
             cinema.SoLuongPhongChieu = dto.SoLuongPhongChieu;
             cinema.ModifiedBy = currentUserId;
             cinema.ModifiedDate = vietNamNow;
+            cinema.UrlAnhCinema = urlAnhCinema;
+            cinema.District = dto.District;
 
             _cinemaDbContext.Cinemas.Update(cinema);
             _cinemaDbContext.SaveChanges();
@@ -99,6 +133,26 @@ namespace RCP.Cinema.ApplicationServices.Cinema.Implements
                 TotalItems = query.Count()
             };
             return response;
+        }
+
+        public ViewCinemaDto FindById (int id)
+        {
+            _logger.LogInformation($"{nameof(FindById)} ");
+            var query = _cinemaDbContext.Cinemas.FirstOrDefault(x => x.Id == id && !x.Deleted)
+                ?? throw new UserFriendlyException(ErrorCodes.CinemaErrorNotFound);
+
+            var cinema = new ViewCinemaDto
+            {
+                Id = query.Id,
+                Name = query.Name,
+                Location = query.Location,
+                City = query.City,
+                District = query.District,
+                SoLuongPhongChieu = query.SoLuongPhongChieu,
+                UrlAnhCinema = query.UrlAnhCinema,
+            };
+
+            return cinema;
         }
 
         public void Delete(int id)

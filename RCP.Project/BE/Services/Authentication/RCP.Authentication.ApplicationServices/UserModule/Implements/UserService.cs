@@ -169,74 +169,25 @@ namespace RCP.Authentication.ApplicationService.UserModule.Implements
         public async Task<GetAuthMeDto> GetAuthMe()
         {
             _logger.LogInformation($"{nameof(GetAuthMe)}");
-            var currentUserId = getCurrentUserId();
+            var userId = getCurrentUserId();
 
-            var currentUser = await _authDbContext.Users.FirstOrDefaultAsync(x => x.Id == currentUserId && !x.Deleted)
+            var data = await _userManager.FindByIdAsync(userId)
                 ?? throw new UserFriendlyException(ErrorCodes.AuthErrorUserNotFound);
+            var user = _mapper.Map<GetAuthMeDto>(data);
 
-            var roles = await _userManager.GetRolesAsync(currentUser);
+            var roles = await _userManager.GetRolesAsync(data);
+            user.Roles = roles;
 
-            var result = new GetAuthMeDto
-            {
-                Id = Guid.Parse(currentUser.Id),
-                FullName = currentUser.FullName,
-                UserName = currentUser.UserName,
-                Email = currentUser.Email,
-                PhoneNumber = currentUser.PhoneNumber,
-                BirthDay = currentUser.BirthDay,
-                Roles = new List<GetRoleAuthMeDto>()
-            };
+            var permissions = (from u in _authDbContext.Users
+                               join userRole in _authDbContext.UserRoles on u.Id equals userRole.UserId
+                               join role in _authDbContext.Roles on userRole.RoleId equals role.Id
+                               join roleClaims in _authDbContext.RoleClaims on role.Id equals roleClaims.RoleId
+                               where u.Id == userId
+                                 && roleClaims.ClaimType == CustomClaimTypes.Permission
+                               select roleClaims.ClaimValue).ToList();
+            user.Permissions = permissions;
 
-
-            foreach (var roleName in roles)
-            {
-                var role = await _roleManager.FindByNameAsync(roleName);
-                if (role != null)
-                {
-
-                    var permissions = await _authDbContext.RoleClaims
-                        .Where(rc => rc.RoleId == role.Id && rc.ClaimType == CustomClaimTypes.Permission)
-                        .Select(rc => rc.ClaimValue)
-                        .ToListAsync();
-
-                    var roleDto = new GetRoleAuthMeDto
-                    {
-                        Id = Guid.Parse(role.Id),
-                        Name = role.Name,
-                        Permissions = new List<GetPermissionAuthMeDto>()
-                    };
-
-                    foreach (var permissionKey in permissions)
-                    {
-                        var permissionInfo = PermissionKeys.All
-                            .FirstOrDefault(p => p.Key == permissionKey);
-
-                        if (permissionInfo != default)
-                        {
-                            roleDto.Permissions.Add(new GetPermissionAuthMeDto
-                            {
-                                Key = permissionInfo.Key,
-                                Name = permissionInfo.Name,
-                                Category = permissionInfo.Category
-                            });
-                        }
-                        else
-                        {
-
-                            roleDto.Permissions.Add(new GetPermissionAuthMeDto
-                            {
-                                Key = permissionKey,
-                                Name = permissionKey,
-                                Category = "Other"
-                            });
-                        }
-                    }
-
-                    result.Roles.Add(roleDto);
-                }
-            }
-
-            return result;
+            return user;
         }
 
         public bool IsValidEmail(string email)

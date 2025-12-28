@@ -26,10 +26,12 @@ namespace RCP.Cinema.Domain
         public string Name { get; set; } = String.Empty;
         //Vị trí
         public string Location { get; set; } = String.Empty;
-        //public string District { get; set; } = String.Empty;
+        public string District { get; set; } = String.Empty;
         public string City { get; set; } = String.Empty;
         public int SoLuongPhongChieu { get; set; }
         //public string ViTriPhongChieu { get; set; } = String.Empty ;
+
+        public string UrlAnhCinema { get; set; }= string.Empty;
         public string? CreatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }
         public string? ModifiedBy { get; set; }

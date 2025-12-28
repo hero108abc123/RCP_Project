@@ -11,7 +11,7 @@ export const permissionGuard: CanActivateFn = (route, state) => {
 
     const requiredPermission = route.data['permission'] as string;
 
-    if (_sharedService.roles.includes(AuthConstants.SUPER_ADMIN_ROLE)) {
+    if (_sharedService.roles.includes(AuthConstants.ADMIN_ROLE)) {
         return true;
     }
     if (_sharedService.permissions?.includes(requiredPermission)) {

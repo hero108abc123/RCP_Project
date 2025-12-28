@@ -25,11 +25,11 @@ namespace RCP.Project.Controller.Cinema
 
         [Permission(PermissionKeys.CinemaAdd)]
         [HttpPost("")]
-        public ApiResponse Create([FromBody]CreateCinemaDto dto)
+        public async Task<ApiResponse> Create([FromForm]CreateCinemaDto dto)
         {
             try
             {
-                _cinemaService.Create(dto);
+                await _cinemaService.Create(dto);
                 return new();
             }
             catch (Exception ex)
@@ -40,7 +40,7 @@ namespace RCP.Project.Controller.Cinema
 
         [Permission(PermissionKeys.CinemaView)]
         [HttpGet("")]
-        public ApiResponse Find([FromBody] FindPagingDto dto)
+        public ApiResponse Find([FromQuery] FindPagingDto dto)
         {
             try
             {
@@ -53,19 +53,36 @@ namespace RCP.Project.Controller.Cinema
             }
         }
 
-        [Permission(PermissionKeys.CinemaUpdate)]
-        [HttpPut("")]
-        public ApiResponse Update([FromBody] UpdateCinemaDto dto)
+        [Permission(PermissionKeys.CinemaView)]
+        [HttpGet("{id}")]
+        public ApiResponse FindById([FromRoute] int id)
         {
             try
             {
-                _cinemaService.Update(dto);
+                var data = _cinemaService.FindById(id);
+                return new(data);
+            }
+            catch (Exception ex)
+            {
+                return OkException(ex);
+            }
+        }
+
+        [Permission(PermissionKeys.CinemaUpdate)]
+        [HttpPut("")]
+        public async Task<ApiResponse> Update([FromForm] UpdateCinemaDto dto)
+        {
+            try
+            {
+                await _cinemaService.Update(dto);
                 return new();
             }catch(Exception ex)
             {
                 return OkException(ex);
             }
         }
+
+
 
         [Permission(PermissionKeys.CinemaDelete)]
         [HttpDelete("{id}")]

@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { View, useWindowDimensions } from 'react-native';
 import { TabView, SceneMap } from 'react-native-tab-view';
+import SapChieu from '../(screen)/sap-chieu';
+import DangChieu from '../(screen)/dang-chieu';
 
 const renderScene = SceneMap({
-  sapchieu: SapChieuRoute,
-  dangchieu: DangChieuRoute,
+  sapchieu: SapChieu,
+  dangchieu: DangChieu,
 });
 
 const routes = [

@@ -1,29 +1,26 @@
-import { View } from 'lucide-react';
 import * as React from 'react';
-import { BottomNavigation, Text } from 'react-native-paper';
+import { Text } from 'react-native';
+import { BottomNavigation } from 'react-native-paper';
+import MovieSchedule from '../(screen)/moive-schedule';
 
+const MovieRoute = () => <MovieSchedule />;
+const CinemaRoute = () => <Text>Cinema</Text>;
+const VoucherRoute = () => <Text>Voucher</Text>;
+const OtherRoute = () => <Text>Other</Text>;
 
-
-const MovieScheduleRoute = () => <View> <MovieScheduleRoute /> </View>;
-
-const CinameScheduleRoute = () => <Text>Albums</Text>;
-
-const VoucherRoute = () => <Text>Recents</Text>;
-
-const OtherRoute = () => <Text>Notifications</Text>;
-
-const MyComponent = () => {
+export default function BottomBar() {
   const [index, setIndex] = React.useState(0);
+
   const [routes] = React.useState([
-    { key: 'movie', title: 'movie', focusedIcon: 'movie-filter', unfocusedIcon: 'movie-filter-outline'},
-    { key: 'ciname', title: 'ciname', focusedIcon: 'ticket-confirmation', unfocusedIcon: 'ticket-confirmation-outline' },
-    { key: 'voucher', title: 'voucher', focusedIcon: 'ticket-percent', unfocusedIcon: 'ticket-percent-outline' },
-    { key: 'other', title: 'other', focusedIcon: 'projector-screen', unfocusedIcon: 'projector-screen-outline' },
+    { key: 'movie', title: 'Phim', focusedIcon: 'movie' },
+    { key: 'cinema', title: 'Rạp', focusedIcon: 'theater' },
+    { key: 'voucher', title: 'Voucher', focusedIcon: 'ticket-percent' },
+    { key: 'other', title: 'Khác', focusedIcon: 'dots-grid' },
   ]);
 
   const renderScene = BottomNavigation.SceneMap({
-    movie: MovieScheduleRoute,
-    ciname: CinameScheduleRoute,
+    movie: MovieRoute,
+    cinema: CinemaRoute,
     voucher: VoucherRoute,
     other: OtherRoute,
   });
@@ -35,6 +32,4 @@ const MyComponent = () => {
       renderScene={renderScene}
     />
   );
-};
-
-export default MyComponent;
+}

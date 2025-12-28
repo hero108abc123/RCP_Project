@@ -126,7 +126,7 @@ function Login() {
             onPress={() => {
               try {
                 console.log("🔵 Bắt đầu điều hướng...");
-                router.replace('/(screen)/home');
+                router.replace('/(bar)/bottom-bar');
                 console.log("✅ Điều hướng thành công");
               } catch (error) {
                 console.error("❌ Lỗi điều hướng:", error);

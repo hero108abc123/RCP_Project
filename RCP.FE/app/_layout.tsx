@@ -1,15 +1,9 @@
 import { Providers } from '@/redux/providers'
-import { clearUser, setUser } from '@/redux/slices/userSlice'
-import { AppDispatch } from '@/redux/store'
 import '@/styles/global.css'
-import api from '@/utils/axios'
-import { Slot, useRouter, useSegments } from 'expo-router'
-import * as SecureStore from 'expo-secure-store'
-import { useEffect, useState } from 'react'
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
+import { Slot } from 'expo-router'
+import { StyleSheet } from 'react-native'
 import Toast from 'react-native-toast-message'
 import 'react-native-toast-message/lib/src/Toast'
-import { useDispatch } from 'react-redux'
 
 function RootLayoutNav() {
 //   const router = useRouter()

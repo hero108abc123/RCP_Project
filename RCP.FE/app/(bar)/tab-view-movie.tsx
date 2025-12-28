@@ -1,20 +1,22 @@
-import * as React from 'react';
-import { View, useWindowDimensions } from 'react-native';
-import { TabView, SceneMap } from 'react-native-tab-view';
+import * as React from "react";
+import { useWindowDimensions } from "react-native";
+import { SceneMap, TabView } from "react-native-tab-view";
+
+import DangChieu from "../(screen)/dang-chieu";
+import SapChieu from "../(screen)/sap-chieu";
 
 const renderScene = SceneMap({
-  sapchieu: SapChieuRoute,
-  dangchieu: DangChieuRoute,
+  sapchieu: SapChieu,
+  dangchieu: DangChieu,
 });
 
-const routes = [
-  { key: 'sapchieu', title: 'Sap Chieu' },
-  { key: 'dangchieu', title: 'Dang Chieu' },
-];
-
-export default function TabViewExample() {
+export default function TabViewMovie() {
   const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(0);
+  const [routes] = React.useState([
+    { key: "sapchieu", title: "Sắp chiếu" },
+    { key: "dangchieu", title: "Đang chiếu" },
+  ]);
 
   return (
     <TabView

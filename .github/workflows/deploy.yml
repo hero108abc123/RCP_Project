@@ -1,0 +1,30 @@
+name: Deploy RCP Project to Staging
+on:
+  push:
+    branches:
+      - cuong
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, linux, x64]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          clean: false  # Prevents deletion of untracked files
+      
+          
+      - name: Copy Code
+        run: |
+          mkdir -p ~/RCP_Project/code
+          cp -R ./* ~/RCP_Project/code
+
+      - name: Deploy code
+        run: |
+          cd ~/RCP_Project/code
+          docker compose -f ./deploy/docker-compose.yml up -d --build
+      
+      - name: Clean dangling data
+        run: |
+          docker system prune -f

@@ -1,12 +1,14 @@
 import * as React from 'react';
-import { Text } from 'react-native';
 import { BottomNavigation } from 'react-native-paper';
+import CinemaScreen from '../(screen)/cinema/cinema';
 import MovieSchedule from '../(screen)/moive-schedule';
+import OtherScreen from '../(screen)/other/other';
+import VoucherScreen from '../(screen)/voucher/voucher';
 
 const MovieRoute = () => <MovieSchedule />;
-const CinemaRoute = () => <Text>Cinema</Text>;
-const VoucherRoute = () => <Text>Voucher</Text>;
-const OtherRoute = () => <Text>Other</Text>;
+const CinemaRoute = () => <CinemaScreen />;
+const VoucherRoute = () => <VoucherScreen />;
+const OtherRoute = () => <OtherScreen />;
 
 export default function BottomBar() {
   const [index, setIndex] = React.useState(0);
@@ -30,6 +32,9 @@ export default function BottomBar() {
       navigationState={{ index, routes }}
       onIndexChange={setIndex}
       renderScene={renderScene}
+      // barStyle={{ backgroundColor: '#09131f' }}
+      // activeColor="#4DA3FF"
+      // inactiveColor="#9AA7BD"
     />
   );
 }

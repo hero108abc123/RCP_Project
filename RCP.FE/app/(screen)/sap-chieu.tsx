@@ -1,9 +1,11 @@
-import { Text, View } from "react-native";
+import React from 'react';
+import { View } from 'react-native';
+import MovieGrid from '../../components/HomeComponents/movie-grid';
 
 export default function SapChieu() {
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>🎬 Phim sắp chiếu</Text>
+    <View>
+      <MovieGrid/>
     </View>
   );
 }

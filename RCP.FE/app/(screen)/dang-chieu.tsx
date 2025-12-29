@@ -1,9 +1,13 @@
-import { Text, View } from "react-native";
+import React from 'react'
+import { StyleSheet, View } from 'react-native'
+import MovieGrid from '../../components/HomeComponents/movie-grid'
 
 export default function DangChieu() {
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>🔥 Phim đang chiếu</Text>
+    <View>
+      <MovieGrid/>
     </View>
-  );
+  )
 }
+
+const styles = StyleSheet.create({})

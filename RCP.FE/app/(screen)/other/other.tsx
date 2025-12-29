@@ -24,8 +24,6 @@ export default function OtherScreen() {
         <Item icon="account-star" label="Thành viên Beta" />
         <Item icon="bell" label="Thông báo" />
         <Item icon="briefcase" label="Tuyển dụng" />
-
-        
         <Item
           icon="cog"
           label="Cài đặt"

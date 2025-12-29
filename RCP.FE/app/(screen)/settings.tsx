@@ -21,7 +21,7 @@ export default function SettingsScreen() {
         <SettingItem
           icon="help-circle-outline"
           title="Hỏi đáp"
-          // onPress={() => router.push('/faq')}
+          onPress={() => router.push('../other/faq')}
         />
         <SettingItem
           icon="file-document-outline"
@@ -31,7 +31,7 @@ export default function SettingsScreen() {
         <SettingItem
           icon="shield-check-outline"
           title="Chính sách thanh toán & bảo mật"
-          // onPress={() => router.push('/policy')}
+          onPress={() => router.push('/policy')}
         />
       </View>
     </View>

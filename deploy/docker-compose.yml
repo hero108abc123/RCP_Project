@@ -1,0 +1,33 @@
+services:
+  rcp.fe.web:
+    image: rcp-fe-web:${APP_ENV:-production}
+    container_name: rcp-fe-web-c-${APP_ENV:-production}
+    build:
+      context: ../RCP.Fe.Web
+      dockerfile: Dockerfile
+      args:
+        APP_ENV: ${APP_FE_ENV:-production}
+    ports:
+      - "4200:80"
+    restart: unless-stopped
+    networks:
+      - rcp-network
+
+  rcp.be:
+    image: rcp-project:${APP_ENV:-production}
+    container_name: rcp-project-c-${APP_ENV:-production}
+    build:
+      context: ../RCP.Project/BE
+      dockerfile: RCP.Project/Dockerfile
+    ports:
+      - "8100:8080"
+    restart: unless-stopped
+    environment:
+      - DOTNET_ENVIRONMENT=${APP_BE_ENV:-Production}
+      - ASPNETCORE_URLS=http://+:8080
+    networks:
+      - rcp-network
+
+networks:
+  rcp-network:
+    driver: bridge

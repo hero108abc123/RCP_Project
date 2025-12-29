@@ -61,7 +61,7 @@ namespace RCP.Movie.ApplicationServices.PhimModule.Implements
         {
             _logger.LogInformation($"{nameof(CreatePhim)} => dto = {JsonSerializer.Serialize(dto)}");
 
-            var userId = GetCurrentUserId();
+            var userId = getCurrentUserId();
             var phim = new Phim
             {
                 TenPhim = dto.TenPhim ?? "",
@@ -140,7 +140,7 @@ namespace RCP.Movie.ApplicationServices.PhimModule.Implements
 
         public ViewPhimDto UpdatePhim(int id, UpdatePhimDto dto)
         {
-            var userId = GetCurrentUserId();
+            var userId = getCurrentUserId();
             var phim = _phimDbContext.Phims.Include(x => x.AnhList).Include(x => x.VideoList)
                 .FirstOrDefault(x => x.Id == id && !x.Deleted);
 
@@ -230,7 +230,7 @@ namespace RCP.Movie.ApplicationServices.PhimModule.Implements
 
         public ViewPhimDto DeletePhim(int id)
         {
-            var userId = GetCurrentUserId();
+            var userId = getCurrentUserId();
             var phim = _phimDbContext.Phims.FirstOrDefault(x => x.Id == id && !x.Deleted);
             if (phim == null)
                 throw new UserFriendlyException(ErrorCodes.NotFound);
@@ -273,19 +273,7 @@ namespace RCP.Movie.ApplicationServices.PhimModule.Implements
             return $"/uploads/{folder}/{fileName}";
         }
 
-        private string? GetCurrentUserId()
-        {
-            var user = _httpContextAccessor.HttpContext?.User;
-            if (user == null || !user.Identity?.IsAuthenticated == true)
-                return null;
 
-            // Thử lấy theo claim "sub" (chuẩn JWT) hoặc "userId"
-            var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                      ?? user.FindFirst("sub")?.Value
-                      ?? user.FindFirst("userId")?.Value;
-
-            return userId;
-        }
 
 
         public List<GetDropDownPhimDto> GetDropDown()

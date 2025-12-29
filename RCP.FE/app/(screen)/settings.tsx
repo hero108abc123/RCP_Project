@@ -10,7 +10,7 @@ export default function SettingsScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: '#F5F5F5' }}>
       <Appbar.Header style={{ backgroundColor: '#0B4A8B' }}>
-        <Appbar.BackAction onPress={() => router.back()} />
+        <Appbar.BackAction color="#FFFFFF"  onPress={() => router.back()} />
         <Appbar.Content
           title="CÀI ĐẶT"
           titleStyle={{ color: '#fff', fontWeight: '700' }}

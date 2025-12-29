@@ -20,7 +20,7 @@ export default function OtherScreen() {
       {/* Grid */}
       <View style={styles.container}>
         <Item icon="ticket-percent" label="Voucher miễn phí" />
-        <Item icon="movie-open" label="Rạp phim" />
+        <Item icon="movie-open" label="Rạp phim" onPress={() => router.push('/(screen)/cinema/cinema')}/>
         <Item icon="account-star" label="Thành viên Beta" />
         <Item icon="bell" label="Thông báo" />
         <Item icon="briefcase" label="Tuyển dụng" />

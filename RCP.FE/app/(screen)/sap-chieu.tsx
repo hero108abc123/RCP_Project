@@ -1,13 +1,11 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import MovieGrid from '../../components/HomeComponents/movie-grid'
+import React from 'react';
+import { View } from 'react-native';
+import MovieGrid from '../../components/HomeComponents/movie-grid';
 
 export default function SapChieu() {
   return (
     <View>
       <MovieGrid/>
     </View>
-  )
+  );
 }
-
-const styles = StyleSheet.create({})

@@ -1,34 +1,31 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import React from 'react';
-import { ImageBackground, StyleSheet, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { Appbar } from 'react-native-paper';
 
-
 export default function Seat() {
-
-    const router = useRouter();
-    const { movie } = useLocalSearchParams();
-    const data = JSON.parse(movie as string);
+  const router = useRouter();
+  const { movieId, cinemaName, date, time } = useLocalSearchParams();
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Appbar.Header style={{ backgroundColor: '#0B4A8B' }}>
-        <Appbar.Content title="ĐẶT VÉ XEM PHIM" titleStyle={{ color: '#fff', fontWeight: '700' }} />
+        <Appbar.BackAction onPress={() => router.back()} />
+        <Appbar.Content
+          title="ĐẶT VÉ XEM PHIM"
+          titleStyle={{ color: '#fff', fontWeight: '700' }}
+        />
       </Appbar.Header>
 
-      <ImageBackground 
-        source={{ uri: data.poster }}
-        style={styles.banner}
-        // blurRadius={2}
-        />
-    </View>
-  )
-}
+      <View style={{ padding: 16 }}>
+        <Text>🎬 Movie ID: {movieId}</Text>
+        <Text>🏢 Rạp: {cinemaName}</Text>
+        <Text>📅 Ngày: {date}</Text>
+        <Text>⏰ Giờ chiếu: {time}</Text>
+      </View>
 
-const styles = StyleSheet.create({
-    banner: {
-        height: 200,
-        justifyContent: 'flex-end',
-        padding: 16,
-    },
-})
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>👉 MÀN CHỌN GHẾ</Text>
+      </View>
+    </View>
+  );
+}

@@ -3,19 +3,47 @@ import { MaterialIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-export default function CinemaItem({ cinema, movieId, date }: any) {
+type ShowTime = {
+  time: string;
+  seat: number;
+};
+
+type Cinema = {
+  name: string;
+  showtimes: {
+    [key: string]: ShowTime[];
+  };
+};
+
+type Props = {
+  cinema: Cinema;
+  movieId: string;
+  date: string;
+};
+
+export default function CinemaItem({ cinema, movieId, date }: Props) {
   const [open, setOpen] = useState(false);
+
+  // Validate data
+  if (!cinema || !cinema.name || !cinema.showtimes) {
+    console.warn('Invalid cinema data:', cinema);
+    return null;
+  }
 
   return (
     <View style={styles.card}>
       <TouchableOpacity
         style={styles.header}
         onPress={() => setOpen(!open)}
+        activeOpacity={0.7}
       >
-        <Text style={styles.name}>{cinema.name}</Text>
+        <View style={styles.headerLeft}>
+          <Text style={styles.name}>{cinema.name}</Text>
+        </View>
         <MaterialIcons
           name={open ? 'keyboard-arrow-up' : 'keyboard-arrow-down'}
-          size={22}
+          size={24}
+          color="#666"
         />
       </TouchableOpacity>
 
@@ -43,28 +71,33 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     borderRadius: 12,
     overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
   },
   header: {
-    padding: 14,
+    padding: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  headerLeft: {
+    flex: 1,
   },
   name: {
     fontWeight: '700',
-    fontSize: 15,
-  },
-  distance: {
-    color: '#1976D2',
-    marginRight: 6,
+    fontSize: 16,
+    color: '#333',
   },
   body: {
-    paddingHorizontal: 14,
-    paddingBottom: 14,
-  },
-  note: {
-    marginTop: 8,
-    fontSize: 12,
-    color: '#757575',
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+    backgroundColor: '#FAFAFA',
   },
 });

@@ -33,6 +33,10 @@ const renderTabBar = (props: any) => (
 export default function TabViewScene() {
   const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(0);
+  const [routes] = React.useState([
+    { key: "sapchieu", title: "Sắp chiếu" },
+    { key: "dangchieu", title: "Đang chiếu" },
+  ]);
 
   return (
     <TabView

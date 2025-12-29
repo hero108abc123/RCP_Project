@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router'
 import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Appbar, Avatar } from 'react-native-paper'
@@ -7,6 +8,7 @@ import TabViewScene from '../(bar)/tab-view-movie'
 
 
 export default function MovieSchedule() {
+  const router = useRouter() 
   return (
     <SafeAreaView style={{ flex: 1}}> 
       <View>
@@ -18,7 +20,7 @@ export default function MovieSchedule() {
           borderBottomColor: '#E5E5E5',
         }}
         >
-          <TouchableOpacity onPress={() => console.log('Go to profile')}>
+          <TouchableOpacity onPress={() => router.push('/profile')}>
             <Avatar.Text
               size={36}
               label="T"

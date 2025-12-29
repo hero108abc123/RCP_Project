@@ -20,7 +20,7 @@ FROM nginx:stable-alpine
 RUN rm -rf /usr/share/nginx/html/*
 
 # Copy Angular build output
-COPY --from=build /app/dist/ /usr/share/nginx/html
+COPY --from=build /app/dist/sakai-ng/browser /usr/share/nginx/html
 
 # Optional: custom nginx.conf for SPA support
 COPY nginx.conf /etc/nginx/conf.d/default.conf

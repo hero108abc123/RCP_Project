@@ -4,7 +4,7 @@ import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react
 import { Appbar } from 'react-native-paper';
 
 import CinemaList from '@/components/HomeComponents/cinema-list';
-import DateSelector from '@/components/HomeComponents/date-selector';
+import DateSelector from '@/components/bookingComponents/date-selector';
 
 type MovieParams = {
   id: string;
@@ -61,12 +61,12 @@ export default function MovieBooking() {
           <Text style={styles.detailText}>Chi tiết phim</Text>
         </TouchableOpacity>
       </ImageBackground>
-
-      {/* ---------- Chọn ngày ---------- */}
-      <DateSelector />
-
-      {/* ---------- Danh sách rạp ---------- */}
-      <CinemaList />
+      
+      <View >
+        <DateSelector/>
+        <Text style={{marginLeft: 10, fontSize: 16, fontWeight: '800'}}>Chọn rạp xem</Text>
+        <CinemaList />
+      </View>
     </View>
   );
 }

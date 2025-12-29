@@ -6,7 +6,6 @@ export default function ScreenLayout() {
             <Stack.Screen name="bottom-bar" />
             <Stack.Screen name="movie-schedule" />
             <Stack.Screen name="home" />
-            <Stack.Screen name="profile" /> 
         </Stack>
     )
 }

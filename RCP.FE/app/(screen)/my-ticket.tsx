@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
-export default function MyTicket() {
+export default function MyTickets() {
   return (
     <View>
       <Text>Myticket</Text>

@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using RCP.Authentication.Domain;
+using RCP.Authentication.Dtos.Role;
 using RCP.Authentication.Dtos.User;
 using System;
 using System.Collections.Generic;
@@ -15,6 +17,7 @@ namespace RCP.Authentication.ApplicationService.Common
         {
             CreateMap<AppUser, ViewUserDto>();
             CreateMap<AppUser, GetAuthMeDto>();
+            CreateMap<IdentityRole, ViewRoleDto>();
         }
     }
 }

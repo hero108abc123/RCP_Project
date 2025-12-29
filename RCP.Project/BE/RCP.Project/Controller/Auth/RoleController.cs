@@ -10,7 +10,7 @@ using RCP.Shared.Constant.Constants.Auth;
 
 namespace RCP.Project.Controller.Auth
 {
-    [Route("api/app/role")]
+    [Route("api/app/roles")]
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class RoleController : BaseController

@@ -19,7 +19,7 @@ export interface IViewUser extends IViewRowUser {
 }
 
 export interface ICreateUser {
-  userName?: string,
+  userName?: string
   email?: string,
   phoneNumber?: string,
   password?: string,

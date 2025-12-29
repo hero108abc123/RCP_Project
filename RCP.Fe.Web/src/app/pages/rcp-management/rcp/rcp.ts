@@ -90,8 +90,15 @@ export class RCP extends BaseComponent {
         this.getData();
     }
     onCustomEmit(data: { type: string; data: IViewRCP; field?: string }) {
-       
-    
+        if (data.type === TblActionTypes.detail) {
+            this.navigateToDetail(data.data); 
+        } else if (data.type === TblActionTypes.delete) {
+            this.onDelete(data.data);
+        } else if (data.type === TblActionTypes.update) {
+            this.onOpenUpdate(data.data);
+        } else if (data.type === 'cellClick' && data.field === 'name') {
+            this.navigateToDetail(data.data); 
+        }
     }
 
     onOpenCreate(){

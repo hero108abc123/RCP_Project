@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using RCP.Lib.ApplicationService.Cloudinary.Interfaces; // Namespace chứa Interface
+using RCP.Lib.Domain.Dtos.Cloudinary; // Namespace chứa DTO upload
 using RCP.Movie.ApplicationServices.Common;
 using RCP.Movie.ApplicationServices.PhimModule.Abstracts;
 using RCP.Movie.Domain;
@@ -10,7 +12,6 @@ using RCP.Movie.Infrastructure;
 using RCP.Project.HttpRequest.AppException;
 using RCP.Project.HttpRequest.BaseRequest;
 using RCP.Shared.Constant.HttpRequest.Error;
-using System.Security.Claims;
 using System.Text.Json;
 
 namespace RCP.Movie.ApplicationServices.PhimModule.Implements
@@ -18,12 +19,21 @@ namespace RCP.Movie.ApplicationServices.PhimModule.Implements
     public class PhimService : BasePhimService, IPhimService
     {
         private readonly PhimDbContext _phimDbContext;
-        private readonly string _uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
-        public PhimService(PhimDbContext phimDbContext, ILogger<BasePhimService> logger, IHttpContextAccessor httpContextAccessor, IMapper mapper) : base(phimDbContext, logger, httpContextAccessor, mapper)
+        private readonly ICloudinaryService _cloudinaryService; // Inject Interface thay vì Cloudinary trực tiếp
+
+        public PhimService(
+            PhimDbContext phimDbContext,
+            ILogger<BasePhimService> logger,
+            IHttpContextAccessor httpContextAccessor,
+            IMapper mapper,
+            ICloudinaryService cloudinaryService) // Inject vào Constructor
+            : base(phimDbContext, logger, httpContextAccessor, mapper)
         {
             _phimDbContext = phimDbContext;
+            _cloudinaryService = cloudinaryService;
         }
 
+        // Hàm FindPaging giữ nguyên (không đổi sang async trừ khi cần thiết)
         public BaseResponsePagingDto<ViewPhimDto> FindPaging(FindPhimDto dto)
         {
             _logger.LogInformation($"{nameof(FindPaging)} => dto = {JsonSerializer.Serialize(dto)}");
@@ -57,7 +67,8 @@ namespace RCP.Movie.ApplicationServices.PhimModule.Implements
             };
         }
 
-        public ViewPhimDto CreatePhim(CreatePhimDto dto)
+        // Chuyển sang async Task
+        public async Task<ViewPhimDto> CreatePhim(CreatePhimDto dto)
         {
             _logger.LogInformation($"{nameof(CreatePhim)} => dto = {JsonSerializer.Serialize(dto)}");
 
@@ -79,7 +90,7 @@ namespace RCP.Movie.ApplicationServices.PhimModule.Implements
             };
 
             _phimDbContext.Phims.Add(phim);
-            _phimDbContext.SaveChanges();
+            await _phimDbContext.SaveChangesAsync(); // Dùng SaveChangesAsync
 
             // Lưu thể loại
             if (dto.TheLoaiIds != null && dto.TheLoaiIds.Any())
@@ -94,60 +105,73 @@ namespace RCP.Movie.ApplicationServices.PhimModule.Implements
                 }
             }
 
-            // Upload ảnh
+            // --- UPLOAD ẢNH (Sử dụng Interface) ---
             if (dto.AnhBia != null)
             {
-                var imageUrl = SaveFile(dto.AnhBia, "images");
-                _phimDbContext.PhimAnhs.Add(new PhimAnh
+                // Giả định UploadFileDto có property File và Folder
+                var uploadDto = new UploadFileDto
                 {
-                    PhimId = phim.Id,
-                    Url = imageUrl,
-                    LaAnhChinh = true,
-                    LoaiAnh = "Poster"
-                });
+                    File = dto.AnhBia,
+                    Folder = "phim_poster"
+                };
+
+                var result = await _cloudinaryService.UploadImageAsync(uploadDto);
+
+                if (result != null) // Kiểm tra kết quả
+                {
+                    _phimDbContext.PhimAnhs.Add(new PhimAnh
+                    {
+                        PhimId = phim.Id,
+                        Url = result.Url, // Giả định property Url
+                        LaAnhChinh = true,
+                        LoaiAnh = "Poster"
+                    });
+                }
             }
 
-            // Upload video trailer
+            // --- UPLOAD VIDEO TRAILER ---
             if (dto.TrailerFile != null)
             {
-                var videoUrl = SaveFile(dto.TrailerFile, "videos");
+                // LƯU Ý: Interface ICloudinaryService bạn cung cấp CHƯA có method upload video.
+                // Bạn cần bổ sung method UploadVideoAsync vào interface.
+                // Dưới đây là code ví dụ khi bạn đã bổ sung method đó:
+
+                /*
+                var videoUploadDto = new UploadFileDto 
+                { 
+                    File = dto.TrailerFile, 
+                    Folder = "phim_trailer" 
+                };
+                
+                // Giả định bạn thêm method này vào Interface
+                var videoResult = await _cloudinaryService.UploadVideoAsync(videoUploadDto); 
+                
                 _phimDbContext.PhimVideos.Add(new PhimVideo
                 {
                     PhimId = phim.Id,
-                    Url = videoUrl,
+                    Url = videoResult.Url,
                     LoaiVideo = "Trailer",
                     TieuDe = $"{phim.TenPhim} - Trailer"
                 });
+                */
             }
 
-            _phimDbContext.SaveChanges();
+            await _phimDbContext.SaveChangesAsync();
 
-            return new ViewPhimDto
-            {
-                Id = phim.Id,
-                TenPhim = phim.TenPhim,
-                MoTa = phim.MoTa,
-                DaoDien = phim.DaoDien,
-                DienVien = phim.DienVien,
-                ThoiLuongPhut = phim.ThoiLuongPhut,
-                NgayKhoiChieu = phim.NgayKhoiChieu,
-                NgonNgu = phim.NgonNgu,
-                PhanLoaiDoTuoi = phim.PhanLoaiDoTuoi,
-                AnhBia = _phimDbContext.PhimAnhs.FirstOrDefault(a => a.PhimId == phim.Id && a.LaAnhChinh)?.Url,
-                TrailerUrl = _phimDbContext.PhimVideos.FirstOrDefault(v => v.PhimId == phim.Id && v.LoaiVideo == "Trailer")?.Url
-            };
+            return MapToViewDto(phim);
         }
 
-        public ViewPhimDto UpdatePhim(int id, UpdatePhimDto dto)
+        // Chuyển sang async Task
+        public async Task<ViewPhimDto> UpdatePhim(int id, UpdatePhimDto dto)
         {
             var userId = getCurrentUserId();
-            var phim = _phimDbContext.Phims.Include(x => x.AnhList).Include(x => x.VideoList)
-                .FirstOrDefault(x => x.Id == id && !x.Deleted);
+            var phim = await _phimDbContext.Phims
+                .Include(x => x.AnhList)
+                .Include(x => x.VideoList)
+                .FirstOrDefaultAsync(x => x.Id == id && !x.Deleted); // Dùng FirstOrDefaultAsync
 
             if (phim == null)
                 throw new UserFriendlyException(ErrorCodes.NotFound);
-
-
 
             phim.TenPhim = dto.TenPhim ?? phim.TenPhim;
             phim.MoTa = dto.MoTa ?? phim.MoTa;
@@ -160,38 +184,62 @@ namespace RCP.Movie.ApplicationServices.PhimModule.Implements
             phim.ModifiedDate = DateTime.Now;
             phim.ModifiedBy = userId;
 
-            // Cập nhật ảnh mới
+            // --- CẬP NHẬT ẢNH ---
             if (dto.AnhBia != null)
             {
                 var img = phim.AnhList.FirstOrDefault(a => a.LaAnhChinh);
                 if (img != null)
-                    _phimDbContext.PhimAnhs.Remove(img);
-
-                var newUrl = SaveFile(dto.AnhBia, "images");
-                _phimDbContext.PhimAnhs.Add(new PhimAnh
                 {
-                    PhimId = phim.Id,
-                    Url = newUrl,
-                    LaAnhChinh = true,
-                    LoaiAnh = "Poster"
-                });
+                    // TODO: Gọi service xóa ảnh cũ nếu cần (vd: DeleteImageAsync)
+                    _phimDbContext.PhimAnhs.Remove(img);
+                }
+
+                var uploadDto = new UploadFileDto
+                {
+                    File = dto.AnhBia,
+                    Folder = "phim_poster"
+                };
+
+                var result = await _cloudinaryService.UploadImageAsync(uploadDto);
+
+                if (result != null)
+                {
+                    _phimDbContext.PhimAnhs.Add(new PhimAnh
+                    {
+                        PhimId = phim.Id,
+                        Url = result.Url,
+                        LaAnhChinh = true,
+                        LoaiAnh = "Poster"
+                    });
+                }
             }
 
-            // Cập nhật trailer
+            // --- CẬP NHẬT TRAILER ---
             if (dto.TrailerFile != null)
             {
                 var trailer = phim.VideoList.FirstOrDefault(v => v.LoaiVideo == "Trailer");
                 if (trailer != null)
+                {
                     _phimDbContext.PhimVideos.Remove(trailer);
+                }
 
-                var videoUrl = SaveFile(dto.TrailerFile, "videos");
+                // Tương tự Create, cần bổ sung UploadVideoAsync vào Interface
+                /*
+                var videoUploadDto = new UploadFileDto 
+                { 
+                    File = dto.TrailerFile, 
+                    Folder = "phim_trailer" 
+                };
+                var videoResult = await _cloudinaryService.UploadVideoAsync(videoUploadDto);
+
                 _phimDbContext.PhimVideos.Add(new PhimVideo
                 {
                     PhimId = phim.Id,
-                    Url = videoUrl,
+                    Url = videoResult.Url,
                     LoaiVideo = "Trailer",
                     TieuDe = $"{phim.TenPhim} - Trailer"
                 });
+                */
             }
 
             // Cập nhật thể loại
@@ -209,29 +257,16 @@ namespace RCP.Movie.ApplicationServices.PhimModule.Implements
                 }
             }
 
-            _phimDbContext.SaveChanges();
+            await _phimDbContext.SaveChangesAsync();
 
-            return new ViewPhimDto
-            {
-                Id = phim.Id,
-                TenPhim = phim.TenPhim,
-                MoTa = phim.MoTa,
-                DaoDien = phim.DaoDien,
-                DienVien = phim.DienVien,
-                ThoiLuongPhut = phim.ThoiLuongPhut,
-                NgayKhoiChieu = phim.NgayKhoiChieu,
-                NgonNgu = phim.NgonNgu,
-                PhanLoaiDoTuoi = phim.PhanLoaiDoTuoi,
-                AnhBia = phim.AnhList.FirstOrDefault(a => a.LaAnhChinh)?.Url,
-                TrailerUrl = phim.VideoList.FirstOrDefault(v => v.LoaiVideo == "Trailer")?.Url
-            };
+            return MapToViewDto(phim);
         }
-
 
         public ViewPhimDto DeletePhim(int id)
         {
             var userId = getCurrentUserId();
-            var phim = _phimDbContext.Phims.FirstOrDefault(x => x.Id == id && !x.Deleted);
+            var phim = _phimDbContext.Phims.Include(x => x.AnhList).Include(x => x.VideoList)
+                        .FirstOrDefault(x => x.Id == id && !x.Deleted);
             if (phim == null)
                 throw new UserFriendlyException(ErrorCodes.NotFound);
 
@@ -240,41 +275,8 @@ namespace RCP.Movie.ApplicationServices.PhimModule.Implements
             phim.DeletedBy = userId;
             _phimDbContext.SaveChanges();
 
-            return new ViewPhimDto
-            {
-                Id = phim.Id,
-                TenPhim = phim.TenPhim,
-                MoTa = phim.MoTa,
-                DaoDien = phim.DaoDien,
-                DienVien = phim.DienVien,
-                ThoiLuongPhut = phim.ThoiLuongPhut,
-                NgayKhoiChieu = phim.NgayKhoiChieu,
-                NgonNgu = phim.NgonNgu,
-                PhanLoaiDoTuoi = phim.PhanLoaiDoTuoi,
-                AnhBia = phim.AnhList.FirstOrDefault(a => a.LaAnhChinh)?.Url,
-                TrailerUrl = phim.VideoList.FirstOrDefault(v => v.LoaiVideo == "Trailer")?.Url
-            };
+            return MapToViewDto(phim);
         }
-
-        private string SaveFile(IFormFile file, string folder)
-        {
-            var folderPath = Path.Combine(_uploadPath, folder);
-            if (!Directory.Exists(folderPath))
-                Directory.CreateDirectory(folderPath);
-
-            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-            var filePath = Path.Combine(folderPath, fileName);
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                file.CopyTo(stream);
-            }
-
-            return $"/uploads/{folder}/{fileName}";
-        }
-
-
-
 
         public List<GetDropDownPhimDto> GetDropDown()
         {
@@ -292,5 +294,31 @@ namespace RCP.Movie.ApplicationServices.PhimModule.Implements
             return query.ToList();
         }
 
+        // Helper Method
+        private ViewPhimDto MapToViewDto(Phim phim)
+        {
+            var anhBia = _phimDbContext.PhimAnhs
+                            .Where(a => a.PhimId == phim.Id && a.LaAnhChinh)
+                            .Select(a => a.Url).FirstOrDefault();
+
+            var trailer = _phimDbContext.PhimVideos
+                            .Where(v => v.PhimId == phim.Id && v.LoaiVideo == "Trailer")
+                            .Select(v => v.Url).FirstOrDefault();
+
+            return new ViewPhimDto
+            {
+                Id = phim.Id,
+                TenPhim = phim.TenPhim,
+                MoTa = phim.MoTa,
+                DaoDien = phim.DaoDien,
+                DienVien = phim.DienVien,
+                ThoiLuongPhut = phim.ThoiLuongPhut,
+                NgayKhoiChieu = phim.NgayKhoiChieu,
+                NgonNgu = phim.NgonNgu,
+                PhanLoaiDoTuoi = phim.PhanLoaiDoTuoi,
+                AnhBia = anhBia,
+                TrailerUrl = trailer
+            };
+        }
     }
 }

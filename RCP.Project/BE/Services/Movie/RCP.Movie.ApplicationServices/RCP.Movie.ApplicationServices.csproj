@@ -15,6 +15,8 @@
 	</ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Lib\RCP.Lib.ApplicationService\RCP.Lib.ApplicationService.csproj" />
+    <ProjectReference Include="..\..\Lib\RCP.Lib.Domain\RCP.Lib.Domain.csproj" />
     <ProjectReference Include="..\..\Shared\RCP.Shared.ApplicationService\RCP.Shared.ApplicationService.csproj" />
     <ProjectReference Include="..\..\Shared\RCP.Shared.Constant\RCP.Shared.Constant.csproj" />
     <ProjectReference Include="..\RCP.Movie.Dtos\RCP.Movie.Dtos.csproj" />

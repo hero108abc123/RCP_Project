@@ -2,12 +2,12 @@ import * as React from "react";
 import { useWindowDimensions } from "react-native";
 import { SceneMap, TabView } from "react-native-tab-view";
 
-import DangChieu from "../(screen)/dang-chieu";
+// import DangChieu from "../(screen)/dang-chieu";
 import SapChieu from "../(screen)/sap-chieu";
 
 const renderScene = SceneMap({
   sapchieu: SapChieu,
-  dangchieu: DangChieu,
+  // dangchieu: DangChieu,
 });
 
 export default function TabViewMovie() {

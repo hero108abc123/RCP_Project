@@ -39,20 +39,36 @@ namespace RCP.Cinema.ApplicationServices.Cinema.Implements
             var cinema = _cinemaDbContext.Cinemas.FirstOrDefault(x => x.Id == dto.IdCinema && !x.Deleted)
                 ?? throw new UserFriendlyException(ErrorCodes.CinemaErrorNotFound);
 
-            var room = new Domain.Room
+
+            if (dto.TongSoLuongGhe < dto.SoLuongGheDoi + dto.SoLuongGheThuong + dto.SoLuongGheVip)
             {
-                IdCinema = dto.IdCinema,
-                Name = dto.Name,
-                Location = dto.Location,
-                TongSoLuongGhe = dto.TongSoLuongGhe,
-                SoLuongGheDoi = dto.SoLuongGheDoi,
-                SoLuongGheThuong = dto.SoLuongGheThuong,
-                SoLuongGheVip = dto.SoLuongGheVip,
-                CreatedBy = currentUserId,
-                CreatedDate = vietNamNow,
-            };
-            _cinemaDbContext.Rooms.Add(room);
-            _cinemaDbContext.SaveChanges();
+                throw new UserFriendlyException(ErrorCodes.RoomErrorInvalidTongSoLuongGhe);
+            }
+            else if (dto.TongSoLuongGhe > dto.SoLuongGheDoi + dto.SoLuongGheThuong + dto.SoLuongGheVip)
+            {
+
+                throw new UserFriendlyException(ErrorCodes.RoomErrorInvalidTongSoLuongGhe);
+
+            }
+            else if (dto.TongSoLuongGhe == dto.SoLuongGheDoi + dto.SoLuongGheThuong + dto.SoLuongGheVip)
+            {
+
+                var room = new Domain.Room
+                {
+                    IdCinema = dto.IdCinema,
+                    Name = dto.Name,
+                    Description = dto.Description,
+                    Location = dto.Location,
+                    TongSoLuongGhe = dto.TongSoLuongGhe,
+                    SoLuongGheDoi = dto.SoLuongGheDoi,
+                    SoLuongGheThuong = dto.SoLuongGheThuong,
+                    SoLuongGheVip = dto.SoLuongGheVip,
+                    CreatedBy = currentUserId,
+                    CreatedDate = vietNamNow,
+                };
+                _cinemaDbContext.Rooms.Add(room);
+                _cinemaDbContext.SaveChanges();
+            }
         }
 
 
@@ -66,18 +82,31 @@ namespace RCP.Cinema.ApplicationServices.Cinema.Implements
                  ?? throw new UserFriendlyException(ErrorCodes.CinemaErrorNotFound);
             var room = _cinemaDbContext.Rooms.FirstOrDefault(x => x.Id == dto.Id && !x.Deleted)
                  ?? throw new UserFriendlyException(ErrorCodes.RoomErrorNotFound);
-            room.Location = dto.Location;
-            room.Name = dto.Name;
-            room.Description = dto.Description;
-            room.TongSoLuongGhe = dto.TongSoLuongGhe;
-            room.SoLuongGheDoi = dto.SoLuongGheDoi;
-            room.SoLuongGheThuong = dto.SoLuongGheThuong;
-            room.SoLuongGheVip = dto.SoLuongGheVip;
-            room.ModifiedBy = currentUserId;
-            room.ModifiedDate = vietNamNow;
+            if (dto.TongSoLuongGhe < dto.SoLuongGheDoi + dto.SoLuongGheThuong + dto.SoLuongGheVip)
+            {
+                throw new UserFriendlyException(ErrorCodes.RoomErrorInvalidTongSoLuongGhe);
+            }
+            else if (dto.TongSoLuongGhe > dto.SoLuongGheDoi + dto.SoLuongGheThuong + dto.SoLuongGheVip)
+            {
 
-            _cinemaDbContext.Rooms.Update(room);
-            _cinemaDbContext.SaveChanges();
+                throw new UserFriendlyException(ErrorCodes.RoomErrorInvalidTongSoLuongGhe);
+
+            }
+            else if (dto.TongSoLuongGhe == dto.SoLuongGheDoi + dto.SoLuongGheThuong + dto.SoLuongGheVip)
+            {
+                room.Location = dto.Location;
+                room.Name = dto.Name;
+                room.Description = dto.Description;
+                room.TongSoLuongGhe = dto.TongSoLuongGhe;
+                room.SoLuongGheDoi = dto.SoLuongGheDoi;
+                room.SoLuongGheThuong = dto.SoLuongGheThuong;
+                room.SoLuongGheVip = dto.SoLuongGheVip;
+                room.ModifiedBy = currentUserId;
+                room.ModifiedDate = vietNamNow;
+
+                _cinemaDbContext.Rooms.Update(room);
+                _cinemaDbContext.SaveChanges();
+            }
         }
 
         public BaseResponsePagingDto<ViewRoomDto> Find (FindPagingRoomDto dto)
@@ -110,7 +139,7 @@ namespace RCP.Cinema.ApplicationServices.Cinema.Implements
             var cinema = _cinemaDbContext.Cinemas.FirstOrDefault(c => c.Id == idCinema && !c.Deleted)
                 ?? throw new UserFriendlyException(ErrorCodes.CinemaErrorNotFound);
 
-            var room = _cinemaDbContext.Rooms.FirstOrDefault(r => r.Id == idCinema && !r.Deleted)
+            var room = _cinemaDbContext.Rooms.FirstOrDefault(r => r.Id == id && r.IdCinema == idCinema && !r.Deleted)
                 ?? throw new UserFriendlyException(ErrorCodes.RoomErrorNotFound);
             room.Deleted = true;
             room.DeletedDate = vietNamNow;

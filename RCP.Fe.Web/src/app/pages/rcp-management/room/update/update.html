@@ -1,0 +1,64 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+   
+    <div class="mb-3">
+        <label for="name" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Tên phòng chiếu <span class="text-red-500">*</span></label>
+        <input pInputText id="name" formControlName="name" placeholder="Nhập tên phòng chiếu" class="w-full" />
+        @if (form.get('name')?.hasError('required') && form.get('name')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('name') }}</p-message>
+        }
+    </div>
+    <div class="mb-3">
+        <label for="description" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Mô tả </label>
+        <input pInputText id="description" formControlName="description" placeholder="Mô tả" class="w-full" />
+        @if (form.get('description')?.hasError('required') && form.get('description')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('description') }}</p-message>
+        }
+    </div>
+    
+
+    
+
+   
+    <div class="mb-3">
+        <label for="location" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Địa chỉ <span class="text-red-500">*</span></label>
+        <input pInputText id="location" formControlName="location" placeholder="Nhập địa chỉ" class="w-full" />
+        @if (form.get('location')?.hasError('required') && form.get('location')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('location') }}</p-message>
+        }
+    </div>
+
+    <div class="mb-3">
+        <label for="tongSoLuongGhe" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Tổng số lượng ghế <span class="text-red-500">*</span></label>
+        <p-inputNumber id="tongSoLuongGhe" formControlName="tongSoLuongGhe" [min]="1" placeholder="Nhập số lượng" styleClass="w-full" />
+        @if (form.get('tongSoLuongGhe')?.hasError('required') && form.get('tongSoLuongGhe')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('tongSoLuongGhe') }}</p-message>
+        }
+    </div>
+    <div class="mb-3">
+        <label for="soLuongGheThuong" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Số lượng ghế thường <span class="text-red-500">*</span></label>
+        <p-inputNumber id="soLuongGheThuong" formControlName="soLuongGheThuong" [min]="1" placeholder="Nhập số lượng" styleClass="w-full" />
+        @if (form.get('soLuongGheThuong')?.hasError('required') && form.get('soLuongGheThuong')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('soLuongGheThuong') }}</p-message>
+        }
+    </div>
+    <div class="mb-3">
+        <label for="soLuongGheVip" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Số lượng ghế vip <span class="text-red-500">*</span></label>
+        <p-inputNumber id="soLuongGheVip" formControlName="soLuongGheVip" [min]="1" placeholder="Nhập số lượng" styleClass="w-full" />
+        @if (form.get('soLuongGheVip')?.hasError('required') && form.get('soLuongGheVip')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('soLuongGheVip') }}</p-message>
+        }
+    </div>
+    <div class="mb-3">
+        <label for="soLuongGheDoi" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Số lượng ghế đôi <span class="text-red-500">*</span></label>
+        <p-inputNumber id="soLuongGheDoi" formControlName="soLuongGheDoi" [min]="1" placeholder="Nhập số lượng" styleClass="w-full" />
+        @if (form.get('soLuongGheDoi')?.hasError('required') && form.get('soLuongGheDoi')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('soLuongGheDoi') }}</p-message>
+        }
+    </div>
+    
+
+    <div class="flex gap-2 mt-4" style="justify-content: flex-end;">
+        <p-button label="Hủy" icon="pi pi-times" severity="secondary" [outlined]="true" (onClick)="onCancel()" />
+        <p-button label="Lưu" icon="pi pi-save" type="submit" [loading]="loading" />
+    </div>
+</form>

@@ -35,6 +35,7 @@
         //Mã lỗi Cinema
         public const int CinemaErrorNotFound = 1001;
         public const int RoomErrorNotFound = 1002;
+        public const int RoomErrorInvalidTongSoLuongGhe = 1003;
 
         //Mã lỗi Cloudinary 
         public const int CloudinaryUploadFailed = 2001;

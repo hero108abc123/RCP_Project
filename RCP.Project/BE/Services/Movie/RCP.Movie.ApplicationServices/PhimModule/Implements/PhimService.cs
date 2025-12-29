@@ -287,5 +287,22 @@ namespace RCP.Movie.ApplicationServices.PhimModule.Implements
             return userId;
         }
 
+
+        public List<GetDropDownPhimDto> GetDropDown()
+        {
+            _logger.LogInformation($"{nameof(GetDropDown)}");
+
+            var query = from m in _phimDbContext.Phims
+                        where !m.Deleted
+                        orderby m.Id
+                        select new GetDropDownPhimDto
+                        {
+                            Id = m.Id,
+                            TenPhim = m.TenPhim
+                        };
+
+            return query.ToList();
+        }
+
     }
 }

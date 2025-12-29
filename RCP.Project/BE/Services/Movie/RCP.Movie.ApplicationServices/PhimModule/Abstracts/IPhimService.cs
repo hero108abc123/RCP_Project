@@ -9,5 +9,6 @@ namespace RCP.Movie.ApplicationServices.PhimModule.Abstracts
         ViewPhimDto CreatePhim(CreatePhimDto dto);
         ViewPhimDto UpdatePhim(int id, UpdatePhimDto dto);
         ViewPhimDto DeletePhim(int id);
+        public List<GetDropDownPhimDto> GetDropDown();
     }
 }

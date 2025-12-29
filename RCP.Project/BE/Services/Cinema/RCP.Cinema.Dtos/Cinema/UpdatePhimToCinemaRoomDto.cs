@@ -8,6 +8,7 @@ namespace RCP.Cinema.Dtos.Cinema
 {
     public class UpdatePhimToCinemaRoomDto
     {
+        public int Id { get; set; }
         public int IdPhim { get; set; }
         public int IdCinema { get; set; }
         public int IdRoom { get; set; }

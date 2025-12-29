@@ -20,12 +20,13 @@ export class RoomService{
         return this.http.put<IBaseResponseWithData<any>>(`${this.api}`,body);
     }
 
-    delete (id:number){
-        return this.http.delete<IBaseResponseWithData<any>>(`${this.api}/${id}`)
+    delete (idCinema:number, id: number){
+        return this.http.delete<IBaseResponseWithData<any>>(`${this.api}/${id}/cinema/${idCinema}`)
     }
 
     findPaging (query: IFindPagingRoom){
         const params ={ 
+            idCinema : query.idCinema,
             pageNumber: query.pageNumber,
             pageSize: query.pageSize,
             keyword: query.keyword || ''

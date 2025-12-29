@@ -1,6 +1,8 @@
 import { IBaseRequestPaging } from "@/shared/models/request-paging.base.models";
 
-export interface IFindPagingRoom extends IBaseRequestPaging {}
+export interface IFindPagingRoom extends IBaseRequestPaging {
+    idCinema: number;
+}
 
 export interface ICreateRoom{
     idCinema ?: number,

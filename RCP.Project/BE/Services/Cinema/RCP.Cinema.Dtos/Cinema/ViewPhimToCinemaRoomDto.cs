@@ -11,23 +11,17 @@ namespace RCP.Cinema.Dtos.Cinema
     public class ViewPhimToCinemaRoomDto
     {
         public int IdCinema {  get; set; }
+        public int IdRoom { get; set; }
+        public List<ViewPhimCinemaDto> Movies { get; set; } = new List<ViewPhimCinemaDto>();
+
+
     }
 
-    public class ViewRoomCinemaDto
-    {
-        public int IdRoom { get; set; }
-        public string Name { get; set; } = String.Empty;
-        public string Description { get; set; } = String.Empty;
-        //Vị trí
-        public string Location { get; set; } = String.Empty;
-        public int TongSoLuongGhe { get; set; }
-        public int SoLuongGheThuong { get; set; }
-        public int SoLuongGheVip { get; set; }
-        public int SoLuongGheDoi { get; set; }
-    }
+    
 
     public class ViewPhimCinemaDto
     {
+        public int IdCinemaRoomMovie { get; set; }
         public int IdPhim { get; set; }
         [Required, MaxLength(500)]
         public string TenPhim { get; set; } = string.Empty;
@@ -52,6 +46,9 @@ namespace RCP.Cinema.Dtos.Cinema
         public string? PhanLoaiDoTuoi { get; set; }
 
         public bool DangChieu { get; set; }
+        public List<ViewPhimAnhCinemaDto> AnhCinema { get; set; } = new List<ViewPhimAnhCinemaDto>();
+        public DateTime? ThoiGianBatDauChieu { get; set; }
+        public DateTime? ThoiGianKetThucChieu { get; set; }
     }
     public class ViewPhimAnhCinemaDto
     {

@@ -38,6 +38,20 @@ namespace RCP.Project.Controller.Phim
                 return OkException(ex);
             }
         }
+        [Permission(PermissionKeys.PhimView)]
+        [HttpGet("dropdown")]
+        public ApiResponse GetDropDown()
+        {
+            try
+            {
+                var data = _phimService.GetDropDown();
+                return new(data);
+            }
+            catch (Exception ex)
+            {
+                return OkException(ex);
+            }
+        }
 
         // POST: api/app/phim
         [Permission(PermissionKeys.PhimCreate)]

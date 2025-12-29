@@ -18,6 +18,7 @@ namespace RCP.Cinema.ApplicationServices.Cinema.Interfaces
         public void AddPhimToCinemaRoom(AddPhimToCinemaRoomDto dto);
         public void UpdatePhimToCinemaRoom(UpdatePhimToCinemaRoomDto dto);
 
-        public void DeletePhimToCinemaRoom(DeletePhimToCinemaRoomDto dto);
+        public void DeletePhimToCinemaRoom(int id);
+        public BaseResponsePagingDto<ViewPhimToCinemaRoomDto> FindPagingCinemaRoomMovie(FindPagingCinemaRoomPhimDto dto);
     }
 }

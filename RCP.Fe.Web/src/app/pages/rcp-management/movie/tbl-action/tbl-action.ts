@@ -8,6 +8,7 @@ import { Menu } from 'primeng/menu';
 import { Button } from 'primeng/button';
 import { IViewRCP } from '@/models/rcp/rcp.models';
 import { IViewRoom } from '@/models/rcp/room.models';
+import { IViewPhimByRoom } from '@/models/rcp/movie.models';
 
 
 
@@ -31,7 +32,7 @@ export class TblAction extends BaseComponent {
 
     tblEmit = inject(TBL_CUSTOM_COMP_EMIT);
 
-    @Input() row: IViewRoom  = {};
+    @Input() row: IViewPhimByRoom  = {};
     @Input() rowIndex: number = 0;
     @Input() data: any;
     @Input() onRefresh?: () => void;

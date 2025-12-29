@@ -130,13 +130,28 @@ namespace RCP.Project.Controller.Cinema
         }
 
         [Permission(PermissionKeys.CinemaUpdate)]
-        [HttpDelete("phim-to-cinema")]
-        public ApiResponse DeletePhimToCinemaRoom([FromBody] DeletePhimToCinemaRoomDto dto)
+        [HttpDelete("phim-to-cinema/{id}")]
+        public ApiResponse DeletePhimToCinemaRoom([FromRoute] int id)
         {
             try
             {
-                _cinemaService.DeletePhimToCinemaRoom(dto);
+                _cinemaService.DeletePhimToCinemaRoom(id);
                 return new();
+            }
+            catch (Exception ex)
+            {
+                return OkException(ex);
+            }
+        }
+
+        [Permission(PermissionKeys.CinemaView)]
+        [HttpGet("phim-to-cinema")]
+        public ApiResponse FindPagingPhimRoomCinema([FromQuery] FindPagingCinemaRoomPhimDto dto)
+        {
+            try
+            {
+                var data = _cinemaService.FindPagingCinemaRoomMovie(dto);
+                return new(data);
             }
             catch (Exception ex)
             {

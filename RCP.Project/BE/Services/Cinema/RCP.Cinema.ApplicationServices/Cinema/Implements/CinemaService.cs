@@ -226,7 +226,7 @@ namespace RCP.Cinema.ApplicationServices.Cinema.Implements
             var phim = _phimDbContext.Phims.FirstOrDefault(p => p.Id == dto.IdPhim && !p.Deleted)
                 ?? throw new UserFriendlyException(ErrorCodes.NotFound);
 
-            var infor = _cinemaDbContext.CinemaRoomMovieInfor.FirstOrDefault(i => i.IdCinema == dto.IdCinema && i.IdPhim == dto.IdPhim && i.IdRoom == dto.IdRoom && !i.Deleted)
+            var infor = _cinemaDbContext.CinemaRoomMovieInfor.FirstOrDefault(i => i.Id== dto.Id && !i.Deleted)
                 ?? throw new UserFriendlyException(ErrorCodes.NotFound);
 
             infor.ThoiGianBatDauChieu = dto.ThoiGianBatDauChieu;
@@ -237,30 +237,105 @@ namespace RCP.Cinema.ApplicationServices.Cinema.Implements
             _cinemaDbContext.SaveChanges();
         }
 
-        public void DeletePhimToCinemaRoom (DeletePhimToCinemaRoomDto dto)
+        public void DeletePhimToCinemaRoom (int id)
         {
 
-            _logger.LogInformation($"{nameof(DeletePhimToCinemaRoom)}  dto = {JsonSerializer.Serialize(dto)}");
+            _logger.LogInformation($"{nameof(DeletePhimToCinemaRoom)} ");
             var vietNamNow = GetVietnamTime();
             var currentUserId = getCurrentUserId();
 
-            var cinema = _cinemaDbContext.Cinemas.FirstOrDefault(c => c.Id == dto.IdCinema && !c.Deleted)
-                ?? throw new UserFriendlyException(ErrorCodes.CinemaErrorNotFound);
-            var room = _cinemaDbContext.Rooms.FirstOrDefault(r => r.Id == dto.IdRoom && !r.Deleted)
-                ?? throw new UserFriendlyException(ErrorCodes.RoomErrorNotFound);
-            var phim = _phimDbContext.Phims.FirstOrDefault(p => p.Id == dto.IdPhim && !p.Deleted)
-                ?? throw new UserFriendlyException(ErrorCodes.NotFound);
+          
 
-            var infor = _cinemaDbContext.CinemaRoomMovieInfor.FirstOrDefault(i => i.IdCinema == dto.IdCinema && i.IdPhim == dto.IdPhim && i.IdRoom == dto.IdRoom && !i.Deleted)
+            var infor = _cinemaDbContext.CinemaRoomMovieInfor.FirstOrDefault(i => i.Id == id && !i.Deleted)
                 ?? throw new UserFriendlyException(ErrorCodes.NotFound);
             infor.Deleted = true;
             infor.DeletedBy = currentUserId;
-            infor.CreatedDate = vietNamNow;
+            infor.DeletedDate = vietNamNow;
             _cinemaDbContext.CinemaRoomMovieInfor.Update(infor);
             _cinemaDbContext.SaveChanges();
 
         }
 
+
+        public BaseResponsePagingDto<ViewPhimToCinemaRoomDto> FindPagingCinemaRoomMovie(FindPagingCinemaRoomPhimDto dto)
+        {
+            _logger.LogInformation($"{nameof(FindPagingCinemaRoomMovie)} dto = {JsonSerializer.Serialize(dto)}");
+
+            var cinema = _cinemaDbContext.Cinemas.FirstOrDefault(c => c.Id == dto.IdCinema && !c.Deleted)
+                ?? throw new UserFriendlyException(ErrorCodes.CinemaErrorNotFound);
+
+            var room = _cinemaDbContext.Rooms.FirstOrDefault(r => r.Id == dto.IdRoom && !r.Deleted)
+                ?? throw new UserFriendlyException(ErrorCodes.RoomErrorNotFound);
+
+            var crmQuery = _cinemaDbContext.CinemaRoomMovieInfor
+                        .Where(crm => !crm.Deleted
+                            && crm.IdCinema == dto.IdCinema
+                            && crm.IdRoom == dto.IdRoom)
+                        .OrderBy(crm => crm.Id);
+
+            var totalItems = crmQuery.Count();
+            var crmData = crmQuery.Paging(dto).ToList();
+            var phimIds = crmData.Select(crm => crm.IdPhim).ToList();
+
+            var phimsQuery = _phimDbContext.Phims
+                        .Where(p => !p.Deleted && phimIds.Contains(p.Id));
+
+            if (!string.IsNullOrEmpty(dto.Keyword))
+            {
+                phimsQuery = phimsQuery.Where(p =>
+                    p.TenPhim.Contains(dto.Keyword)
+                    || p.DaoDien.Contains(dto.Keyword)
+                    || p.DienVien.Contains(dto.Keyword));
+            }
+
+            var phims = phimsQuery.ToList();
+
+            var movies = (from crm in crmData
+                          join p in phims on crm.IdPhim equals p.Id
+                          select new ViewPhimCinemaDto
+                          {
+                              IdCinemaRoomMovie = crm.Id,
+                              IdPhim = p.Id,
+                              TenPhim = p.TenPhim,
+                              MoTa = p.MoTa,
+                              DaoDien = p.DaoDien,
+                              DienVien = p.DienVien,
+                              ThoiLuongPhut = p.ThoiLuongPhut,
+                              NgayKhoiChieu = p.NgayKhoiChieu,
+                              NgonNgu = p.NgonNgu,
+                              PhanLoaiDoTuoi = p.PhanLoaiDoTuoi,
+                              DangChieu = p.DangChieu,
+
+                              ThoiGianBatDauChieu = crm.ThoiGianBatDauChieu,
+                              ThoiGianKetThucChieu = crm.ThoiGianKetThucChieu,
+
+                              AnhCinema = _phimDbContext.PhimAnhs
+                                  .Where(a => a.PhimId == p.Id)
+                                  .Select(a => new ViewPhimAnhCinemaDto
+                                  {
+                                      Id = a.Id,
+                                      IdPhim = a.PhimId,
+                                      Url = a.Url,
+                                      LoaiAnh = a.LoaiAnh,
+                                      LaAnhChinh = a.LaAnhChinh
+                                  }).ToList()
+                          }).ToList();
+
+            var result = new ViewPhimToCinemaRoomDto
+            {
+                IdCinema = dto.IdCinema,
+                IdRoom = dto.IdRoom,
+                Movies = movies
+            };
+
+            var response = new BaseResponsePagingDto<ViewPhimToCinemaRoomDto>
+            {
+                Items = new List<ViewPhimToCinemaRoomDto> { result },
+                TotalItems = totalItems
+            };
+
+            return response;
+        }
 
     }
 }

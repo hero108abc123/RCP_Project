@@ -10,12 +10,12 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 @Component({
-    selector: 'app-create-phim-room',
+    selector: 'app-create-phim',
     imports: [SharedImports],
     templateUrl: './create.html',
     styleUrl: './create.scss'
 })
-export class CreatePhimRoom extends BaseComponent {
+export class CreatePhim extends BaseComponent {
     private _ref = inject(DynamicDialogRef);
     private _rcpService = inject(RCPService);
     private _movieService = inject(PhimService);

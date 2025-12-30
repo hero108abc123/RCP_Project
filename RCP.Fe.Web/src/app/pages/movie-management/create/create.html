@@ -1,0 +1,31 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    
+    <div class="mb-3">
+        <label for="idPhim" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Phim <span class="text-red-500">*</span></label>
+        <p-select id="idPhim" formControlName="idPhim" [options]="listPhims" optionLabel="tenPhim" optionValue="id" [filter]="true" placeholder="Chọn phim" styleClass="w-full" class="mb-2" appendTo="body" />
+        @if (form.get('idPhim')?.hasError('required') && form.get('idPhim')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('idPhim') }} </p-message>
+        }
+    </div>
+
+    <div class="mb-3">
+        <label for="thoiGianBatDauChieu" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Thời gian bắt đầu chiếu <span class="text-red-500">*</span></label>
+        <p-datePicker formControlName="thoiGianBatDauChieu" inputId="thoiGianBatDauChieu" styleClass="w-full" [showIcon]="true" [showTime]="true" hourFormat="24" dateFormat="dd/mm/yy" appendTo="body" [showOnFocus]="false" />
+        @if (form.get('thoiGianBatDauChieu')?.hasError('required') && form.get('thoiGianBatDauChieu')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('thoiGianBatDauChieu') }} </p-message>
+        }
+    </div>
+
+    <div class="mb-3">
+        <label for="thoiGianKetThucChieu" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Thời gian kết thúc chiếu <span class="text-red-500">*</span></label>
+        <p-datePicker formControlName="thoiGianKetThucChieu" inputId="thoiGianKetThucChieu" styleClass="w-full" [showIcon]="true" [showTime]="true" hourFormat="24" dateFormat="dd/mm/yy" appendTo="body" [showOnFocus]="false" />
+        @if (form.get('thoiGianKetThucChieu')?.hasError('required') && form.get('thoiGianKetThucChieu')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('thoiGianKetThucChieu') }} </p-message>
+        }
+    </div>
+
+    <div class="flex gap-2 mt-4" style="justify-content: flex-end;">
+        <p-button label="Hủy" icon="pi pi-times" severity="secondary" [outlined]="true" (onClick)="onCancel()" />
+        <p-button label="Lưu" icon="pi pi-save" type="submit" [loading]="loading" />
+    </div>
+</form>

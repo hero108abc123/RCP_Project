@@ -6,8 +6,6 @@ import { Landing } from './app/pages/landing/landing';
 import { Notfound } from './app/pages/notfound/notfound';
 import { authGuard } from '@/shared/guard/auth-guard';
 
-
-
 export const appRoutes: Routes = [
     {
         path: '',
@@ -20,11 +18,12 @@ export const appRoutes: Routes = [
             //{ path: 'trao-bang', loadChildren: () => import('./app/pages/trao-bang/trao-bang.routes') },
             { path: 'uikit', loadChildren: () => import('./app/pages/uikit/uikit.routes') },
             { path: 'rcp-management', loadChildren: () => import('./app/pages/rcp-management/rcp-management.routes') },
+            { path: 'movie-management', loadChildren: () => import('./app/pages/movie-management/movie-management.routes') },
             { path: 'documentation', component: Documentation },
             { path: 'pages', loadChildren: () => import('./app/pages/pages.routes') }
         ]
     },
-    
+
     { path: 'landing', component: Landing },
     { path: 'notfound', component: Notfound },
     { path: 'auth', loadChildren: () => import('./app/pages/auth/auth.routes') },

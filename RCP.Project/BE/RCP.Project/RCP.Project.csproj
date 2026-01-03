@@ -39,11 +39,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Services\Asset\RCP.Asset.ApplicationServices\RCP.Asset.ApplicationServices.csproj" />
+    <ProjectReference Include="..\Services\Asset\RCP.Asset.Infrastructure\RCP.Asset.Infrastructure.csproj" />
     <ProjectReference Include="..\Services\Authentication\RCP.Authentication.ApplicationServices\RCP.Authentication.ApplicationServices.csproj" />
     <ProjectReference Include="..\Services\Lib\RCP.Lib.ApplicationService\RCP.Lib.ApplicationService.csproj" />
-	 <ProjectReference Include="..\Services\External\RCP.External.ApplicationService\RCP.External.ApplicationService.csproj" />
+    <ProjectReference Include="..\Services\Menu\RCP.Menu.ApplicationService\RCP.Menu.ApplicationService.csproj" />
+    <ProjectReference Include="..\Services\Menu\RCP.Menu.Infrastructure\RCP.Menu.Infrastructure.csproj" />
     <ProjectReference Include="..\Services\Movie\RCP.Movie.ApplicationServices\RCP.Movie.ApplicationServices.csproj" />
 	  <ProjectReference Include="..\Services\Cinema\RCP.Cinema.ApplicationServices\RCP.Cinema.ApplicationServices.csproj" />
+	  <ProjectReference Include="..\Services\Movie\RCP.Movie.Infrastructure\RCP.Movie.Infrastructure.csproj" />
+	  <ProjectReference Include="..\Services\Shared\RCP.Shared.ApplicationService\RCP.Shared.ApplicationService.csproj" />
+	  <ProjectReference Include="..\Services\Shared\RCP.Shared.Constant\RCP.Shared.Constant.csproj" />
   </ItemGroup>
 
 </Project>

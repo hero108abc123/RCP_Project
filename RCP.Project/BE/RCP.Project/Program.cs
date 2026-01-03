@@ -6,6 +6,9 @@ using Microsoft.IdentityModel.Tokens;
 using NLog;
 using NLog.Web;
 using OpenIddict.Abstractions;
+using RCP.Asset.ApplicationServices.AssetModule.Abstracts;
+using RCP.Asset.ApplicationServices.AssetModule.Implements;
+using RCP.Asset.Infrastructure;
 using RCP.Authentication.ApplicationService.Common;
 using RCP.Authentication.ApplicationService.UserModule.Abstracts;
 using RCP.Authentication.ApplicationService.UserModule.Implements;
@@ -19,7 +22,9 @@ using RCP.Cinema.Infrastructure;
 using RCP.External.ApplicationService.BackGroundJob;
 using RCP.Lib.ApplicationService.Cloudinary.Implements;
 using RCP.Lib.ApplicationService.Cloudinary.Interfaces;
-using RCP.Movie.ApplicationServices.Common;
+using RCP.Menu.ApplicationService.MenuModule.Abstracts;
+using RCP.Menu.ApplicationService.MenuModule.Implements;
+using RCP.Menu.Infrastructure;
 using RCP.Movie.ApplicationServices.PhimModule.Abstracts;
 using RCP.Movie.ApplicationServices.PhimModule.Implements;
 using RCP.Movie.Infrastructure;
@@ -70,6 +75,24 @@ builder.Services.AddDbContext<CinemaDbContext>(options =>
     {
         options.MigrationsAssembly(typeof(Program).Assembly.GetName().Name);
         options.MigrationsHistoryTable(DbSchemas.TableMigrationsHistory, DbSchemas.Cinema);
+    });
+}, ServiceLifetime.Scoped);
+
+builder.Services.AddDbContext<AssetDbContext>(options =>
+{
+    options.UseSqlServer(connectionString, options =>
+    {
+        options.MigrationsAssembly(typeof(Program).Assembly.GetName().Name);
+        options.MigrationsHistoryTable(DbSchemas.TableMigrationsHistory, DbSchemas.Asset);
+    });
+}, ServiceLifetime.Scoped);
+
+builder.Services.AddDbContext<MenuDbContext>(options =>
+{
+    options.UseSqlServer(connectionString, options =>
+    {
+        options.MigrationsAssembly(typeof(Program).Assembly.GetName().Name);
+        options.MigrationsHistoryTable(DbSchemas.TableMigrationsHistory, DbSchemas.Menu);
     });
 }, ServiceLifetime.Scoped);
 
@@ -191,9 +214,8 @@ builder.Services.AddScoped<ICinemaService, CinemaService>();
 builder.Services.AddScoped<IRoomService, RoomService>();
 builder.Services.AddHostedService<thongbao.be.Workers.AuthWorker>();
 builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
-builder.Services.AddScoped<IJobService, JobService>();
-builder.Services.AddScoped<IGiaVeService, GiaVeService>();
-builder.Services.AddScoped<ILichChieuService, LichChieuService>();
+builder.Services.AddScoped<IAssetService, AssetService>();
+builder.Services.AddScoped<IMenuService, MenuService>();
 #endregion
 // Add services to the container.
 

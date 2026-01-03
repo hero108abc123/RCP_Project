@@ -29,7 +29,7 @@
         public const int AuthErrorPasswordRequired = 513;
         public const int AuthErrorInvalidBirthDay = 514;
         public const int AuthErrorPermissionKeyExists = 515;
-  
+
 
 
         //Mã lỗi Cinema
@@ -46,6 +46,12 @@
         public const int CloudinaryFileTooLarge = 2004;
         public const int CloudinaryConfigMissing = 2005;
 
+        //Mã lỗi Asset
+        public const int AssetErrorNotFound = 3001;
+        public const int AssetErrorAlreadyExists = 3002;
+
+        //Mã lỗi Menu
+        public const int MenuErrorNotFound = 4001;
 
     }
 }

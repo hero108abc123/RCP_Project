@@ -23,12 +23,13 @@ namespace RCP.Cinema.Domain
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-
-        public int IdCinema { get; set; }
-        public int IdRoom { get; set; }
-        public int IdPhim { get; set; }
-        public int IdGhe {  get; set; }
-        public string Gia { get; set; } = string.Empty;
+        public string GiaNgayThuong{ get; set; } = string.Empty;
+        public string GiaNgayLe { get; set; } = string.Empty;
+        public string GiaCuoiTuan { get; set; } = string.Empty;
+        public int HangGhe { get; set; }
+        //public string Gia { get; set; } = string.Empty;
+        public int TrangThaiNgay { get; set; }
+  
         public string? CreatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }
         public string? ModifiedBy { get; set; }

@@ -30,8 +30,11 @@ namespace RCP.Cinema.Domain
         public string Location { get; set; } = String.Empty;
         public int TongSoLuongGhe {  get; set; }
         public int SoLuongGheThuong { get; set; }
-        public int SoLuongGheVip { get; set; }
+        //public int SoLuongGheVip { get; set; }
         public int SoLuongGheDoi { get; set; }
+        public int SoLuongGheThuongMoiHang { get; set; }
+        public int SoLuongGheDoiMoiHang { get; set; }
+
 
         public string? CreatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }

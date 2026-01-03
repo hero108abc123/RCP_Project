@@ -30,8 +30,10 @@ export class UpdateRoom extends BaseComponent{
         location: new FormControl('', [Validators.required]),
         tongSoLuongGhe: new FormControl('', [Validators.required]),
         soLuongGheThuong: new FormControl('', [Validators.required]),
-        soLuongGheVip :new FormControl('', [Validators.required]),
+        //soLuongGheVip :new FormControl('', [Validators.required]),
         soLuongGheDoi :new FormControl('', [Validators.required]),
+        soLuongGheThuongMoiHang :new FormControl('', [Validators.required]),
+        soLuongGheDoiMoiHang :new FormControl('', [Validators.required]),
     });
 
     override ValidationMessages: Record<string, Record<string, string>> = {
@@ -47,10 +49,13 @@ export class UpdateRoom extends BaseComponent{
         soLuongGheThuong: {
             required: 'Không được bỏ trống'
         },
-        soLuongGheVip: {
+        soLuongGheThuongMoiHang: {
             required: 'Không được bỏ trống'
         },
         soLuongGheDoi: {
+            required: 'Không được bỏ trống'
+        },
+        soLuongGheDoiMoiHangDoi: {
             required: 'Không được bỏ trống'
         },
      };
@@ -79,8 +84,9 @@ export class UpdateRoom extends BaseComponent{
                         location: this.data?.location,
                         tongSoLuongGhe: this.data?.tongSoLuongGhe,
                         soLuongGheThuong: this.data?.soLuongGheThuong,
-                        soLuongGheVip: this.data?.soLuongGheVip,
-                        soLuongGheDoi: this.data?.soLuongGheDoi
+                        soLuongGheThuongMoiHang: this.data?.soLuongGheThuongMoiHang,
+                        soLuongGheDoi: this.data?.soLuongGheDoi,
+                        soLuongGheDoiMoiHangDoi: this.data?.soLuongGheDoiMoiHang,
 
                     });
                 }

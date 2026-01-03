@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using RCP.Cinema.ApplicationServices.Cinema.Interfaces;
+using RCP.Cinema.Dtos.Cinema;
+using RCP.Cinema.Dtos.Room;
 using RCP.Project.Attributes;
 using RCP.Project.Controller.Base;
 using RCP.Project.HttpRequest;
 using RCP.Shared.Constant.Constants.Auth;
-using RCP.Cinema.ApplicationServices.Cinema.Interfaces;
-using RCP.Cinema.Dtos.Room;
 
 namespace RCP.Project.Controller.Room
 {
@@ -44,6 +44,36 @@ namespace RCP.Project.Controller.Room
             try
             {
                 var data = _roomService.Find(dto);
+                return new(data);
+            }
+            catch (Exception ex)
+            {
+                return OkException(ex);
+            }
+        }
+
+        [Permission(PermissionKeys.RoomView)]
+        [HttpGet("cinema/{idCinema}/drop-down")]
+        public ApiResponse GetDropDown([FromRoute] int idCinema)
+        {
+            try
+            {
+                var data = _roomService.GetListRoom(idCinema);
+                return new(data);
+            }
+            catch (Exception ex)
+            {
+                return OkException(ex);
+            }
+        }
+
+        [Permission(PermissionKeys.RoomView)]
+        [HttpGet("ghe")]
+        public ApiResponse FindPagingGhe([FromQuery] FindPagingGheInRoomDto dto)
+        {
+            try
+            {
+                var data = _roomService.FindPagingGheInRoom(dto);
                 return new(data);
             }
             catch (Exception ex)
@@ -96,5 +126,7 @@ namespace RCP.Project.Controller.Room
                 return OkException(ex);
             }
         }
+
+
     }
 }

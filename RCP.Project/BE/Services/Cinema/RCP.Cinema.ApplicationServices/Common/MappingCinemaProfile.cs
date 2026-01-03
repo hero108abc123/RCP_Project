@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using RCP.Cinema.Dtos.Cinema;
+using RCP.Cinema.Dtos.GiaVe;
 using RCP.Cinema.Dtos.Room;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,9 @@ namespace RCP.Cinema.ApplicationServices.Common
         {
             CreateMap<Domain.Cinema,ViewCinemaDto>();
             CreateMap<Domain.Room, ViewRoomDto>();
+            CreateMap<Domain.GiaVe,ViewGiaVeDto>();
+            CreateMap<Domain.Cinema, GetDropDownCinemaDto>();
+            CreateMap<Domain.Room,GetDropDownRoomDto>();    
         }
     }
 }

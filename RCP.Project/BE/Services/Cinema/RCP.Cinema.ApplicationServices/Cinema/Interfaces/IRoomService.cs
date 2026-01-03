@@ -1,4 +1,5 @@
-﻿using RCP.Cinema.Dtos.Room;
+﻿using RCP.Cinema.Dtos.Cinema;
+using RCP.Cinema.Dtos.Room;
 using RCP.Project.HttpRequest.BaseRequest;
 using System;
 using System.Collections.Generic;
@@ -15,5 +16,10 @@ namespace RCP.Cinema.ApplicationServices.Cinema.Interfaces
         public void Delete(int idCinema,int id);
         public BaseResponsePagingDto<ViewRoomDto> Find(FindPagingRoomDto dto);
         public ViewRoomDto FindById(int idCinema,int id);
+
+        public  Task UpdateTrangThaiNgayGiaVe();
+
+        public BaseResponsePagingDto<ViewGheInRoomDto> FindPagingGheInRoom(FindPagingGheInRoomDto dto);
+        public List<GetDropDownRoomDto> GetListRoom(int idCinema);
     }
 }

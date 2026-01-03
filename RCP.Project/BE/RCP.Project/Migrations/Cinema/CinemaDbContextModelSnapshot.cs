@@ -180,10 +180,6 @@ namespace RCP.Project.Migrations.Cinema
                     b.Property<int>("IdRoom")
                         .HasColumnType("int");
 
-                    b.Property<string>("KhuVuc")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -199,6 +195,52 @@ namespace RCP.Project.Migrations.Cinema
                     b.HasIndex(new[] { "Id" }, "IX_Ghe");
 
                     b.ToTable("Ghe", "cinema");
+                });
+
+            modelBuilder.Entity("RCP.Cinema.Domain.GheGiaVe", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<bool>("Deleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("IdGhe")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdGiaVe")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex(new[] { "Id" }, "IX_GheGiaVe");
+
+                    b.ToTable("GheGiaVe", "cinema");
                 });
 
             modelBuilder.Entity("RCP.Cinema.Domain.GiaVe", b =>
@@ -228,20 +270,19 @@ namespace RCP.Project.Migrations.Cinema
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Gia")
+                    b.Property<string>("GiaCuoiTuan")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("IdCinema")
-                        .HasColumnType("int");
+                    b.Property<string>("GiaNgayLe")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("IdGhe")
-                        .HasColumnType("int");
+                    b.Property<string>("GiaNgayThuong")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("IdPhim")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdRoom")
+                    b.Property<int>("HangGhe")
                         .HasColumnType("int");
 
                     b.Property<string>("ModifiedBy")
@@ -249,6 +290,9 @@ namespace RCP.Project.Migrations.Cinema
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("TrangThaiNgay")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -308,10 +352,13 @@ namespace RCP.Project.Migrations.Cinema
                     b.Property<int>("SoLuongGheDoi")
                         .HasColumnType("int");
 
+                    b.Property<int>("SoLuongGheDoiMoiHang")
+                        .HasColumnType("int");
+
                     b.Property<int>("SoLuongGheThuong")
                         .HasColumnType("int");
 
-                    b.Property<int>("SoLuongGheVip")
+                    b.Property<int>("SoLuongGheThuongMoiHang")
                         .HasColumnType("int");
 
                     b.Property<int>("TongSoLuongGhe")

@@ -42,17 +42,26 @@
         }
     </div>
     <div class="mb-3">
-        <label for="soLuongGheVip" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Số lượng ghế vip <span class="text-red-500">*</span></label>
-        <p-inputNumber id="soLuongGheVip" formControlName="soLuongGheVip" [min]="1" placeholder="Nhập số lượng" styleClass="w-full" />
-        @if (form.get('soLuongGheVip')?.hasError('required') && form.get('soLuongGheVip')?.touched) {
-        <p-message severity="error" variant="simple" size="small">{{ getError('soLuongGheVip') }}</p-message>
+        <label for="soLuongGheThuongMoiHang" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Số lượng ghế thường mỗi hàng <span class="text-red-500">*</span></label>
+        <p-inputNumber id="soLuongGheThuongMoiHang" formControlName="soLuongGheThuongMoiHang" [min]="1" placeholder="Nhập số lượng" styleClass="w-full" />
+        @if (form.get('soLuongGheThuongMoiHang')?.hasError('required') && form.get('soLuongGheThuongMoiHang')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('soLuongGheThuongMoiHang') }}</p-message>
         }
     </div>
+
     <div class="mb-3">
         <label for="soLuongGheDoi" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Số lượng ghế đôi <span class="text-red-500">*</span></label>
         <p-inputNumber id="soLuongGheDoi" formControlName="soLuongGheDoi" [min]="1" placeholder="Nhập số lượng" styleClass="w-full" />
         @if (form.get('soLuongGheDoi')?.hasError('required') && form.get('soLuongGheDoi')?.touched) {
         <p-message severity="error" variant="simple" size="small">{{ getError('soLuongGheDoi') }}</p-message>
+        }
+    </div>
+    
+    <div class="mb-3">
+        <label for="soLuongGheDoiMoiHang" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Số lượng ghế đôi mỗi hàng <span class="text-red-500">*</span></label>
+        <p-inputNumber id="soLuongGheDoiMoiHang" formControlName="soLuongGheDoiMoiHang" [min]="1" placeholder="Nhập số lượng" styleClass="w-full" />
+        @if (form.get('soLuongGheDoiMoiHang')?.hasError('required') && form.get('soLuongGheDoiMoiHang')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('soLuongGheDoiMoiHang') }}</p-message>
         }
     </div>
     

@@ -39,6 +39,20 @@ namespace RCP.Project.Controller.Phim
             }
         }
         [Permission(PermissionKeys.PhimView)]
+        [HttpGet("the-loai/dropdown")]
+        public ApiResponse FindTheLoai()
+        {
+            try
+            {
+                var data = _phimService.GetTheLoai();
+                return new(data);
+            }
+            catch (Exception ex)
+            {
+                return OkException(ex);
+            }
+        }
+        [Permission(PermissionKeys.PhimView)]
         [HttpGet("dropdown")]
         public ApiResponse GetDropDown()
         {

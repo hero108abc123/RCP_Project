@@ -47,6 +47,19 @@ export class AppMenu {
                                 visible: this._sharedService.isGranted(PermissionConstants.MenuRapChieuPhim),
                                 heroIcon: 'heroVideoCamera',
                                 routerLink: ['/rcp-management/movie']
+                            },
+                            {
+                                label: 'Giá vé',
+                                visible: this._sharedService.isGranted(PermissionConstants.MenuGiaVe),
+                                heroIcon: 'heroTicket',
+                                routerLink: ['/gia-ve/gia-ve']
+                            },
+                            {
+                                label: 'Lịch chiếu',
+                                visible: this._sharedService.isGranted(PermissionConstants.MenuGiaVe),
+                                heroIcon: 'heroCalendarDays',
+                                routerLink: ['/lich-chieu/lich-chieu']
+
                             }
                         ]
                     }

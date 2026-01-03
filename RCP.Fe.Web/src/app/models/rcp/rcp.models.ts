@@ -31,3 +31,8 @@ export interface IViewRCP {
     soLuongPhongChieu?: number;
     urlAnhCinema?: string;
 }
+
+export interface IGetDropDownRCP{
+    id?: number
+    name?: string
+}

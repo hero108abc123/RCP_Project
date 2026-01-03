@@ -36,8 +36,10 @@ export class Room extends BaseComponent{
         { header: 'Vị trí', field: 'location', headerContainerStyle: 'min-width: 12rem', cellStyle: 'text-align:center' },
         { header: 'Tổng số lượng ghế', field: 'tongSoLuongGhe', headerContainerStyle: 'min-width: 12rem', cellStyle: 'text-align:center' },
         { header: 'Số lượng ghế thường', field: 'soLuongGheThuong', headerContainerStyle: 'min-width: 12rem', cellStyle: 'text-align:center' },
-        { header: 'Số lượng ghế Vip', field: 'soLuongGheVip', headerContainerStyle: 'min-width: 12rem', cellStyle: 'text-align:center' },
+        { header: 'Số lượng ghế thường mỗi hàng', field: 'soLuongGheThuongMoiHang', headerContainerStyle: 'min-width: 12rem', cellStyle: 'text-align:center' },
+        //{ header: 'Số lượng ghế Vip', field: 'soLuongGheVip', headerContainerStyle: 'min-width: 12rem', cellStyle: 'text-align:center' },
         { header: 'Số lượng ghế đôi', field: 'soLuongGheDoi', headerContainerStyle: 'min-width: 12rem', cellStyle: 'text-align:center' },
+        { header: 'Số lượng ghế đôi mỗi hàng', field: 'soLuongGheDoiMoiHang', headerContainerStyle: 'min-width: 12rem', cellStyle: 'text-align:center' },
         { header: 'Thao tác', headerContainerStyle: 'width: 6rem', cellViewType: CellViewTypes.CUSTOM_COMP, customComponent: TblAction ,cellStyle: 'text-align:center'}
             
     ];
@@ -126,7 +128,7 @@ export class Room extends BaseComponent{
     navigateToDetail(data: IViewRoom) {
             //console.log('Navigating with:', danhBa?.id);
             if (data?.id && this.query.idCinema) {
-                this.router.navigate(['/rcp-management/movie'], {
+                this.router.navigate(['/rcp-management/ghe'], {
                     queryParams: {
                          idRoom: data.id,
                          idCinema: this.query.idCinema  

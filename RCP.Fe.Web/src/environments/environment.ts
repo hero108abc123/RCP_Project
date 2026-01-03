@@ -1,7 +1,7 @@
 import { IEnvironment } from "@/shared/models/environment.models";
 
 export const environment: IEnvironment = {
-    production: true,
+     production: true,
     baseUrl: 'http://10.20.0.108:8100',
     authGrantType: 'password',
     authClientId: 'client-web',

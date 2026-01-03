@@ -20,6 +20,8 @@ export const appRoutes: Routes = [
             //{ path: 'trao-bang', loadChildren: () => import('./app/pages/trao-bang/trao-bang.routes') },
             { path: 'uikit', loadChildren: () => import('./app/pages/uikit/uikit.routes') },
             { path: 'rcp-management', loadChildren: () => import('./app/pages/rcp-management/rcp-management.routes') },
+            { path: 'gia-ve', loadChildren: () => import('./app/pages/gia-ve/gia-ve.routes') },
+            { path: 'lich-chieu', loadChildren: () => import('./app/pages/lich-chieu/lich-chieu.routes') },
             { path: 'documentation', component: Documentation },
             { path: 'pages', loadChildren: () => import('./app/pages/pages.routes') }
         ]

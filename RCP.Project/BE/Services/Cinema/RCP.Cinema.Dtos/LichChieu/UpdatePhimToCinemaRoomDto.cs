@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RCP.Cinema.Dtos.Cinema
+namespace RCP.Cinema.Dtos.LichChieu
 {
-    public class AddPhimToCinemaRoomDto
+    public class UpdatePhimToCinemaRoomDto
     {
+        public int Id { get; set; }
         public int IdPhim { get; set; }
-        public int IdCinema { get; set; }   
+        public int IdCinema { get; set; }
         public int IdRoom { get; set; }
         public DateTime? ThoiGianBatDauChieu { get; set; }
         public DateTime? ThoiGianKetThucChieu { get; set; }

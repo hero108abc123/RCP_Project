@@ -1,4 +1,6 @@
 import { IGetDropDownPhim } from "@/models/movie/movie.models";
+import { IGetDropDownTheLoai } from "@/models/rcp/movie.models";
+
 import { IBaseResponseWithData } from "@/shared/models/request-paging.base.models";
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
@@ -14,4 +16,8 @@ export class PhimService{
         return this.http.get<IBaseResponseWithData<IGetDropDownPhim[]>>(`${this.api}/dropdown`);
     }
 
+    getTheLoai(){
+        return this.http.get<IBaseResponseWithData<IGetDropDownTheLoai[]>>(`${this.api}/the-loai/dropdown`);
+    }
 }
+

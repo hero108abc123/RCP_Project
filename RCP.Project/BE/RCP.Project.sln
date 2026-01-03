@@ -49,6 +49,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCP.Lib.ApplicationService"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCP.Lib.Domain", "Services\Lib\RCP.Lib.Domain\RCP.Lib.Domain.csproj", "{F788D142-4237-44EB-8A86-7DCBC0C1BFDD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{51E575A1-505B-49A3-BAD0-2942AB07603D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCP.External.ApplicationService", "Services\External\RCP.External.ApplicationService\RCP.External.ApplicationService.csproj", "{2F1EDE30-525D-4D4E-A32E-7F3FC8073465}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -123,6 +127,10 @@ Global
 		{F788D142-4237-44EB-8A86-7DCBC0C1BFDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F788D142-4237-44EB-8A86-7DCBC0C1BFDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F788D142-4237-44EB-8A86-7DCBC0C1BFDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F1EDE30-525D-4D4E-A32E-7F3FC8073465}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F1EDE30-525D-4D4E-A32E-7F3FC8073465}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F1EDE30-525D-4D4E-A32E-7F3FC8073465}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F1EDE30-525D-4D4E-A32E-7F3FC8073465}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -149,6 +157,8 @@ Global
 		{620B78B4-C6B8-4E4B-B236-965076E9F038} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{985868B1-9D9D-4836-9AD0-9D09E554C89A} = {620B78B4-C6B8-4E4B-B236-965076E9F038}
 		{F788D142-4237-44EB-8A86-7DCBC0C1BFDD} = {620B78B4-C6B8-4E4B-B236-965076E9F038}
+		{51E575A1-505B-49A3-BAD0-2942AB07603D} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{2F1EDE30-525D-4D4E-A32E-7F3FC8073465} = {51E575A1-505B-49A3-BAD0-2942AB07603D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8C5B4BDE-4A30-4D3A-90C7-3EF5A9157634}

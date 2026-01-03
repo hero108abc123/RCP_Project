@@ -37,11 +37,23 @@
         public const string CinemaUpdate = Function + "CinemaUpdate";
         public const string CinemaDelete = Function + "CinemaDelete";
 
+        public const string CategoryGiaVe = "QL Giá vé";
+        public const string GiaVeView = Function + "GiaVeView";
+        public const string GiaVeAdd = Function + "GiaVeCreate";
+        public const string GiaVeUpdate = Function + "GiaVeUpdate";
+        public const string GiaVeDelete = Function + "GiaVeDelete";
+
         public const string CategoryRoom = "QL Phòng chiếu";
         public const string RoomView = Function + "RoomView";
         public const string RoomAdd = Function + "RoomCreate";
         public const string RoomUpdate = Function + "RoomUpdate";
         public const string RoomDelete = Function + "CinemaDelete";
+
+        public const string CategoryLichChieu = "QL Lịch chiếu";
+        public const string LichChieuView = Function + "LichChieuView";
+        public const string LichChieuAdd = Function + "LichChieuCreate";
+        public const string LichChieuUpdate = Function + "LichChieuUpdate";
+        public const string LichChieuDelete = Function + "LichChieuDelete";
 
 
 
@@ -80,6 +92,16 @@
             (RoomAdd, "Thêm Phòng chiếu", CategoryRoom),
             (RoomUpdate, "Cập nhật Phòng chiếu", CategoryRoom),
             (RoomDelete, "Xóa Phòng chiếu", CategoryRoom ),
+
+            (GiaVeView, "Xem Gía vé", CategoryGiaVe),
+            (GiaVeAdd, "Thêm Gía vé", CategoryGiaVe),
+            (GiaVeUpdate, "Cập nhật Gía vé", CategoryGiaVe),
+            (GiaVeDelete, "Xóa Gía vé", CategoryGiaVe ),
+
+            (LichChieuView, "Xem Lịch chiếu", CategoryLichChieu),
+            (LichChieuAdd, "Thêm Lịch chiếu", CategoryLichChieu),
+            (LichChieuUpdate, "Cập nhật Lịch chiếu", CategoryLichChieu),
+            (LichChieuDelete, "Xóa Lịch chiếu", CategoryLichChieu ),
         };
     }
 }

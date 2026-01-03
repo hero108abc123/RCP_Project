@@ -1,0 +1,47 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+        <label for="giaNgayThuong" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Giá ngày thường <span class="text-red-500">*</span></label>
+        <p-inputNumber id="giaNgayThuong" formControlName="giaNgayThuong" mode="currency" currency="VND" locale="vi-VN" [min]="0" placeholder="Nhập giá ngày thường" styleClass="w-full" />
+        @if (form.get('giaNgayThuong')?.hasError('required') && form.get('giaNgayThuong')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('giaNgayThuong') }}</p-message>
+        }
+    </div>
+     <div class="mb-3">
+        <label for="giaCuoiTuan" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Giá cuối tuần <span class="text-red-500">*</span></label>
+        <p-inputNumber id="giaCuoiTuan" formControlName="giaCuoiTuan" mode="currency" currency="VND" locale="vi-VN" [min]="0" placeholder="Nhập giá cuối tuần" styleClass="w-full" />
+        @if (form.get('giaCuoiTuan')?.hasError('required') && form.get('giaCuoiTuan')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('giaCuoiTuan') }}</p-message>
+        }
+    </div>
+
+    <div class="mb-3">
+        <label for="giaNgayLe" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Giá ngày lễ <span class="text-red-500">*</span></label>
+        <p-inputNumber id="giaNgayLe" formControlName="giaNgayLe" mode="currency" currency="VND" locale="vi-VN" [min]="0" placeholder="Nhập giá ngày lễ" styleClass="w-full" />
+        @if (form.get('giaNgayLe')?.hasError('required') && form.get('giaNgayLe')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('giaNgayLe') }}</p-message>
+        }
+    </div>
+
+   
+
+    <div class="mb-3">
+        <label for="hangGhe" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Hạng ghế <span class="text-red-500">*</span></label>
+        <p-select id="hangGhe" formControlName="hangGhe" [options]="hangGheOptions" placeholder="Chọn hạng ghế" styleClass="w-full" appendTo="body" />
+        @if (form.get('hangGhe')?.hasError('required') && form.get('hangGhe')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('hangGhe') }}</p-message>
+        }
+    </div>
+
+    <div class="mb-3">
+        <label for="trangThaiNgay" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Trạng thái ngày <span class="text-red-500">*</span></label>
+        <p-select id="trangThaiNgay" formControlName="trangThaiNgay" [options]="trangThaiNgayOptions" placeholder="Chọn trạng thái ngày" styleClass="w-full" appendTo="body" />
+        @if (form.get('trangThaiNgay')?.hasError('required') && form.get('trangThaiNgay')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('trangThaiNgay') }}</p-message>
+        }
+    </div>
+
+    <div class="flex gap-2 mt-4" style="justify-content: flex-end;">
+        <p-button label="Hủy" icon="pi pi-times" severity="secondary" [outlined]="true" (onClick)="onCancel()" />
+        <p-button label="Lưu" icon="pi pi-save" type="submit" [loading]="loading" />
+    </div>
+</form>

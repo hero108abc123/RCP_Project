@@ -4,6 +4,11 @@ export interface IFindPagingRoom extends IBaseRequestPaging {
     idCinema: number;
 }
 
+export interface IFindPagingGhe extends IBaseRequestPaging{
+    idCinema: number;
+    idRoom: number;
+}
+
 export interface ICreateRoom{
     idCinema ?: number,
     name?: string,
@@ -11,8 +16,10 @@ export interface ICreateRoom{
     location?: string,
     tongSoLuongGhe? : number,
     soLuongGheThuong?: number,
-    soLuongGheVip?: number,
+    //soLuongGheVip?: number,
     soLuongGheDoi?: number,
+    soLuongGheThuongMoiHang?: number,
+    soLuongGheDoiMoiHang?: number,
 }
 
 export interface IUpdateRoom{
@@ -23,8 +30,10 @@ export interface IUpdateRoom{
     location?: string,
     tongSoLuongGhe? : number,
     soLuongGheThuong?: number,
-    soLuongGheVip?: number,
+    //soLuongGheVip?: number,
     soLuongGheDoi?: number,
+    soLuongGheThuongMoiHang?: number,
+    soLuongGheDoiMoiHang?: number,
 }
 
 export type IViewRoom = { 
@@ -35,6 +44,27 @@ export type IViewRoom = {
     location?: string,
     tongSoLuongGhe? : number,
     soLuongGheThuong?: number,
-    soLuongGheVip?: number,
+    //soLuongGheVip?: number,
     soLuongGheDoi?: number,
+    soLuongGheThuongMoiHang?: number,
+    soLuongGheDoiMoiHang?: number,
 }
+
+export type IViewGhe ={ 
+    id?: number
+    name?: string
+    hang?: string
+    hangGhe?: number 
+    giaVe: IViewGiaVeGhe
+}
+
+export type IViewGiaVeGhe ={
+    id?: number
+    giaVe?: string
+}
+
+export interface IGetDropDownRoom{
+    id?: number
+    name?: string
+}
+

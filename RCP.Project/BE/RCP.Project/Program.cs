@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Hangfire;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -15,8 +16,10 @@ using RCP.Cinema.ApplicationServices.Cinema.Implements;
 using RCP.Cinema.ApplicationServices.Cinema.Interfaces;
 using RCP.Cinema.ApplicationServices.Common;
 using RCP.Cinema.Infrastructure;
+using RCP.External.ApplicationService.BackGroundJob;
 using RCP.Lib.ApplicationService.Cloudinary.Implements;
 using RCP.Lib.ApplicationService.Cloudinary.Interfaces;
+using RCP.Movie.ApplicationServices.Common;
 using RCP.Movie.ApplicationServices.PhimModule.Abstracts;
 using RCP.Movie.ApplicationServices.PhimModule.Implements;
 using RCP.Movie.Infrastructure;
@@ -106,6 +109,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole>()
 // Build mapper configuration
 builder.Services.AddAutoMapper(cfg => { }, typeof(MappingProfile));
 builder.Services.AddAutoMapper(cfg => { }, typeof(MappingCinemaProfile));
+builder.Services.AddAutoMapper(cfg => { }, typeof(MappingPhimProfile));
 #endregion
 #region auth
 string secretKey = builder.Configuration.GetSection("AuthServer:SecretKey").Value!;
@@ -175,7 +179,9 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 #endregion
-
+#region hangfire
+builder.Services.ConfigureHangfire(hangfireConnectionString);
+#endregion
 
 #region service
 builder.Services.AddScoped<IUserService, UserService>();
@@ -185,6 +191,9 @@ builder.Services.AddScoped<ICinemaService, CinemaService>();
 builder.Services.AddScoped<IRoomService, RoomService>();
 builder.Services.AddHostedService<thongbao.be.Workers.AuthWorker>();
 builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
+builder.Services.AddScoped<IJobService, JobService>();
+builder.Services.AddScoped<IGiaVeService, GiaVeService>();
+builder.Services.AddScoped<ILichChieuService, LichChieuService>();
 #endregion
 // Add services to the container.
 
@@ -252,7 +261,13 @@ app.UseAuthorization();
 
 
 app.MapControllers();
-//app.UseHangfireDashboard();
+app.UseHangfireDashboard();
+using (var scope = app.Services.CreateScope())
+{
+    var jobService = scope.ServiceProvider.GetRequiredService<IJobService>();
+    jobService.CronJobUpdateTrangThaiNgayGiaVe();
+}
+
 //app.MapHealthChecks("/health");
 
 app.Run();

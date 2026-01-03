@@ -320,5 +320,17 @@ namespace RCP.Movie.ApplicationServices.PhimModule.Implements
                 TrailerUrl = trailer
             };
         }
+
+        public List<GetTheLoaiDto> GetTheLoai()
+        {
+            _logger.LogInformation($"{nameof(GetTheLoai)}");
+            var query = from tl in _phimDbContext.TheLoais
+                        where !tl.Deleted
+                        orderby tl.Id 
+                        select tl;
+            var data = query.ToList();
+            var result = _mapper.Map<List<GetTheLoaiDto>>(data);
+            return result;
+        }
     }
 }

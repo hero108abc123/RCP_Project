@@ -18,6 +18,7 @@ namespace RCP.Authentication.ApplicationService.Common
             CreateMap<AppUser, ViewUserDto>();
             CreateMap<AppUser, GetAuthMeDto>();
             CreateMap<IdentityRole, ViewRoleDto>();
+
         }
     }
 }

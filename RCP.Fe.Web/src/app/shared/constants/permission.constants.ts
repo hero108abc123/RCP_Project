@@ -8,6 +8,8 @@ export class PermissionConstants {
     static MenuUserManagementUser = this.MenuUserManagement + "_User";
     static MenuUserManagementRole = this.MenuUserManagement + "_User";
     static MenuRapChieuPhim = this.Menu + "RapChieuPhim";
+    static MenuGiaVe = this.Menu + "GiaVe";
+    static MenuLichChieu = this.Menu + "LichChieu";
 
 
 

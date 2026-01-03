@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using RCP.Authentication.ApplicationService.UserModule.Abstracts;
 using RCP.Cinema.ApplicationServices.Cinema.Interfaces;
 using RCP.Cinema.Dtos.Cinema;
+using RCP.Cinema.Dtos.LichChieu;
 using RCP.Project.Attributes;
 using RCP.Project.Controller.Base;
 using RCP.Project.HttpRequest;
@@ -67,6 +68,20 @@ namespace RCP.Project.Controller.Cinema
                 return OkException(ex);
             }
         }
+        [Permission(PermissionKeys.CinemaView)]
+        [HttpGet("drop-down")]
+        public ApiResponse GetDropDown()
+        {
+            try
+            {
+                var data = _cinemaService.GetListCinema();
+                return new(data);
+            }
+            catch (Exception ex)
+            {
+                return OkException(ex);
+            }
+        }
 
         [Permission(PermissionKeys.CinemaUpdate)]
         [HttpPut("")]
@@ -99,64 +114,6 @@ namespace RCP.Project.Controller.Cinema
             }
         }
 
-        [Permission(PermissionKeys.CinemaAdd)]
-        [HttpPost("phim-to-cinema")]
-        public ApiResponse AddPhimToCinemaRoom([FromBody] AddPhimToCinemaRoomDto dto)
-        {
-            try
-            {
-                _cinemaService.AddPhimToCinemaRoom(dto);
-                return new();
-            }
-            catch (Exception ex)
-            {
-                return OkException(ex);
-            }
-        }
-
-        [Permission(PermissionKeys.CinemaUpdate)]
-        [HttpPut("phim-to-cinema")]
-        public ApiResponse UpdatePhimToCinemaRoom([FromBody] UpdatePhimToCinemaRoomDto dto)
-        {
-            try
-            {
-                _cinemaService.UpdatePhimToCinemaRoom(dto);
-                return new();
-            }
-            catch (Exception ex)
-            {
-                return OkException(ex);
-            }
-        }
-
-        [Permission(PermissionKeys.CinemaUpdate)]
-        [HttpDelete("phim-to-cinema/{id}")]
-        public ApiResponse DeletePhimToCinemaRoom([FromRoute] int id)
-        {
-            try
-            {
-                _cinemaService.DeletePhimToCinemaRoom(id);
-                return new();
-            }
-            catch (Exception ex)
-            {
-                return OkException(ex);
-            }
-        }
-
-        [Permission(PermissionKeys.CinemaView)]
-        [HttpGet("phim-to-cinema")]
-        public ApiResponse FindPagingPhimRoomCinema([FromQuery] FindPagingCinemaRoomPhimDto dto)
-        {
-            try
-            {
-                var data = _cinemaService.FindPagingCinemaRoomMovie(dto);
-                return new(data);
-            }
-            catch (Exception ex)
-            {
-                return OkException(ex);
-            }
-        }
+        
     }
 }

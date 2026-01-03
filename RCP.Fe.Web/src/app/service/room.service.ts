@@ -1,4 +1,4 @@
-import { ICreateRoom, IFindPagingRoom, IUpdateRoom } from "@/models/rcp/room.models";
+import { ICreateRoom, IFindPagingGhe, IFindPagingRoom, IUpdateRoom } from "@/models/rcp/room.models";
 import { IBaseResponseWithData } from "@/shared/models/request-paging.base.models";
 import { query } from "@angular/animations";
 import { HttpClient } from "@angular/common/http";
@@ -36,6 +36,20 @@ export class RoomService{
 
     findById (idCinema:number, id: number){
          return this.http.get<IBaseResponseWithData<any>>(`${this.api}/${id}/cinema/${idCinema}`)
+    }
+
+    findPagingGhe( query: IFindPagingGhe){
+        const params ={
+            idCinema: query.idCinema,
+            idRoom: query.idRoom,
+            pageNumber: query.pageNumber,
+            pageSize: query.pageSize,
+            keyword: query.keyword || ''
+        };
+        return this.http.get<IBaseResponseWithData<any>> (`${this.api}/ghe`, {params});
+    }
+    getListDropDown(idCinema: number){
+        return this.http.get<IBaseResponseWithData<any>>(`${this.api}/cinema/${idCinema}/drop-down`);
     }
 }
 

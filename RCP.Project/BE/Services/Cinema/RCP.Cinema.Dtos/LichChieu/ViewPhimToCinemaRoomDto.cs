@@ -6,17 +6,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RCP.Cinema.Dtos.Cinema
+namespace RCP.Cinema.Dtos.LichChieu
 {
     public class ViewPhimToCinemaRoomDto
     {
-        public int IdCinema {  get; set; }
-        public int IdRoom { get; set; }
+
+        public ViewCinema Cinema { get; set; } = new ViewCinema();
+        public ViewRoom Room { get; set; } = new ViewRoom();
         public List<ViewPhimCinemaDto> Movies { get; set; } = new List<ViewPhimCinemaDto>();
 
 
     }
 
+    public class ViewCinema
+    {
+        public int IdCinema { get; set; }
+        public string Name { get; set; } = String.Empty;
+    }
+    public class ViewRoom
+    {
+        public int IdRoom { get; set; }
+        public string Name { get; set; } = String.Empty;
+    }
     
 
     public class ViewPhimCinemaDto

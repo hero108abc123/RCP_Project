@@ -10,6 +10,6 @@ namespace RCP.Shared.Constant.Constants.Cinema
     {
         public const int Thuong = 1;
         public const int Doi = 2;
-        public const int Vip = 3;
+        //public const int Vip = 3;
     }
 }

@@ -1,4 +1,4 @@
-import { heroSquare3Stack3d, heroEnvelope, heroChatBubbleBottomCenterText, heroRadio, heroUser, heroUserGroup, heroAcademicCap, heroCamera, heroFilm, heroVideoCamera } from '@ng-icons/heroicons/outline';
+import { heroSquare3Stack3d, heroEnvelope, heroChatBubbleBottomCenterText, heroRadio, heroUser, heroUserGroup, heroAcademicCap, heroCamera, heroFilm, heroVideoCamera, heroTicket, heroCalendarDays } from '@ng-icons/heroicons/outline';
 
 export const heroIcons = {
     heroSquare3Stack3d,
@@ -11,4 +11,6 @@ export const heroIcons = {
     heroCamera,
     heroFilm,
     heroVideoCamera,
+    heroTicket,
+    heroCalendarDays,
 };

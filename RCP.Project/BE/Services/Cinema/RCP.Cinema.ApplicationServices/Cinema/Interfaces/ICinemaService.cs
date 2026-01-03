@@ -1,4 +1,5 @@
 ﻿using RCP.Cinema.Dtos.Cinema;
+using RCP.Cinema.Dtos.LichChieu;
 using RCP.Project.HttpRequest.BaseRequest;
 using System;
 using System.Collections.Generic;
@@ -15,10 +16,6 @@ namespace RCP.Cinema.ApplicationServices.Cinema.Interfaces
         public BaseResponsePagingDto<ViewCinemaDto> Find(FindPagingDto dto);
         public ViewCinemaDto FindById(int id);
         public void Delete(int id);
-        public void AddPhimToCinemaRoom(AddPhimToCinemaRoomDto dto);
-        public void UpdatePhimToCinemaRoom(UpdatePhimToCinemaRoomDto dto);
-
-        public void DeletePhimToCinemaRoom(int id);
-        public BaseResponsePagingDto<ViewPhimToCinemaRoomDto> FindPagingCinemaRoomMovie(FindPagingCinemaRoomPhimDto dto);
+        public List<GetDropDownCinemaDto> GetListCinema();
     }
 }

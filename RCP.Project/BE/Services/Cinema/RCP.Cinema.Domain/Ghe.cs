@@ -28,7 +28,7 @@ namespace RCP.Cinema.Domain
         public int IdRoom { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Hang { get; set; } = string.Empty;
-        public string KhuVuc { get; set; } = string.Empty;
+        //public string KhuVuc { get; set; } = string.Empty;
         //public string GiaVe { get; set; } = string.Empty;
         public int HangGhe { get; set; }
         public string? CreatedBy { get; set; }

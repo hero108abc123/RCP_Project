@@ -41,6 +41,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Services\Authentication\RCP.Authentication.ApplicationServices\RCP.Authentication.ApplicationServices.csproj" />
     <ProjectReference Include="..\Services\Lib\RCP.Lib.ApplicationService\RCP.Lib.ApplicationService.csproj" />
+	 <ProjectReference Include="..\Services\External\RCP.External.ApplicationService\RCP.External.ApplicationService.csproj" />
     <ProjectReference Include="..\Services\Movie\RCP.Movie.ApplicationServices\RCP.Movie.ApplicationServices.csproj" />
 	  <ProjectReference Include="..\Services\Cinema\RCP.Cinema.ApplicationServices\RCP.Cinema.ApplicationServices.csproj" />
   </ItemGroup>

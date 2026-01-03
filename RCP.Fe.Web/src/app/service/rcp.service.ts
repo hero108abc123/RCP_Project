@@ -1,4 +1,4 @@
-import { IAddPhim, IDeletePhimByRoom, IFindPagingPhimByRoom, IUpdatePhimByRoom } from "@/models/rcp/movie.models";
+
 import { ICreateRCP, IFindPagingRCP, IUpdateRCP } from "@/models/rcp/rcp.models";
 import { IBaseResponsePaging, IBaseResponseWithData } from "@/shared/models/request-paging.base.models";
 import { HttpClient } from "@angular/common/http";
@@ -55,29 +55,11 @@ export class RCPService {
         return this.http.get<IBaseResponseWithData<any>>(`${this.api}/${id}`);
     }
 
-    addPhimToRoomRCP(body:IAddPhim){
-        return this.http.post<IBaseResponseWithData<any>> (`${this.api}/phim-to-cinema`, body);
+    getListDropDown(){
+        return this.http.get<IBaseResponseWithData<any>>(`${this.api}/drop-down`);
     }
 
-    updatePhimToRoomRCP(body:IUpdatePhimByRoom){
-        return this.http.put<IBaseResponseWithData<any>> (`${this.api}/phim-to-cinema`, body);
-    }
-
-    deletePhimToRoomRCP(id:number){
-        return this.http.delete<IBaseResponseWithData<any>> (`${this.api}/phim-to-cinema/${id}`);
-    }
-
-    findPagingPhimRoomRCP(query:IFindPagingPhimByRoom){
-        const params = { 
-            idCinema : query.idCinema,
-            idRoom:query.idRoom,
-            pageNumber: query.pageNumber,
-            pageSize: query.pageSize,
-            keyword: query.keyword || ''
-        };
-
-        return this.http.get<IBaseResponseWithData<any>>(`${this.api}/phim-to-cinema`, { params  });
-    }
+    
     
     
 }

@@ -5,6 +5,9 @@ using Microsoft.IdentityModel.Tokens;
 using NLog;
 using NLog.Web;
 using OpenIddict.Abstractions;
+using RCP.Asset.ApplicationServices.AssetModule.Abstracts;
+using RCP.Asset.ApplicationServices.AssetModule.Implements;
+using RCP.Asset.Infrastructure;
 using RCP.Authentication.ApplicationService.Common;
 using RCP.Authentication.ApplicationService.UserModule.Abstracts;
 using RCP.Authentication.ApplicationService.UserModule.Implements;
@@ -67,6 +70,15 @@ builder.Services.AddDbContext<CinemaDbContext>(options =>
     {
         options.MigrationsAssembly(typeof(Program).Assembly.GetName().Name);
         options.MigrationsHistoryTable(DbSchemas.TableMigrationsHistory, DbSchemas.Cinema);
+    });
+}, ServiceLifetime.Scoped);
+
+builder.Services.AddDbContext<AssetDbContext>(options =>
+{
+    options.UseSqlServer(connectionString, options =>
+    {
+        options.MigrationsAssembly(typeof(Program).Assembly.GetName().Name);
+        options.MigrationsHistoryTable(DbSchemas.TableMigrationsHistory, DbSchemas.Asset);
     });
 }, ServiceLifetime.Scoped);
 
@@ -185,6 +197,7 @@ builder.Services.AddScoped<ICinemaService, CinemaService>();
 builder.Services.AddScoped<IRoomService, RoomService>();
 builder.Services.AddHostedService<thongbao.be.Workers.AuthWorker>();
 builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
+builder.Services.AddScoped<IAssetService, AssetService>();
 #endregion
 // Add services to the container.
 

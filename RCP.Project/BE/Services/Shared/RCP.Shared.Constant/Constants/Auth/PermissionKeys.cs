@@ -43,6 +43,12 @@
         public const string RoomUpdate = Function + "RoomUpdate";
         public const string RoomDelete = Function + "CinemaDelete";
 
+        public const string CategoryAsset = "QL Tài sản";
+        public const string AssetView = "Asset_View";
+        public const string AssetAdd = "Asset_Add";
+        public const string AssetUpdate = "Asset_Update";
+        public const string AssetDelete = "Asset_Delete";
+
 
 
         public static readonly (string Key, string Name, string Category)[] All =
@@ -80,6 +86,11 @@
             (RoomAdd, "Thêm Phòng chiếu", CategoryRoom),
             (RoomUpdate, "Cập nhật Phòng chiếu", CategoryRoom),
             (RoomDelete, "Xóa Phòng chiếu", CategoryRoom ),
+
+            (AssetView, "Xem Tài sản", CategoryAsset),
+            (AssetAdd, "Thêm Tài sản", CategoryAsset),
+            (AssetUpdate, "Cập nhật Tài sản", CategoryAsset),
+            (AssetDelete, "Xóa Tài sản", CategoryAsset),
         };
     }
 }

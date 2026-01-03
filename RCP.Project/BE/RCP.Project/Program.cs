@@ -25,6 +25,7 @@ using RCP.Lib.ApplicationService.Cloudinary.Interfaces;
 using RCP.Menu.ApplicationService.MenuModule.Abstracts;
 using RCP.Menu.ApplicationService.MenuModule.Implements;
 using RCP.Menu.Infrastructure;
+using RCP.Movie.ApplicationServices.Common;
 using RCP.Movie.ApplicationServices.PhimModule.Abstracts;
 using RCP.Movie.ApplicationServices.PhimModule.Implements;
 using RCP.Movie.Infrastructure;
@@ -216,6 +217,9 @@ builder.Services.AddHostedService<thongbao.be.Workers.AuthWorker>();
 builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 builder.Services.AddScoped<IAssetService, AssetService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
+builder.Services.AddScoped<IJobService, JobService>();
+builder.Services.AddScoped<ILichChieuService, LichChieuService>();
+builder.Services.AddScoped<IGiaVeService, GiaVeService>();
 #endregion
 // Add services to the container.
 

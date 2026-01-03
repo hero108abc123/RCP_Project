@@ -55,6 +55,18 @@
         public const string LichChieuUpdate = Function + "LichChieuUpdate";
         public const string LichChieuDelete = Function + "LichChieuDelete";
 
+        public const string CategoryAsset = "QL Tài sản";
+        public const string AssetView = "Asset_View";
+        public const string AssetAdd = "Asset_Add";
+        public const string AssetUpdate = "Asset_Update";
+        public const string AssetDelete = "Asset_Delete";
+
+        public const string CategoryMenu = "QL Menu";
+        public const string MenuView = "Menu_View";
+        public const string MenuAdd = "Menu_Add";
+        public const string MenuUpdate = "Menu_Update";
+        public const string MenuDelete = "Menu_Delete";
+
 
 
         public static readonly (string Key, string Name, string Category)[] All =
@@ -102,6 +114,17 @@
             (LichChieuAdd, "Thêm Lịch chiếu", CategoryLichChieu),
             (LichChieuUpdate, "Cập nhật Lịch chiếu", CategoryLichChieu),
             (LichChieuDelete, "Xóa Lịch chiếu", CategoryLichChieu ),
+
+
+            (AssetView, "Xem Tài sản", CategoryAsset),
+            (AssetAdd, "Thêm Tài sản", CategoryAsset),
+            (AssetUpdate, "Cập nhật Tài sản", CategoryAsset),
+            (AssetDelete, "Xóa Tài sản", CategoryAsset),
+
+            (MenuView, "Xem Menu", CategoryMenu),
+            (MenuAdd, "Thêm Menu", CategoryMenu),
+            (MenuUpdate, "Cập nhật Menu", CategoryMenu),
+            (MenuDelete, "Xóa Menu", CategoryMenu),
         };
     }
 }

@@ -48,5 +48,8 @@
         public const int AssetErrorNotFound = 3001;
         public const int AssetErrorAlreadyExists = 3002;
 
+        //Mã lỗi Menu
+        public const int MenuErrorNotFound = 4001;
+
     }
 }

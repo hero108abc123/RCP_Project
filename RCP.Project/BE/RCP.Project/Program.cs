@@ -20,6 +20,9 @@ using RCP.Cinema.ApplicationServices.Common;
 using RCP.Cinema.Infrastructure;
 using RCP.Lib.ApplicationService.Cloudinary.Implements;
 using RCP.Lib.ApplicationService.Cloudinary.Interfaces;
+using RCP.Menu.ApplicationService.MenuModule.Abstracts;
+using RCP.Menu.ApplicationService.MenuModule.Implements;
+using RCP.Menu.Infrastructure;
 using RCP.Movie.ApplicationServices.PhimModule.Abstracts;
 using RCP.Movie.ApplicationServices.PhimModule.Implements;
 using RCP.Movie.Infrastructure;
@@ -79,6 +82,15 @@ builder.Services.AddDbContext<AssetDbContext>(options =>
     {
         options.MigrationsAssembly(typeof(Program).Assembly.GetName().Name);
         options.MigrationsHistoryTable(DbSchemas.TableMigrationsHistory, DbSchemas.Asset);
+    });
+}, ServiceLifetime.Scoped);
+
+builder.Services.AddDbContext<MenuDbContext>(options =>
+{
+    options.UseSqlServer(connectionString, options =>
+    {
+        options.MigrationsAssembly(typeof(Program).Assembly.GetName().Name);
+        options.MigrationsHistoryTable(DbSchemas.TableMigrationsHistory, DbSchemas.Menu);
     });
 }, ServiceLifetime.Scoped);
 
@@ -198,6 +210,7 @@ builder.Services.AddScoped<IRoomService, RoomService>();
 builder.Services.AddHostedService<thongbao.be.Workers.AuthWorker>();
 builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 builder.Services.AddScoped<IAssetService, AssetService>();
+builder.Services.AddScoped<IMenuService, MenuService>();
 #endregion
 // Add services to the container.
 

@@ -9,5 +9,6 @@
         public const string Cinema = "cinema";
         public const string Asset = "asset";
         public const string Core = "core";
+        public const string Menu = "menu";
     }
 }

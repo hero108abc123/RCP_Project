@@ -50,7 +50,7 @@ function Item({
       style={styles.item}
       activeOpacity={0.7}
       onPress={onPress}
-      disabled={!onPress}   // không có onPress thì không bấm
+      disabled={!onPress}   
     >
       <MaterialCommunityIcons name={icon} size={36} color="#0B4A8B" />
       <Text style={styles.text}>{label}</Text>

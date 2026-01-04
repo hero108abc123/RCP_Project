@@ -1,4 +1,5 @@
 import { MaterialIcons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
   StyleSheet,
@@ -9,6 +10,8 @@ import {
 import { cinemas } from '../../app/(screen)/cinema/data';
 
 export default function CinemaList() {
+
+  const router = useRouter();
   const [openId, setOpenId] = useState<string | null>(null);
 
   const toggle = (id: string) => {
@@ -25,7 +28,9 @@ export default function CinemaList() {
             {/* HEADER */}
             <TouchableOpacity
               style={styles.header}
-              onPress={() => toggle(cinema.id)}
+              onPress={() =>(
+                toggle(cinema.id)
+              )}
               activeOpacity={0.8}
             >
               <View>
@@ -52,10 +57,13 @@ export default function CinemaList() {
                           key={t.time}
                           style={styles.timeItem}
                           onPress={() =>
-                            console.log(
+                            (
+                              router.push('/booking/seat'),
+                              console.log(
                               cinema.name,
                               schedule.type,
                               t.time
+                            )
                             )
                           }
                         >

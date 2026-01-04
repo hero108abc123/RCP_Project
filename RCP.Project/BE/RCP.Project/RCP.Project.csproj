@@ -40,6 +40,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Services\Asset\RCP.Asset.ApplicationServices\RCP.Asset.ApplicationServices.csproj" />
+    <ProjectReference Include="..\Services\Asset\RCP.Asset.Dtos\RCP.Asset.Dtos.csproj" />
     <ProjectReference Include="..\Services\Asset\RCP.Asset.Infrastructure\RCP.Asset.Infrastructure.csproj" />
     <ProjectReference Include="..\Services\Authentication\RCP.Authentication.ApplicationServices\RCP.Authentication.ApplicationServices.csproj" />
     <ProjectReference Include="..\Services\External\RCP.External.ApplicationService\RCP.External.ApplicationService.csproj" />

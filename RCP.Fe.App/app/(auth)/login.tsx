@@ -68,7 +68,7 @@ function Login() {
       await SecureStore.setItemAsync("refreshToken", data.refresh_token);
       console.log(1111, data.access_token);
 
-      const meResponse = await api.get("api/app/user/me");
+      const meResponse = await api.get("api/app/users/me");
       const userData = meResponse.data;
 
       dispatch(

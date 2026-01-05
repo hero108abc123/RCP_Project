@@ -1,10 +1,13 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 
 type Props = {
   selectedSeats: string[];
 };
 
 export default function SeatFooter({ selectedSeats }: Props) {
+
+  const router = useRouter();
   const totalPrice = selectedSeats.length * 50000;
 
   return (
@@ -27,6 +30,9 @@ export default function SeatFooter({ selectedSeats }: Props) {
           selectedSeats.length === 0 && styles.disabled,
         ]}
         disabled={selectedSeats.length === 0}
+        onPress={()=> {
+          router.push('/booking/payment' as any)
+        }}
       >
         <Text style={styles.buttonText}>Tiếp tục</Text>
       </TouchableOpacity>

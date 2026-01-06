@@ -130,7 +130,7 @@ builder.Services.AddDbContext<MenuDbContext>(options =>
 #endregion
 
 #region cors
-string allowOrigins = builder.Configuration.GetSection("AllowedHosts")!.Value!;
+string allowOrigins = builder.Configuration.GetSection("AllowedOrigins")!.Value!;
 //File.WriteAllText("cors.now.txt", $"CORS: {allowOrigins}");;/'\,
 Console.WriteLine($"CORS: {allowOrigins}");
 var origins = allowOrigins

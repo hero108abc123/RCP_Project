@@ -4,12 +4,12 @@ import { ApiResponse } from "@/model/user/api-response";
 import { ViewUser } from "@/model/user/users.models";
 
 export const userService = {
-    getById: async (id: string): Promise<ViewUser> => {
-        const res = await api.get<ApiResponse<ViewUser>>(`/users/${id}`)
-        return res.data.data
+  getById: async (id: string): Promise<ViewUser> => {
+    const res = await api.get<ApiResponse<ViewUser>>(`/users/${id}`);
+    return res.data.data;
   },
-    getMe: async (): Promise<ViewUser> => {
-        const res = await api.get<ApiResponse<ViewUser>>(`/api/app/user/me`)
-        return res.data.data
+  getMe: async (): Promise<ViewUser> => {
+    const res = await api.get<ApiResponse<ViewUser>>(`/api/app/users/me`);
+    return res.data.data;
   },
-}
+};

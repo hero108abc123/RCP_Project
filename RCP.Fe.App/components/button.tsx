@@ -12,23 +12,24 @@ interface ButtonProps {
   marginVertical?: number;
   marginHorizontal?: number;
   paddingHorizontal?: number;
+  fontSize?: number;
 }
 
-export default function ButtonCustom({ title, onPress, backgroundColor  = "#C64747", textColor, borderRadius, paddingVertical, marginVertical, marginHorizontal, paddingHorizontal }: ButtonProps) {
+export default function ButtonCustom({ title, onPress, backgroundColor  = "#C64747", textColor, fontSize, borderRadius, paddingVertical, marginVertical, marginHorizontal, paddingHorizontal }: ButtonProps) {
   return (
     <TouchableOpacity
       onPress={onPress}
       style={{
         backgroundColor,
-        paddingVertical: paddingVertical ||12,
-        borderRadius: borderRadius || 20,
+        paddingVertical: paddingVertical || 13,
+        borderRadius: borderRadius || 40,
         alignItems: "center",
         marginVertical: marginVertical ||6,
         marginHorizontal: marginHorizontal || 10,
-        paddingHorizontal: paddingHorizontal ,
+        paddingHorizontal: paddingHorizontal || 20,
       }}
     >
-      <Text style={{ color: textColor, fontWeight: "bold" }}>{title}</Text>
+      <Text style={{ color: textColor, fontWeight: "bold", fontSize: fontSize||16 }}>{title}</Text>
     </TouchableOpacity>
   );
 }

@@ -92,17 +92,19 @@ function Login() {
     <SafeAreaView style={{ flex: 1, backgroundColor }}>
       <View>
         <Image
-          source={require("../../assets/images/image 2.png")}
-          style={{ width: "100%", height: 250, resizeMode: "cover" }}
+          source={require("../../assets/images/image 12.png")}
+          style={{ width: "100%", height: 250, resizeMode: "contain" }}
         />
-        <View style={{ padding: 16 }}>
-          <Text style={{
+
+        <Text style={{
             textAlign: "center",
             fontWeight: "bold",
-            fontSize: 20,
-            marginVertical: 12,
+            fontSize: 30,
             color: '#C64747'
-          }}>Đăng Nhập</Text>
+          }}>ĐĂNG NHẬP</Text>
+
+        <View style={{ padding: 16, margin: 10 }}>
+          
 
           <InputField 
             label='Username hoặc Email'
@@ -120,13 +122,15 @@ function Login() {
             showToggle
             onToggleSecure={() => setSecureTextEntry(!secureTextEntry)}
           />
-
+        <View style={{ gap: 12, marginTop: 60, margin: 30 }}>
           <Button
             title={loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
+            textColor='white'
+            fontSize={20}
             onPress={() => {
               try {
                 console.log("🔵 Bắt đầu điều hướng...");
-                router.replace('/(screen)/home');
+                router.replace('/(bar)/bottom-bar' as any );
                 console.log("✅ Điều hướng thành công");
               } catch (error) {
                 console.error("❌ Lỗi điều hướng:", error);
@@ -147,11 +151,14 @@ function Login() {
 
           <Button 
             title="Đăng Ký" 
+            textColor='white'
+            fontSize={20}
             onPress={() => {
-              router.push('/register');
+              router.push('/register' as any);
               console.log("register")
             }}
           />
+        </View>
         </View>
       </View>
     </SafeAreaView>

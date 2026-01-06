@@ -27,3 +27,4 @@ slnx.sqlite
 .DS_Store
 Thumbs.db
 "@ | Out-File -Encoding UTF8 .gitignore
+node_modules

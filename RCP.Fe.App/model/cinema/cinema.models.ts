@@ -21,4 +21,3 @@ export interface IPagingResponse<T> {
   items: T[];
   totalItems: number;
 }
-export interface IFindCinemaResponse extends IPagingResponse<ICinema> {}

@@ -1,0 +1,26 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    
+
+
+    <div class="mb-3">
+        <label for="tenMon" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Tên hàng <span class="text-red-500">*</span></label>
+        <input pInputText id="tenMon" formControlName="tenMon" placeholder="Nhập tên hàng" class="w-full" />
+        @if (form.get('tenMon')?.hasError('required') && form.get('tenMon')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('tenMon') }}</p-message>
+        }
+    </div>
+    <div class="mb-3">
+        <label for="moTa" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Mô tả</label>
+        <input pInputText id="moTa" formControlName="moTa" placeholder="Nhập mô tả " class="w-full" />
+        @if (form.get('moTa')?.hasError('required') && form.get('moTa')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('moTa') }}</p-message>
+        }
+    </div>
+    <div class="flex gap-2 mt-4" style="justify-content: flex-end;">
+        <p-button label="Hủy" icon="pi pi-times" severity="secondary" [outlined]="true" (onClick)="onCancel()" />
+        <p-button label="Lưu" icon="pi pi-save" type="submit" [loading]="loading" />
+    </div>
+
+
+
+</form>

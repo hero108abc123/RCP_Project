@@ -56,7 +56,7 @@ namespace RCP.Cinema.Dtos.LichChieu
         [MaxLength(10)]
         public string? PhanLoaiDoTuoi { get; set; }
 
-        public bool DangChieu { get; set; }
+        public int DangChieu { get; set; }
         public List<ViewPhimAnhCinemaDto> AnhCinema { get; set; } = new List<ViewPhimAnhCinemaDto>();
         public DateTime? ThoiGianBatDauChieu { get; set; }
         public DateTime? ThoiGianKetThucChieu { get; set; }

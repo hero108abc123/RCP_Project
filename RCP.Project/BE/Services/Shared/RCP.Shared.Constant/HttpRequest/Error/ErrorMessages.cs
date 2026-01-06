@@ -4,13 +4,11 @@
     {
         private static readonly Dictionary<int, string> _messages = new()
         {
-
             { ErrorCodes.System, "Lỗi hệ thống" },
             { ErrorCodes.InternalServerError, "Lỗi server" },
             { ErrorCodes.BadRequest, "Request không hợp lệ" },
             { ErrorCodes.NotFound, "Không tìm thấy trong hệ thống" },
             { ErrorCodes.Unauthorized, "Không được phân quyền" },
-
             { ErrorCodes.AuthErrorUserAlreadyExists, "Tài khoản đã tồn tại" },
             { ErrorCodes.AuthErrorInvalidEmail, "Email không hợp lệ" },
             { ErrorCodes.AuthErrorInvalidPhoneNumber, "Số điện thoại không hợp lệ" },
@@ -28,26 +26,35 @@
             { ErrorCodes.AuthErrorPasswordRequired, "Mật khẩu là bắt buộc" },
             { ErrorCodes.AuthErrorInvalidBirthDay, "Ngày sinh không hợp lệ" },
             { ErrorCodes.AuthErrorPermissionKeyExists, "Khóa quyền đã tồn tại trong hệ thống" },
-
-
-
-
-
+            
             //Message mã lỗi cinema
             { ErrorCodes.CinemaErrorNotFound, "Rạp chiếu không tồn tại" },
-
+            
             //Msg mã lỗi cloudinary
             { ErrorCodes.CloudinaryUploadFailed, "Upload file lên Cloudinary thất bại" },
             { ErrorCodes.CloudinaryFileEmpty, "File không được để trống" },
             { ErrorCodes.CloudinaryInvalidFileType, "Định dạng file không hợp lệ" },
             { ErrorCodes.CloudinaryFileTooLarge, "Kích thước file vượt quá giới hạn cho phép" },
             { ErrorCodes.CloudinaryConfigMissing, "Thiếu cấu hình Cloudinary" },
+            
+            //Msg mã lỗi Menu
+            { ErrorCodes.MenuErrorNotFound, "Menu không tồn tại" },
+            { ErrorCodes.MenuErrorThucDonNotFound, "Thực đơn không tồn tại" },
+            { ErrorCodes.MenuErrorMonNotFound, "Món không tồn tại" },
+            { ErrorCodes.MenuErrorMonAlreadyInThucDon, "Món đã có trong thực đơn" },
+            { ErrorCodes.MenuErrorKhoNotFound, "Không tìm thấy kho của rạp" },
+            { ErrorCodes.MenuErrorNguyenLieuNotFound, "Nguyên liệu không có trong kho" },
+            { ErrorCodes.MenuErrorInvalidSoLuongNguyenLieu, "Số lượng nguyên liệu cần cho món phải lớn hơn 0" },
+            { ErrorCodes.MenuErrorKhongDuNguyenLieu, "Không đủ nguyên liệu để làm món" },
+            { ErrorCodes.MenuErrorThucDonMonNotFound, "Không tìm thấy món trong thực đơn" },
+            
+            //Msg mã lỗi phim
+            { ErrorCodes.PhimErrorPhimDaChieu, "Phim đã chiếu không thể xoá" }
         };
+
         public static string GetMessage(int code)
         {
             return _messages.TryGetValue(code, out var message) ? message : "Unknown error.";
         }
     }
-
 }
-

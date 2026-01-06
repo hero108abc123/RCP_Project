@@ -2,11 +2,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RCP.Menu.ApplicationService.MenuModule.Abstracts;
-using RCP.Menu.Dtos;
+using RCP.Menu.Dtos.Menu;
 using RCP.Project.Attributes;
 using RCP.Project.Controller.Base;
 using RCP.Project.HttpRequest;
-using RCP.Shared.Constant.Constants.Auth; // Đảm bảo đã định nghĩa PermissionKeys cho Menu
+using RCP.Shared.Constant.Constants.Auth;
 
 namespace RCP.Project.Controller.Menu
 {
@@ -22,13 +22,13 @@ namespace RCP.Project.Controller.Menu
             _menuService = menuService;
         }
 
-        [Permission(PermissionKeys.MenuAdd)] // Cần định nghĩa: public const string MenuAdd = "Menu_Add";
+        [Permission(PermissionKeys.MenuAdd)]
         [HttpPost("")]
-        public async Task<ApiResponse> Create([FromForm] CreateMenuDto dto) // Dùng [FromForm] vì có upload file
+        public ApiResponse Create([FromBody] CreateMenuDto dto)
         {
             try
             {
-                await _menuService.Create(dto);
+                _menuService.Create(dto);
                 return new();
             }
             catch (Exception ex)
@@ -37,43 +37,13 @@ namespace RCP.Project.Controller.Menu
             }
         }
 
-        [Permission(PermissionKeys.MenuView)] // Cần định nghĩa: public const string MenuView = "Menu_View";
-        [HttpGet("")]
-        public ApiResponse Find([FromQuery] FindPagingMenuDto dto)
-        {
-            try
-            {
-                var data = _menuService.Find(dto);
-                return new(data);
-            }
-            catch (Exception ex)
-            {
-                return OkException(ex);
-            }
-        }
-
-        [Permission(PermissionKeys.MenuView)]
-        [HttpGet("{id}")]
-        public ApiResponse FindById([FromRoute] int id)
-        {
-            try
-            {
-                var data = _menuService.FindById(id);
-                return new(data);
-            }
-            catch (Exception ex)
-            {
-                return OkException(ex);
-            }
-        }
-
-        [Permission(PermissionKeys.MenuUpdate)] // Cần định nghĩa: public const string MenuUpdate = "Menu_Update";
+        [Permission(PermissionKeys.MenuUpdate)]
         [HttpPut("")]
-        public async Task<ApiResponse> Update([FromForm] UpdateMenuDto dto) // Dùng [FromForm]
+        public ApiResponse Update([FromBody] UpdateMenuDto dto)
         {
             try
             {
-                await _menuService.Update(dto);
+                _menuService.Update(dto);
                 return new();
             }
             catch (Exception ex)
@@ -82,7 +52,7 @@ namespace RCP.Project.Controller.Menu
             }
         }
 
-        [Permission(PermissionKeys.MenuDelete)] // Cần định nghĩa: public const string MenuDelete = "Menu_Delete";
+        [Permission(PermissionKeys.MenuDelete)]
         [HttpDelete("{id}")]
         public ApiResponse Delete([FromRoute] int id)
         {
@@ -96,5 +66,109 @@ namespace RCP.Project.Controller.Menu
                 return OkException(ex);
             }
         }
+
+        [Permission(PermissionKeys.MenuView)]
+        [HttpGet("")]
+        public ApiResponse FindPaging([FromQuery] FindPagingMenuDto dto)
+        {
+            try
+            {
+                var data = _menuService.FindPaging(dto);
+                return new(data);
+            }
+            catch (Exception ex)
+            {
+                return OkException(ex);
+            }
+        }
+
+        [Permission(PermissionKeys.MenuAdd)]
+        [HttpPost("add-mon")]
+        public ApiResponse AddMonVaoMenu([FromBody] AddMonVaoMenuDto dto)
+        {
+            try
+            {
+                _menuService.AddMonVaoMenu(dto);
+                return new();
+            }
+            catch (Exception ex)
+            {
+                return OkException(ex);
+            }
+        }
+
+        [Permission(PermissionKeys.MenuUpdate)]
+        [HttpPut("update-mon")]
+        public ApiResponse UpdateMonVaoMenu([FromBody] UpdateMonVaoDto dto)
+        {
+            try
+            {
+                _menuService.UpdateMonVaoMenu(dto);
+                return new();
+            }
+            catch (Exception ex)
+            {
+                return OkException(ex);
+            }
+        }
+
+        [Permission(PermissionKeys.MenuDelete)]
+        [HttpDelete("delete-mon/{id}")]
+        public ApiResponse DeleteMonKhoiMenu([FromRoute] int id)
+        {
+            try
+            {
+                _menuService.DeleteMonKhoiMenu(id);
+                return new();
+            }
+            catch (Exception ex)
+            {
+                return OkException(ex);
+            }
+        }
+
+        [Permission(PermissionKeys.MenuView)]
+        [HttpGet("mon-by-thuc-don")]
+        public ApiResponse FindPagingMonByThucDon([FromQuery] FindPagingMonByIdThucDonDto dto)
+        {
+            try
+            {
+                var data = _menuService.FindPagingMonByThucDon(dto);
+                return new(data);
+            }
+            catch (Exception ex)
+            {
+                return OkException(ex);
+            }
+        }
+        [Permission(PermissionKeys.MenuView)]
+        [HttpGet("{id}")]
+        public ApiResponse GetById([FromRoute] int id)
+        {
+            try
+            {
+                var data = _menuService.GetById(id);
+                return new(data);
+            }
+            catch (Exception ex)
+            {
+                return OkException(ex);
+            }
+        }
+        [Permission(PermissionKeys.MenuView)]
+        [HttpGet("mon/{id}")]
+        public ApiResponse GetByIdMonVaoMenu([FromRoute] int id)
+        {
+            try
+            {
+                var data = _menuService.GetByIdMonVaoMenu(id);
+                return new(data);
+            }
+            catch (Exception ex)
+            {
+                return OkException(ex);
+            }
+        }
+
     }
 }

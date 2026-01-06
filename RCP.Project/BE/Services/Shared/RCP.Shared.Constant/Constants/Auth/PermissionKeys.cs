@@ -68,6 +68,30 @@
         public const string MenuDelete = "Menu_Delete";
 
 
+        public const string CategoryKho = "QL Kho";
+        public const string KhoView = "Kho_View";
+        public const string KhoAdd = "Kho_Add";
+        public const string KhoUpdate = "Kho_Update";
+        public const string KhoDelete = "Kho_Delete";
+
+
+        public const string CategoryHang = "QL Hàng";
+        public const string HangView = "Hang_View";
+        public const string HangAdd = "Hang_Add";
+        public const string HangUpdate = "Hang_Update";
+        public const string HangDelete = "Hang_Delete";
+
+
+        public const string CategoryThongKeKho = "QL thống kê kho ";
+        public const string ThongKeKhoView = "ThongKeKho_View";
+
+        public const string CategoryMon = "QL Món";
+        public const string MonView = "Mon_View";
+        public const string MonAdd = "Mon_Add";
+        public const string MonUpdate = "Mon_Update";
+        public const string MonDelete = "Mon_Delete";
+
+
 
         public static readonly (string Key, string Name, string Category)[] All =
         {
@@ -125,6 +149,27 @@
             (MenuAdd, "Thêm Menu", CategoryMenu),
             (MenuUpdate, "Cập nhật Menu", CategoryMenu),
             (MenuDelete, "Xóa Menu", CategoryMenu),
+
+
+            (KhoView, "Xem Kho", CategoryKho),
+            (KhoAdd, "Thêm Kho", CategoryKho),
+            (KhoUpdate, "Cập nhật Kho", CategoryKho),
+            (KhoDelete, "Xóa Kho", CategoryKho),
+
+
+            (HangView, "Xem Hàng", CategoryHang),
+            (HangAdd, "Thêm Hàng", CategoryHang),
+            (HangUpdate, "Cập nhật Hàng", CategoryHang),
+            (HangDelete, "Xóa Hàng", CategoryHang),
+
+
+            (ThongKeKhoView, "Xem Thống kê kho", CategoryThongKeKho),
+
+
+            (MonView, "Xem Món", CategoryMon),
+            (MonAdd, "Thêm Món", CategoryMon),
+            (MonUpdate, "Cập nhật Món", CategoryMon),
+            (MonDelete, "Xóa Món", CategoryMon),
         };
     }
 }

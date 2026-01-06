@@ -220,6 +220,10 @@ builder.Services.AddScoped<IMenuService, MenuService>();
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<ILichChieuService, LichChieuService>();
 builder.Services.AddScoped<IGiaVeService, GiaVeService>();
+builder.Services.AddScoped<IKhoService, KhoService>();
+builder.Services.AddScoped<IHangService, HangService>();
+builder.Services.AddScoped<IThongKeService,ThongKeService>();
+builder.Services.AddScoped<IMonService, MonService>();
 #endregion
 // Add services to the container.
 
@@ -292,6 +296,7 @@ using (var scope = app.Services.CreateScope())
 {
     var jobService = scope.ServiceProvider.GetRequiredService<IJobService>();
     jobService.CronJobUpdateTrangThaiNgayGiaVe();
+    jobService.CronJobUpdateTrangThaiPhim();
 }
 
 //app.MapHealthChecks("/health");

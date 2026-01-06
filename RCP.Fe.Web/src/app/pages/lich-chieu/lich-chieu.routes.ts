@@ -1,5 +1,5 @@
 import { PermissionConstants } from "@/shared/constants/permission.constants";
-import { LichChieu } from "./lich-chieu/lich-chieu";
+import { LichChieu } from "./lich-chieu";
 import { permissionGuard } from "@/shared/guard/permission-guard";
 import { Routes } from "@angular/router";
 

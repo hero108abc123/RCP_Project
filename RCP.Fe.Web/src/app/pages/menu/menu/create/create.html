@@ -1,0 +1,39 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    
+    <div class="mb-3">
+        <label for="idCinema" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Rạp chiếu <span class="text-red-500">*</span></label>
+        <p-select id="idCinema" formControlName="idCinema" [options]="listCinemas" optionLabel="name" optionValue="id" [filter]="true" placeholder="Chọn rạp chiếu" styleClass="w-full" class="mb-2" appendTo="body" />
+        @if (form.get('idCinema')?.hasError('required') && form.get('idCinema')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('idCinema') }} </p-message>
+        }
+    </div>
+
+    <div class="mb-3">
+        <label for="tenThucDon" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Tên menu <span class="text-red-500">*</span></label>
+        <input pInputText id="tenThucDon" formControlName="tenThucDon" placeholder="Nhập tên menu" class="w-full" />
+        @if (form.get('tenThucDon')?.hasError('required') && form.get('tenThucDon')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('tenThucDon') }}</p-message>
+        }
+    </div>
+    <div class="mb-3">
+        <label for="moTa" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Mô tả </label>
+        <input pInputText id="moTa" formControlName="moTa" placeholder="Mô tả" class="w-full" />
+        @if (form.get('moTa')?.hasError('required') && form.get('moTa')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('moTa') }}</p-message>
+        }
+    </div>
+    <div class="mb-3">
+        <label for="tongSoMon" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Tổng số món <span class="text-red-500">*</span></label>
+        <p-inputNumber id="tongSoMon" formControlName="tongSoMon" [min]="1" placeholder="Nhập tổng số món" styleClass="w-full" />
+        @if (form.get('tongSoMon')?.hasError('required') && form.get('tongSoMon')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('tongSoMon') }}</p-message>
+        }
+    </div>
+    <div class="flex gap-2 mt-4" style="justify-content: flex-end;">
+        <p-button label="Hủy" icon="pi pi-times" severity="secondary" [outlined]="true" (onClick)="onCancel()" />
+        <p-button label="Lưu" icon="pi pi-save" type="submit" [loading]="loading" />
+    </div>
+
+
+
+</form>

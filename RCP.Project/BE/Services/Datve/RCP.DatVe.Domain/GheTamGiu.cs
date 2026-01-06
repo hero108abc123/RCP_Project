@@ -2,36 +2,29 @@
 using RCP.Shared.ApplicationService.Database;
 using RCP.Shared.ApplicationService.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
-namespace RCP.Cinema.Domain
+namespace RCP.DatVe.Domain
 {
-    [Table(nameof(Ghe), Schema = DbSchemas.Cinema)]
-    [Index(
-      nameof(Id),
-      IsUnique = false,
-      Name = $"IX_{nameof(Ghe)}"
-    )]
-    public class Ghe:ISoftDeleted
+    [Table(nameof(GheTamGiu), Schema = DbSchemas.DatVe)]
+    [Index(nameof(IdGhe), nameof(Deleted), Name = $"IX_{nameof(GheTamGiu)}_IdGhe_Deleted")]
+    public class GheTamGiu : ISoftDeleted
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public int IdCinema { get; set; }
+        public int IdGhe { get; set; }
         public int IdRoom { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string Hang { get; set; } = string.Empty;
-        //public string KhuVuc { get; set; } = string.Empty;
-        //public string GiaVe { get; set; } = string.Empty;
-        public int HangGhe { get; set; }
-        public int TrangThaiDatGhe { get; set; }
+        public int IdCinema { get; set; }
+        public int IdPhim { get; set; }
+        public string? IdUser { get; set; }
+        public string SessionId { get; set; } = string.Empty; // Để track session người dùng
+
+        public DateTime NgayGioGiuGhe { get; set; } // Thời gian bắt đầu giữ
+        public DateTime NgayGioHetHan { get; set; } // Thời gian hết hạn (10 phút)
+
         public string? CreatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }
         public string? ModifiedBy { get; set; }

@@ -19,7 +19,13 @@ using RCP.Cinema.ApplicationServices.Cinema.Implements;
 using RCP.Cinema.ApplicationServices.Cinema.Interfaces;
 using RCP.Cinema.ApplicationServices.Common;
 using RCP.Cinema.Infrastructure;
+using RCP.DatVe.ApplicationService.Implements;
+using RCP.DatVe.ApplicationService.Interfaces;
+using RCP.DatVe.Infrastructure;
 using RCP.External.ApplicationService.BackGroundJob;
+using RCP.HoaDon.ApplicationService.Implements;
+using RCP.HoaDon.ApplicationService.Interfaces;
+using RCP.HoaDon.Infrastructure;
 using RCP.Lib.ApplicationService.Cloudinary.Implements;
 using RCP.Lib.ApplicationService.Cloudinary.Interfaces;
 using RCP.Menu.ApplicationService.MenuModule.Abstracts;
@@ -76,6 +82,30 @@ builder.Services.AddDbContext<CinemaDbContext>(options =>
     {
         options.MigrationsAssembly(typeof(Program).Assembly.GetName().Name);
         options.MigrationsHistoryTable(DbSchemas.TableMigrationsHistory, DbSchemas.Cinema);
+    });
+}, ServiceLifetime.Scoped);
+builder.Services.AddDbContext<HoaDonDbContext>(options =>
+{
+    options.UseSqlServer(connectionString, options =>
+    {
+        options.MigrationsAssembly(typeof(Program).Assembly.GetName().Name);
+        options.MigrationsHistoryTable(DbSchemas.TableMigrationsHistory, DbSchemas.HoaDon);
+    });
+}, ServiceLifetime.Scoped);
+builder.Services.AddDbContext<DatVeDbContext>(options =>
+{
+    options.UseSqlServer(connectionString, options =>
+    {
+        options.MigrationsAssembly(typeof(Program).Assembly.GetName().Name);
+        options.MigrationsHistoryTable(DbSchemas.TableMigrationsHistory, DbSchemas.DatVe);
+    });
+}, ServiceLifetime.Scoped);
+builder.Services.AddDbContext<MenuDbContext>(options =>
+{
+    options.UseSqlServer(connectionString, options =>
+    {
+        options.MigrationsAssembly(typeof(Program).Assembly.GetName().Name);
+        options.MigrationsHistoryTable(DbSchemas.TableMigrationsHistory, DbSchemas.Menu);
     });
 }, ServiceLifetime.Scoped);
 
@@ -224,6 +254,10 @@ builder.Services.AddScoped<IKhoService, KhoService>();
 builder.Services.AddScoped<IHangService, HangService>();
 builder.Services.AddScoped<IThongKeService,ThongKeService>();
 builder.Services.AddScoped<IMonService, MonService>();
+builder.Services.AddScoped<IDatVeService,DatVeService>();
+builder.Services.AddScoped<IJobDatVeService,JobDatVeService>();
+builder.Services.AddScoped<IHoaDonService, HoaDonService>();
+
 #endregion
 // Add services to the container.
 
@@ -297,6 +331,8 @@ using (var scope = app.Services.CreateScope())
     var jobService = scope.ServiceProvider.GetRequiredService<IJobService>();
     jobService.CronJobUpdateTrangThaiNgayGiaVe();
     jobService.CronJobUpdateTrangThaiPhim();
+    var jobDatVeService = scope.ServiceProvider.GetRequiredService<IJobDatVeService>();
+    jobDatVeService.CronJobGiaiPhongGheHetHan();
 }
 
 //app.MapHealthChecks("/health");

@@ -50,7 +50,22 @@
         public const int MenuErrorInvalidSoLuongNguyenLieu = 4007;
         public const int MenuErrorKhongDuNguyenLieu = 4008;
         public const int MenuErrorThucDonMonNotFound = 4009;
+
+
+
         //Mã lỗi Phim 
         public const int PhimErrorPhimDaChieu = 5001;
+
+
+        public const int GheNotFound = 6001;
+        public const int GheDaDuocDat = 6002;
+        public const int GheDangDuocGiu = 6003;
+        public const int GheTamGiuKhongHopLe = 6004;
+        public const int KhongCoQuyenXacNhan = 6005;
+        public const int KhongCoQuyenHuy = 6006;
+        public const int GheTamGiuNotFound = 6007;
+        public const int SuatChieuNotFound = 6008;
+        public const int VeNotFound = 6009;
+
     }
 }

@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AutoMapper" Version="15.0.1" />
+
+		<PackageReference Include="Hangfire.Core" Version="1.8.21" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Authentication\RCP.Authentication.Infrastructure\RCP.Authentication.Infrastructure.csproj" />
+		<ProjectReference Include="..\..\HoaDon\RCP.HoaDon.Infrastructure\RCP.HoaDon.Infrastructure.csproj" />
+		<ProjectReference Include="..\..\Lib\RCP.Lib.ApplicationService\RCP.Lib.ApplicationService.csproj" />
+		<ProjectReference Include="..\..\Movie\RCP.Movie.Infrastructure\RCP.Movie.Infrastructure.csproj" />
+		<ProjectReference Include="..\..\Shared\RCP.Shared.ApplicationService\RCP.Shared.ApplicationService.csproj" />
+		<ProjectReference Include="..\..\Shared\RCP.Shared.Constant\RCP.Shared.Constant.csproj" />
+		<ProjectReference Include="..\RCP.DatVe.Infrastructure\RCP.DatVe.Infrastructure.csproj" />
+		<ProjectReference Include="..\RCP.DatVe.Dtos\RCP.DatVe.Dtos.csproj" />
+
+
+
+	</ItemGroup>
+
+</Project>

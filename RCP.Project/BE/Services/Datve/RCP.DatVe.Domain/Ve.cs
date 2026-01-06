@@ -10,28 +10,31 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace RCP.Cinema.Domain
+namespace RCP.DatVe.Domain
 {
-    [Table(nameof(Ghe), Schema = DbSchemas.Cinema)]
+    [Table(nameof(Ve), Schema = DbSchemas.DatVe)]
     [Index(
       nameof(Id),
       IsUnique = false,
-      Name = $"IX_{nameof(Ghe)}"
+      Name = $"IX_{nameof(Ve)}"
     )]
-    public class Ghe:ISoftDeleted
+    public class Ve: ISoftDeleted
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-
-        public int IdCinema { get; set; }
+        public string? IdUser {  get; set; } 
+        public string? HoVaTen { get; set; }
+        public string? SoDienThoai { get; set; }
+        public string? Email { get; set; }
+        public string? DiaChi { get; set; }
+        public DateTime? Birthday { get; set; }
+        public  int IdCinema { get; set; }
+        public int IdPhim { get; set; }
         public int IdRoom { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string Hang { get; set; } = string.Empty;
-        //public string KhuVuc { get; set; } = string.Empty;
-        //public string GiaVe { get; set; } = string.Empty;
-        public int HangGhe { get; set; }
-        public int TrangThaiDatGhe { get; set; }
+        public List<int> IdGhe {  get; set; } = new List<int>();
+        public string SessionId { get; set; } = string.Empty;
+        //public int TrangThaiThanhToan { get; set; }
         public string? CreatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }
         public string? ModifiedBy { get; set; }

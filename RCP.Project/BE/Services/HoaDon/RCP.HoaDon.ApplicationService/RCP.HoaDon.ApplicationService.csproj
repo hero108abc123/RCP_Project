@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AutoMapper" Version="15.0.1" />
+
+		<PackageReference Include="Hangfire.Core" Version="1.8.21" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\Menu\RCP.Menu.Infrastructure\RCP.Menu.Infrastructure.csproj" />
+	  <ProjectReference Include="..\RCP.HoaDon.Dtos\RCP.HoaDon.Dtos.csproj" />
+	  <ProjectReference Include="..\RCP.HoaDon.Infrastructure\RCP.HoaDon.Infrastructure.csproj" />
+	</ItemGroup>
+
+</Project>

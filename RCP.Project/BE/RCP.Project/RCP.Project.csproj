@@ -35,6 +35,8 @@
     <Folder Include="Log\Logs\" />
     <Folder Include="Log\Archive\" />
     <Folder Include="Migrations\Cinema\" />
+    <Folder Include="Migrations\DatVe\" />
+    <Folder Include="Migrations\HoaDon\" />
     <Folder Include="Migrations\Phim\" />
   </ItemGroup>
 
@@ -43,7 +45,9 @@
     <ProjectReference Include="..\Services\Asset\RCP.Asset.Dtos\RCP.Asset.Dtos.csproj" />
     <ProjectReference Include="..\Services\Asset\RCP.Asset.Infrastructure\RCP.Asset.Infrastructure.csproj" />
     <ProjectReference Include="..\Services\Authentication\RCP.Authentication.ApplicationServices\RCP.Authentication.ApplicationServices.csproj" />
+    <ProjectReference Include="..\Services\Datve\RCP.DatVe.ApplicationService\RCP.DatVe.ApplicationService.csproj" />
     <ProjectReference Include="..\Services\External\RCP.External.ApplicationService\RCP.External.ApplicationService.csproj" />
+    <ProjectReference Include="..\Services\HoaDon\RCP.HoaDon.ApplicationService\RCP.HoaDon.ApplicationService.csproj" />
     <ProjectReference Include="..\Services\Lib\RCP.Lib.ApplicationService\RCP.Lib.ApplicationService.csproj" />
     <ProjectReference Include="..\Services\Menu\RCP.Menu.ApplicationService\RCP.Menu.ApplicationService.csproj" />
     <ProjectReference Include="..\Services\Menu\RCP.Menu.Infrastructure\RCP.Menu.Infrastructure.csproj" />

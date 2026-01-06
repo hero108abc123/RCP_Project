@@ -10,5 +10,7 @@
         public const string Asset = "asset";
         public const string Core = "core";
         public const string Menu = "menu";
+        public const string DatVe = "ve";
+        public const string HoaDon = "invoice";
     }
 }

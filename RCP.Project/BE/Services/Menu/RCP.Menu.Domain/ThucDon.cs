@@ -17,15 +17,18 @@ namespace RCP.Menu.Domain
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string TenMon { get; set; }
-        public decimal Gia { get; set; }
-        public string MoTa { get; set; }
+        public int IdCinema { get; set; }
+       
+        public string TenThucDon { get; set; } = String.Empty;
+        //public decimal Gia { get; set; }
+        public string MoTa { get; set; } = String.Empty;
+        public int TongSoMon { get; set; }
+        //public string? AnhMinhHoa { get; set; }
+       // public int SoLuong { get; set; }
 
-        public string? AnhMinhHoa { get; set; }
+        //public int Loai { get; set; } // Để lọc hiển thị trên màn hình bán hàng
 
-        public int Loai { get; set; } // Để lọc hiển thị trên màn hình bán hàng
-
-        public int TrangThai { get; set; }
+        //public int TrangThai { get; set; }
         public string? CreatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }
         public string? ModifiedBy { get; set; }

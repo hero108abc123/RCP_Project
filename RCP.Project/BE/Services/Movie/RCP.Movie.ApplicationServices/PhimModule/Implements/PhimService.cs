@@ -11,6 +11,7 @@ using RCP.Movie.Dtos.Phim;
 using RCP.Movie.Infrastructure;
 using RCP.Project.HttpRequest.AppException;
 using RCP.Project.HttpRequest.BaseRequest;
+using RCP.Shared.Constant.Constants.Phim;
 using RCP.Shared.Constant.HttpRequest.Error;
 using System.Text.Json;
 
@@ -18,7 +19,7 @@ namespace RCP.Movie.ApplicationServices.PhimModule.Implements
 {
     public class PhimService : BasePhimService, IPhimService
     {
-        private readonly PhimDbContext _phimDbContext;
+       // private readonly PhimDbContext _phimDbContext;
         private readonly ICloudinaryService _cloudinaryService; // Inject Interface thay vì Cloudinary trực tiếp
 
         public PhimService(
@@ -29,37 +30,93 @@ namespace RCP.Movie.ApplicationServices.PhimModule.Implements
             ICloudinaryService cloudinaryService) // Inject vào Constructor
             : base(phimDbContext, logger, httpContextAccessor, mapper)
         {
-            _phimDbContext = phimDbContext;
+            //_phimDbContext = phimDbContext;
             _cloudinaryService = cloudinaryService;
         }
 
         // Hàm FindPaging giữ nguyên (không đổi sang async trừ khi cần thiết)
+
         public BaseResponsePagingDto<ViewPhimDto> FindPaging(FindPhimDto dto)
         {
             _logger.LogInformation($"{nameof(FindPaging)} => dto = {JsonSerializer.Serialize(dto)}");
-
-            var query = from phim in _phimDbContext.Phims
-                        where !phim.Deleted &&
-                            (string.IsNullOrEmpty(dto.Keyword) || phim.TenPhim.Contains(dto.Keyword))
-                        orderby phim.CreatedDate descending
-                        select new ViewPhimDto
-                        {
-                            Id = phim.Id,
-                            TenPhim = phim.TenPhim,
-                            MoTa = phim.MoTa,
-                            DaoDien = phim.DaoDien,
-                            DienVien = phim.DienVien,
-                            ThoiLuongPhut = phim.ThoiLuongPhut,
-                            NgayKhoiChieu = phim.NgayKhoiChieu,
-                            NgonNgu = phim.NgonNgu,
-                            PhanLoaiDoTuoi = phim.PhanLoaiDoTuoi,
-                            AnhBia = phim.AnhList.FirstOrDefault(a => a.LaAnhChinh)!.Url,
-                            TrailerUrl = phim.VideoList.FirstOrDefault(v => v.LoaiVideo == "Trailer")!.Url
-                        };
-
-            var total = query.Count();
-            var items = query.Paging(dto).ToList();
-
+            var phimQuery = _phimDbContext.Phims
+                .Where(p => !p.Deleted &&
+                    (string.IsNullOrEmpty(dto.Keyword) || p.TenPhim.Contains(dto.Keyword)))
+                .AsQueryable();
+            // Filter by DangChieu
+            if (dto.DangChieu.HasValue)
+            {
+                phimQuery = phimQuery.Where(p => p.DangChieu == dto.DangChieu.Value);
+            }
+            // Filter by NgonNgu
+            if (!string.IsNullOrEmpty(dto.NgonNgu))
+            {
+                phimQuery = phimQuery.Where(p => p.NgonNgu == dto.NgonNgu);
+            }
+            // Filter by PhanLoaiDoTuoi
+            if (dto.PhanLoaiDoTuoi != null && dto.PhanLoaiDoTuoi.Any())
+            {
+                phimQuery = phimQuery.Where(p => dto.PhanLoaiDoTuoi.Contains(p.PhanLoaiDoTuoi));
+            }
+            // Filter by DaoDien
+            if (!string.IsNullOrEmpty(dto.DaoDien))
+            {
+                phimQuery = phimQuery.Where(p => p.DaoDien != null && p.DaoDien.Contains(dto.DaoDien));
+            }
+            // Filter by DienVien
+            if (!string.IsNullOrEmpty(dto.DienVien))
+            {
+                phimQuery = phimQuery.Where(p => p.DienVien != null && p.DienVien.Contains(dto.DienVien));
+            }
+            // Filter by NgayKhoiChieu range
+            if (dto.TuNgay.HasValue)
+            {
+                phimQuery = phimQuery.Where(p => p.NgayKhoiChieu >= dto.TuNgay.Value);
+            }
+            if (dto.DenNgay.HasValue)
+            {
+                var denNgayEnd = dto.DenNgay.Value.Date.AddDays(1).AddSeconds(-1);
+                phimQuery = phimQuery.Where(p => p.NgayKhoiChieu <= denNgayEnd);
+            }
+            // Filter by TheLoai - Phim phải có TẤT CẢ các thể loại trong list
+            if (dto.IdTheLoai != null && dto.IdTheLoai.Any())
+            {
+                var phimIdsWithTheLoai = _phimDbContext.PhimTheLoais
+                    .Where(ptl => dto.IdTheLoai.Contains(ptl.TheLoaiId))
+                    .GroupBy(ptl => ptl.PhimId)
+                    .Where(g => g.Select(x => x.TheLoaiId).Distinct().Count() == dto.IdTheLoai.Count)
+                    .Select(g => g.Key)
+                    .ToList();
+                phimQuery = phimQuery.Where(p => phimIdsWithTheLoai.Contains(p.Id));
+            }
+            phimQuery = phimQuery.OrderByDescending(p => p.CreatedDate);
+            var total = phimQuery.Count();
+            var phimList = phimQuery.Paging(dto).ToList();
+            var phimIds = phimList.Select(p => p.Id).ToList();
+            var phimTheLoais = _phimDbContext.PhimTheLoais
+                .Where(ptl => phimIds.Contains(ptl.PhimId))
+                .Join(_phimDbContext.TheLoais,
+                    ptl => ptl.TheLoaiId,
+                    tl => tl.Id,
+                    (ptl, tl) => new { ptl.PhimId, TheLoai = new ViewTheLoai { Id = tl.Id, TenTheLoai = tl.TenTheLoai } })
+                .GroupBy(x => x.PhimId)
+                .ToDictionary(g => g.Key, g => g.Select(x => x.TheLoai).ToList());
+            var items = phimList.Select(phim => new ViewPhimDto
+            {
+                Id = phim.Id,
+                TenPhim = phim.TenPhim,
+                MoTa = phim.MoTa,
+                DaoDien = phim.DaoDien,
+                DienVien = phim.DienVien,
+                ThoiLuongPhut = phim.ThoiLuongPhut,
+                NgayKhoiChieu = phim.NgayKhoiChieu,
+                NgonNgu = phim.NgonNgu,
+                PhanLoaiDoTuoi = phim.PhanLoaiDoTuoi,
+                DangChieu = phim.DangChieu,
+                AnhBia = phim.AnhList.FirstOrDefault(a => a.LaAnhChinh)?.Url,
+                TrailerUrl = phim.VideoList.FirstOrDefault(v => v.LoaiVideo == "Trailer")?.Url,
+                TheLoais = phimTheLoais.ContainsKey(phim.Id) ? phimTheLoais[phim.Id] : new List<ViewTheLoai>()
+            }).ToList();
             return new BaseResponsePagingDto<ViewPhimDto>
             {
                 Items = items,
@@ -85,7 +142,7 @@ namespace RCP.Movie.ApplicationServices.PhimModule.Implements
                 PhanLoaiDoTuoi = dto.PhanLoaiDoTuoi,
                 CreatedBy = userId,
                 CreatedDate = DateTime.Now,
-                DangChieu = false,
+                DangChieu = PhimConstants.ChuaChieu,
                 Deleted = false
             };
 
@@ -130,7 +187,7 @@ namespace RCP.Movie.ApplicationServices.PhimModule.Implements
             }
 
             // --- UPLOAD VIDEO TRAILER ---
-            if (dto.TrailerFile != null)
+            if (dto.TrailerUrl != null)
             {
                 // LƯU Ý: Interface ICloudinaryService bạn cung cấp CHƯA có method upload video.
                 // Bạn cần bổ sung method UploadVideoAsync vào interface.
@@ -145,15 +202,18 @@ namespace RCP.Movie.ApplicationServices.PhimModule.Implements
                 
                 // Giả định bạn thêm method này vào Interface
                 var videoResult = await _cloudinaryService.UploadVideoAsync(videoUploadDto); 
+                */
                 
                 _phimDbContext.PhimVideos.Add(new PhimVideo
                 {
                     PhimId = phim.Id,
-                    Url = videoResult.Url,
+                    Url = dto.TrailerUrl,
                     LoaiVideo = "Trailer",
                     TieuDe = $"{phim.TenPhim} - Trailer"
                 });
-                */
+                
+
+
             }
 
             await _phimDbContext.SaveChangesAsync();
@@ -162,13 +222,13 @@ namespace RCP.Movie.ApplicationServices.PhimModule.Implements
         }
 
         // Chuyển sang async Task
-        public async Task<ViewPhimDto> UpdatePhim(int id, UpdatePhimDto dto)
+        public async Task<ViewPhimDto> UpdatePhim( UpdatePhimDto dto)
         {
             var userId = getCurrentUserId();
             var phim = await _phimDbContext.Phims
                 .Include(x => x.AnhList)
                 .Include(x => x.VideoList)
-                .FirstOrDefaultAsync(x => x.Id == id && !x.Deleted); // Dùng FirstOrDefaultAsync
+                .FirstOrDefaultAsync(x => x.Id == dto.Id && !x.Deleted); // Dùng FirstOrDefaultAsync
 
             if (phim == null)
                 throw new UserFriendlyException(ErrorCodes.NotFound);
@@ -215,7 +275,7 @@ namespace RCP.Movie.ApplicationServices.PhimModule.Implements
             }
 
             // --- CẬP NHẬT TRAILER ---
-            if (dto.TrailerFile != null)
+            if (dto.TrailerUrl != null)
             {
                 var trailer = phim.VideoList.FirstOrDefault(v => v.LoaiVideo == "Trailer");
                 if (trailer != null)
@@ -231,15 +291,16 @@ namespace RCP.Movie.ApplicationServices.PhimModule.Implements
                     Folder = "phim_trailer" 
                 };
                 var videoResult = await _cloudinaryService.UploadVideoAsync(videoUploadDto);
+                */
 
                 _phimDbContext.PhimVideos.Add(new PhimVideo
                 {
                     PhimId = phim.Id,
-                    Url = videoResult.Url,
+                    Url = dto.TrailerUrl,
                     LoaiVideo = "Trailer",
                     TieuDe = $"{phim.TenPhim} - Trailer"
                 });
-                */
+                
             }
 
             // Cập nhật thể loại
@@ -269,6 +330,10 @@ namespace RCP.Movie.ApplicationServices.PhimModule.Implements
                         .FirstOrDefault(x => x.Id == id && !x.Deleted);
             if (phim == null)
                 throw new UserFriendlyException(ErrorCodes.NotFound);
+            if(phim.DangChieu == PhimConstants.DaChieu)
+            {
+                throw new UserFriendlyException(ErrorCodes.PhimErrorPhimDaChieu);
+            }
 
             phim.Deleted = true;
             phim.DeletedDate = DateTime.Now;
@@ -317,7 +382,8 @@ namespace RCP.Movie.ApplicationServices.PhimModule.Implements
                 NgonNgu = phim.NgonNgu,
                 PhanLoaiDoTuoi = phim.PhanLoaiDoTuoi,
                 AnhBia = anhBia,
-                TrailerUrl = trailer
+                TrailerUrl = trailer,
+                DangChieu = phim.DangChieu,
             };
         }
 
@@ -331,6 +397,56 @@ namespace RCP.Movie.ApplicationServices.PhimModule.Implements
             var data = query.ToList();
             var result = _mapper.Map<List<GetTheLoaiDto>>(data);
             return result;
+        }
+
+        public ViewPhimDto FindById(int id)
+        {
+            _logger.LogInformation($"{nameof(FindById)} => id = {id}");
+
+            var phim = _phimDbContext.Phims
+                .FirstOrDefault(p => p.Id == id && !p.Deleted);
+
+            if (phim == null)
+                throw new UserFriendlyException(ErrorCodes.NotFound);
+
+            var anhBia = _phimDbContext.PhimAnhs
+                .Where(a => a.PhimId == phim.Id && a.LaAnhChinh)
+                .Select(a => a.Url)
+                .FirstOrDefault();
+
+            var trailerUrl = _phimDbContext.PhimVideos
+                .Where(v => v.PhimId == phim.Id && v.LoaiVideo == "Trailer")
+                .Select(v => v.Url)
+                .FirstOrDefault();
+
+            var theLoais = _phimDbContext.PhimTheLoais
+                .Where(ptl => ptl.PhimId == phim.Id)
+                .Join(_phimDbContext.TheLoais,
+                    ptl => ptl.TheLoaiId,
+                    tl => tl.Id,
+                    (ptl, tl) => new ViewTheLoai
+                    {
+                        Id = tl.Id,
+                        TenTheLoai = tl.TenTheLoai
+                    })
+                .ToList();
+
+            return new ViewPhimDto
+            {
+                Id = phim.Id,
+                TenPhim = phim.TenPhim,
+                MoTa = phim.MoTa,
+                DaoDien = phim.DaoDien,
+                DienVien = phim.DienVien,
+                ThoiLuongPhut = phim.ThoiLuongPhut,
+                NgayKhoiChieu = phim.NgayKhoiChieu,
+                NgonNgu = phim.NgonNgu,
+                PhanLoaiDoTuoi = phim.PhanLoaiDoTuoi,
+                DangChieu = phim.DangChieu,
+                AnhBia = anhBia,
+                TrailerUrl = trailerUrl,
+                TheLoais = theLoais
+            };
         }
     }
 }

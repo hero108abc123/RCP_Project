@@ -9,6 +9,7 @@ using RCP.Movie.Infrastructure;
 using RCP.Project.HttpRequest.AppException;
 using RCP.Project.HttpRequest.BaseRequest;
 using RCP.Shared.Constant.HttpRequest.Error;
+using RCP.Shared.Constant.Constants.Phim;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -206,8 +207,9 @@ namespace RCP.Cinema.ApplicationServices.Cinema.Implements
             {
                 var phimTheLoais = _phimDbContext.PhimTheLoais
                     .Where(ptl => dto.IdTheLoai.Contains(ptl.TheLoaiId))
-                    .Select(ptl => ptl.PhimId)
-                    .Distinct()
+                    .GroupBy(ptl => ptl.PhimId)
+                    .Where(g => g.Select(x => x.TheLoaiId).Distinct().Count() == dto.IdTheLoai.Count)
+                    .Select(g => g.Key)
                     .ToList();
 
                 phimsQuery = phimsQuery.Where(p => phimTheLoais.Contains(p.Id));
@@ -274,6 +276,86 @@ namespace RCP.Cinema.ApplicationServices.Cinema.Implements
             return response;
         }
 
+        public void UpdateTrangThaiPhim()
+        {
+            _logger.LogInformation($"{nameof(UpdateTrangThaiPhim)} - Bắt đầu cập nhật trạng thái phim");
 
+            var vietNamNow = GetVietnamTime();
+
+            var lichChieuList = _cinemaDbContext.CinemaRoomMovieInfor
+                .Where(lc => !lc.Deleted
+                    && lc.ThoiGianBatDauChieu.HasValue
+                    && lc.ThoiGianKetThucChieu.HasValue)
+                .ToList();
+
+            if (!lichChieuList.Any())
+            {
+                _logger.LogInformation($"{nameof(UpdateTrangThaiPhim)} - Không có lịch chiếu nào để xử lý");
+                return;
+            }
+
+            var phimIds = lichChieuList.Select(lc => lc.IdPhim).Distinct().ToList();
+
+            var phimList = _phimDbContext.Phims
+                .Where(p => !p.Deleted && phimIds.Contains(p.Id))
+                .ToList();
+
+            var phimCanCapNhat = new List<Movie.Domain.Phim>();
+
+            foreach (var phim in phimList)
+            {
+                var lichChieuCuaPhim = lichChieuList.Where(lc => lc.IdPhim == phim.Id).ToList();
+
+                if (!lichChieuCuaPhim.Any())
+                {
+                    continue;
+                }
+
+                var trangThaiMoi = TinhTrangThaiPhim(vietNamNow, lichChieuCuaPhim);
+
+                if (phim.DangChieu != trangThaiMoi)
+                {
+                    phim.DangChieu = trangThaiMoi;
+                    phimCanCapNhat.Add(phim);
+                    _logger.LogInformation($"Cập nhật phim ID={phim.Id}, Tên={phim.TenPhim}, Trạng thái cũ={phim.DangChieu}, Trạng thái mới={trangThaiMoi}");
+                }
+            }
+
+            if (phimCanCapNhat.Any())
+            {
+                _phimDbContext.Phims.UpdateRange(phimCanCapNhat);
+                _phimDbContext.SaveChanges();
+                _logger.LogInformation($"{nameof(UpdateTrangThaiPhim)} - Đã cập nhật {phimCanCapNhat.Count} phim");
+            }
+            else
+            {
+                _logger.LogInformation($"{nameof(UpdateTrangThaiPhim)} - Không có phim nào cần cập nhật");
+            }
+        }
+
+        private int TinhTrangThaiPhim(DateTime currentTime, List<Domain.CinemaRoomMovieInfor> lichChieuList)
+        {
+            var coLichChieuDangChieu = lichChieuList.Any(lc =>
+                lc.ThoiGianBatDauChieu.HasValue &&
+                lc.ThoiGianKetThucChieu.HasValue &&
+                currentTime >= lc.ThoiGianBatDauChieu.Value &&
+                currentTime <= lc.ThoiGianKetThucChieu.Value);
+
+            if (coLichChieuDangChieu)
+            {
+                return PhimConstants.DangChieu;
+            }
+
+            var tatCaDaKetThuc = lichChieuList.All(lc =>
+                lc.ThoiGianKetThucChieu.HasValue &&
+                currentTime > lc.ThoiGianKetThucChieu.Value);
+
+            if (tatCaDaKetThuc)
+            {
+                return PhimConstants.DaChieu;
+            }
+
+            return PhimConstants.ChuaChieu;
+        }
     }
 }

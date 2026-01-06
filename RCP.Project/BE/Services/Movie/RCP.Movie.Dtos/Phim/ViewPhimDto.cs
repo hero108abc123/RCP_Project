@@ -22,5 +22,16 @@
         public string? NgonNgu { get; set; }
 
         public string? PhanLoaiDoTuoi { get; set; }
+        public int DangChieu { get; set; }
+        public List<ViewTheLoai> TheLoais { get; set; } = new List<ViewTheLoai>();
+
+
+
+    }
+
+    public class ViewTheLoai
+    {
+        public int Id { get; set; }
+        public string TenTheLoai { get; set; } = string.Empty;
     }
 }

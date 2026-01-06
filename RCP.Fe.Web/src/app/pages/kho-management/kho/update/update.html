@@ -1,0 +1,25 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    
+    <div class="mb-3">
+        <label for="idCinema" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Rạp chiếu <span class="text-red-500">*</span></label>
+        <p-select id="idCinema" formControlName="idCinema" [options]="listCinemas" optionLabel="name" optionValue="id" [filter]="true" placeholder="Chọn rạp chiếu" styleClass="w-full" class="mb-2" appendTo="body" />
+        @if (form.get('idCinema')?.hasError('required') && form.get('idCinema')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('idCinema') }} </p-message>
+        }
+    </div>
+
+    <div class="mb-3">
+        <label for="tenKho" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Tên kho <span class="text-red-500">*</span></label>
+        <input pInputText id="tenKho" formControlName="tenKho" placeholder="Nhập tên kho" class="w-full" />
+        @if (form.get('tenKho')?.hasError('required') && form.get('tenKho')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('tenKho') }}</p-message>
+        }
+    </div>
+    <div class="flex gap-2 mt-4" style="justify-content: flex-end;">
+        <p-button label="Hủy" icon="pi pi-times" severity="secondary" [outlined]="true" (onClick)="onCancel()" />
+        <p-button label="Lưu" icon="pi pi-save" type="submit" [loading]="loading" />
+    </div>
+
+
+
+</form>

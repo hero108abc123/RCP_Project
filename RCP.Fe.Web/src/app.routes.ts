@@ -20,6 +20,9 @@ export const appRoutes: Routes = [
             { path: 'rcp-management', loadChildren: () => import('./app/pages/rcp-management/rcp-management.routes') },
             { path: 'gia-ve', loadChildren: () => import('./app/pages/gia-ve/gia-ve.routes') },
             { path: 'lich-chieu', loadChildren: () => import('./app/pages/lich-chieu/lich-chieu.routes') },
+            { path: 'menu', loadChildren: () => import('./app/pages/menu/menu.routes') },
+            { path: 'movie-management', loadChildren: () => import('./app/pages/movie-management/movie-management.routes') },
+            { path: 'kho-management', loadChildren: () => import('./app/pages/kho-management/kho-management.routes') },
             { path: 'documentation', component: Documentation },
             { path: 'pages', loadChildren: () => import('./app/pages/pages.routes') }
         ]

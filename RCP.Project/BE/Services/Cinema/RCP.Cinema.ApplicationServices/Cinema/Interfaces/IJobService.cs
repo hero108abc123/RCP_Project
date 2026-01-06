@@ -9,5 +9,6 @@ namespace RCP.Cinema.ApplicationServices.Cinema.Interfaces
     public interface IJobService
     {
         public void CronJobUpdateTrangThaiNgayGiaVe();
+        public void CronJobUpdateTrangThaiPhim();
     }
 }

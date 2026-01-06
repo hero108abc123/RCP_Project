@@ -11,7 +11,7 @@ namespace RCP.Movie.Dtos.Phim
 
         // Upload file (ảnh & trailer)
         public IFormFile? AnhBia { get; set; }        // File ảnh poster upload
-        public IFormFile? TrailerFile { get; set; }   // File video trailer upload
+        public string? TrailerUrl { get; set; }   // File video trailer upload
 
         public int ThoiLuongPhut { get; set; }
         public DateTime NgayKhoiChieu { get; set; }

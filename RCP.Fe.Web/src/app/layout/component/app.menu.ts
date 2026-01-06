@@ -46,7 +46,7 @@ export class AppMenu {
                                 label: 'Phim',
                                 visible: this._sharedService.isGranted(PermissionConstants.MenuRapChieuPhim),
                                 heroIcon: 'heroVideoCamera',
-                                routerLink: ['/rcp-management/movie']
+                                routerLink: ['/movie-management/movie-management']
                             },
                             {
                                 label: 'Giá vé',
@@ -61,6 +61,59 @@ export class AppMenu {
                                 routerLink: ['/lich-chieu/lich-chieu']
 
                             }
+                        ]
+                    }
+                ],
+                visible: this._sharedService.isGranted(PermissionConstants.MenuUserManagement),
+            },
+            {
+                items: [
+                    {
+                        label: 'Quản lý kho',
+                        visible: this._sharedService.isGranted(PermissionConstants.MenuKho),
+                        items: [
+                            {
+                                label: 'Kho',
+                                visible: this._sharedService.isGranted(PermissionConstants.MenuKho),
+                                heroIcon: 'heroBuildingStorefront',
+                                routerLink: ['/kho-management/kho']
+                            },
+                            {
+                                label: 'Mặt hàng',
+                                visible: this._sharedService.isGranted(PermissionConstants.MenuKho),
+                                heroIcon: 'heroShoppingBag',
+                                routerLink: ['/kho-management/hang']
+                            },
+                            {
+                                label: 'Thống kê',
+                                visible: this._sharedService.isGranted(PermissionConstants.MenuKho),
+                                heroIcon: 'heroUserGroup',
+                                routerLink: ['/kho-management/thong-ke']
+                            }
+                        ]
+                    }
+                ],
+                visible: this._sharedService.isGranted(PermissionConstants.MenuUserManagement),
+            },
+            {
+                items: [
+                    {
+                        label: 'Quản lý menu rạp chiếu',
+                        visible: this._sharedService.isGranted(PermissionConstants.MenuMenu),
+                        items: [
+                            {
+                                label: 'Món',
+                                visible: this._sharedService.isGranted(PermissionConstants.MenuMenu),
+                                heroIcon: 'heroCake',
+                                routerLink: ['/menu/mon']
+                            },
+                            {
+                                label: 'Menu',
+                                visible: this._sharedService.isGranted(PermissionConstants.MenuMenu),
+                                heroIcon: 'heroClipboardDocumentList',
+                                routerLink: ['/menu/menu']
+                            },
+                           
                         ]
                     }
                 ],

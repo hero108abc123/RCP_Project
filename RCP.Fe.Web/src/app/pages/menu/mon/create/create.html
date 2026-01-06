@@ -1,0 +1,50 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+        <label for="idHang" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Mặt hàng <span class="text-red-500">*</span></label>
+        <p-select id="idHang" formControlName="idHang" [options]="listMatHangs" optionLabel="tenMon" optionValue="id" placeholder="Chọn mặt hàng" [filter]="true" filterPlaceholder="Tìm kiếm" styleClass="w-full" appendTo="body" />
+        @if (form.get('idHang')?.hasError('required') && form.get('idHang')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('idHang') }}</p-message>
+        }
+    </div>
+    <div class="mb-3">
+        <label for="name" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Tên món <span class="text-red-500">*</span></label>
+        <input pInputText id="name" formControlName="name" placeholder="Nhập tên món" class="w-full" />
+        @if (form.get('name')?.hasError('required') && form.get('name')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('name') }}</p-message>
+        }
+    </div>
+
+    <div class="mb-3">
+        <label for="moTa" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Mô tả </label>
+        <textarea pInputTextarea id="moTa" formControlName="moTa" placeholder="Nhập mô tả" class="w-full" rows="4"></textarea>
+        @if (form.get('moTa')?.hasError('required') && form.get('moTa')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('moTa') }}</p-message>
+        }
+    </div>
+
+    <div class="mb-3">
+        <label for="soLuong" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Số lượng <span class="text-red-500">*</span></label>
+        <p-inputNumber id="soLuong" formControlName="soLuong" [min]="1" placeholder="Nhập số lượng" styleClass="w-full" />
+        @if (form.get('soLuong')?.hasError('required') && form.get('soLuong')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('soLuong') }}</p-message>
+        }
+    </div>
+
+    <div class="mb-3">
+        <label for="loai" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Loại món <span class="text-red-500">*</span></label>
+        <p-select id="loai" formControlName="loai" [options]="loaiMonOptions" optionLabel="label" optionValue="value" placeholder="Chọn loại món" styleClass="w-full" appendTo="body" />
+        @if (form.get('loai')?.hasError('required') && form.get('loai')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('loai') }}</p-message>
+        }
+    </div>
+
+    <div class="mb-3">
+        <label for="anhMinhHoa" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Ảnh minh họa</label>
+        <p-fileupload id="anhMinhHoa" mode="basic" (onSelect)="onSelectFile($event)" chooseLabel="Chọn ảnh" chooseIcon="pi pi-image" accept="image/*" maxFileSize="10000000" />
+    </div>
+
+    <div class="flex gap-2 mt-4" style="justify-content: flex-end;">
+        <p-button label="Hủy" icon="pi pi-times" severity="secondary" [outlined]="true" (onClick)="onCancel()" />
+        <p-button label="Lưu" icon="pi pi-save" type="submit" [loading]="loading" />
+    </div>
+</form>

@@ -1,21 +1,72 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    
+    <div class="mb-3">
+        <label for="fileAnhBia" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Ảnh bìa phim</label>
+        <p-fileupload id="fileAnhBia" mode="basic" (onSelect)="onSelectFile($event)" chooseLabel="Chọn ảnh" chooseIcon="pi pi-image" accept="image/*" maxFileSize="10000000" />
+    </div>
 
-
-     <div class="mb-3">
-        <label for="thoiGianBatDauChieu" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Thời gian bắt đầu chiếu <span class="text-red-500">*</span></label>
-        <p-datePicker formControlName="thoiGianBatDauChieu" inputId="thoiGianBatDauChieu" styleClass="w-full" [showIcon]="true" [showTime]="true" hourFormat="24" dateFormat="dd/mm/yy" appendTo="body" [showOnFocus]="false" />
-        @if (form.get('thoiGianBatDauChieu')?.hasError('required') && form.get('thoiGianBatDauChieu')?.touched) {
-        <p-message severity="error" variant="simple" size="small">{{ getError('thoiGianBatDauChieu') }} </p-message>
+    <div class="mb-3">
+        <label for="tenPhim" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Tên phim <span class="text-red-500">*</span></label>
+        <input pInputText id="tenPhim" formControlName="tenPhim" placeholder="Nhập tên phim" class="w-full" />
+        @if (form.get('tenPhim')?.hasError('required') && form.get('tenPhim')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('tenPhim') }}</p-message>
         }
     </div>
 
     <div class="mb-3">
-        <label for="thoiGianKetThucChieu" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Thời gian kết thúc chiếu <span class="text-red-500">*</span></label>
-        <p-datePicker formControlName="thoiGianKetThucChieu" inputId="thoiGianKetThucChieu" styleClass="w-full" [showIcon]="true" [showTime]="true" hourFormat="24" dateFormat="dd/mm/yy" appendTo="body" [showOnFocus]="false" />
-        @if (form.get('thoiGianKetThucChieu')?.hasError('required') && form.get('thoiGianKetThucChieu')?.touched) {
-        <p-message severity="error" variant="simple" size="small">{{ getError('thoiGianKetThucChieu') }} </p-message>
+        <label for="moTa" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Mô tả</label>
+        <textarea pInputTextarea id="moTa" formControlName="moTa" placeholder="Nhập mô tả phim" class="w-full" rows="4"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label for="daoDien" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Đạo diễn</label>
+        <input pInputText id="daoDien" formControlName="daoDien" placeholder="Nhập tên đạo diễn" class="w-full" />
+    </div>
+
+    <div class="mb-3">
+        <label for="dienVien" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Diễn viên</label>
+        <input pInputText id="dienVien" formControlName="dienVien" placeholder="Nhập tên diễn viên" class="w-full" />
+    </div>
+
+    <div class="mb-3">
+        <label for="trailerUrl" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Trailer URL</label>
+        <input pInputText id="trailerUrl" formControlName="trailerUrl" placeholder="Nhập URL trailer" class="w-full" />
+    </div>
+
+    <div class="mb-3">
+        <label for="thoiLuongPhut" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Thời lượng (phút) <span class="text-red-500">*</span></label>
+        <p-inputNumber id="thoiLuongPhut" formControlName="thoiLuongPhut" [min]="1" placeholder="Nhập thời lượng" styleClass="w-full" />
+        @if (form.get('thoiLuongPhut')?.hasError('required') && form.get('thoiLuongPhut')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('thoiLuongPhut') }}</p-message>
         }
+    </div>
+
+    <div class="mb-3">
+        <label for="ngayKhoiChieu" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Ngày khởi chiếu <span class="text-red-500">*</span></label>
+        <p-datepicker id="ngayKhoiChieu" formControlName="ngayKhoiChieu" placeholder="Chọn ngày khởi chiếu" dateFormat="dd/mm/yy" [showIcon]="true" styleClass="w-full" appendTo="body" />
+        @if (form.get('ngayKhoiChieu')?.hasError('required') && form.get('ngayKhoiChieu')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('ngayKhoiChieu') }}</p-message>
+        }
+    </div>
+
+    <div class="mb-3">
+        <label for="ngonNgu" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Ngôn ngữ <span class="text-red-500">*</span></label>
+        <p-select id="ngonNgu" formControlName="ngonNgu" [options]="ngonNguOptions" optionLabel="label" optionValue="value" placeholder="Chọn ngôn ngữ" [filter]="true" filterPlaceholder="Tìm kiếm" styleClass="w-full" appendTo="body" />
+        @if (form.get('ngonNgu')?.hasError('required') && form.get('ngonNgu')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('ngonNgu') }}</p-message>
+        }
+    </div>
+
+    <div class="mb-3">
+        <label for="phanLoaiDoTuoi" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Phân loại độ tuổi <span class="text-red-500">*</span></label>
+        <p-select id="phanLoaiDoTuoi" formControlName="phanLoaiDoTuoi" [options]="phanLoaiDoTuoiOptions" optionLabel="label" optionValue="value" placeholder="Chọn phân loại" styleClass="w-full" appendTo="body" />
+        @if (form.get('phanLoaiDoTuoi')?.hasError('required') && form.get('phanLoaiDoTuoi')?.touched) {
+        <p-message severity="error" variant="simple" size="small">{{ getError('phanLoaiDoTuoi') }}</p-message>
+        }
+    </div>
+
+    <div class="mb-3">
+        <label for="theLoaiIds" class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Thể loại phim</label>
+        <p-multiselect formControlName="theLoaiIds" id="theLoaiIds" [options]="listTheLoai" optionLabel="tenTheLoai" optionValue="id" placeholder="Chọn thể loại" [showClear]="true" styleClass="w-full" appendTo="body" [maxSelectedLabels]="1" selectedItemsLabel="{0} thể loại đã chọn" />
     </div>
 
     <div class="flex gap-2 mt-4" style="justify-content: flex-end;">

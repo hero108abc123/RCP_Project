@@ -10,6 +10,9 @@ export class PermissionConstants {
     static MenuRapChieuPhim = this.Menu + "RapChieuPhim";
     static MenuGiaVe = this.Menu + "GiaVe";
     static MenuLichChieu = this.Menu + "LichChieu";
+    static MenuMovie = this.Menu + "Movie";
+    static MenuKho = this.Menu + "Kho";
+    static MenuMenu = this.Menu +"Menu";
 
 
 

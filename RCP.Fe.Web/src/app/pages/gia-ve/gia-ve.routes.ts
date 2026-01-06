@@ -1,6 +1,6 @@
 import { PermissionConstants } from "@/shared/constants/permission.constants";
 import { Routes } from "@angular/router";
-import { GiaVe } from "./gia-ve/gia-ve";
+import { GiaVe } from "./gia-ve";
 import { permissionGuard } from "@/shared/guard/permission-guard";
 
 export default [

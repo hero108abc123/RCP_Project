@@ -25,7 +25,7 @@ namespace RCP.Project.Controller.Phim
 
         // GET: api/app/phim
         [Permission(PermissionKeys.PhimView)]
-        [HttpGet("find")]
+        [HttpGet("")]
         public ApiResponse Find([FromQuery] FindPhimDto dto)
         {
             try
@@ -69,7 +69,7 @@ namespace RCP.Project.Controller.Phim
 
         // POST: api/app/phim
         [Permission(PermissionKeys.PhimCreate)]
-        [HttpPost("create")]
+        [HttpPost("")]
         public ApiResponse Create([FromBody] CreatePhimDto dto)
         {
             try
@@ -85,12 +85,12 @@ namespace RCP.Project.Controller.Phim
 
         // PUT: api/app/phim/{id}
         [Permission(PermissionKeys.PhimUpdate)]
-        [HttpPut("update/{id}")]
-        public ApiResponse Update([FromBody] int id, UpdatePhimDto dto)
+        [HttpPut("")]
+        public ApiResponse Update([FromBody] UpdatePhimDto dto)
         {
             try
             {
-                var data = _phimService.UpdatePhim(id, dto);
+                var data = _phimService.UpdatePhim( dto);
                 return new(data);
             }
             catch (Exception ex)
@@ -100,12 +100,26 @@ namespace RCP.Project.Controller.Phim
         }
 
         [Permission(PermissionKeys.PhimDelete)]
-        [HttpDelete("delete/{id}")]
-        public ApiResponse Delete([FromBody] int id)
+        [HttpDelete("{id}")]
+        public ApiResponse Delete([FromRoute] int id)
         {
             try
             {
                 var data = _phimService.DeletePhim(id);
+                return new(data);
+            }
+            catch (Exception ex)
+            {
+                return OkException(ex);
+            }
+        }
+        [Permission(PermissionKeys.PhimView)]
+        [HttpGet("{id}")]
+        public ApiResponse FindById([FromRoute] int id)
+        {
+            try
+            {
+                var data = _phimService.FindById(id);
                 return new(data);
             }
             catch (Exception ex)

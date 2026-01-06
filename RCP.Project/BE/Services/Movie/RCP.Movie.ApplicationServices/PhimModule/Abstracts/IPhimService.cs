@@ -7,9 +7,10 @@ namespace RCP.Movie.ApplicationServices.PhimModule.Abstracts
     {
         BaseResponsePagingDto<ViewPhimDto> FindPaging(FindPhimDto dto);
         Task<ViewPhimDto> CreatePhim(CreatePhimDto dto);
-        Task<ViewPhimDto> UpdatePhim(int id, UpdatePhimDto dto);
+        Task<ViewPhimDto> UpdatePhim( UpdatePhimDto dto);
         ViewPhimDto DeletePhim(int id);
         public List<GetDropDownPhimDto> GetDropDown();
         public List<GetTheLoaiDto> GetTheLoai();
+        public ViewPhimDto FindById(int id);
     }
 }

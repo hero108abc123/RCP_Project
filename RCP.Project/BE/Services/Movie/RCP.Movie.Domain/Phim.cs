@@ -34,7 +34,7 @@ namespace RCP.Movie.Domain
         [MaxLength(10)]
         public string? PhanLoaiDoTuoi { get; set; }
 
-        public bool DangChieu { get; set; }
+        public int  DangChieu { get; set; }
 
         // 🔹 Audit fields
         public DateTime? CreatedDate { get; set; }

@@ -38,8 +38,8 @@ namespace RCP.Project.Migrations.Phim
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<bool>("DangChieu")
-                        .HasColumnType("bit");
+                    b.Property<int>("DangChieu")
+                        .HasColumnType("int");
 
                     b.Property<string>("DaoDien")
                         .HasMaxLength(500)

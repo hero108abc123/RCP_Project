@@ -24,6 +24,14 @@ export interface IFindMovieParams {
   pageNumber?: number;
   pageSize?: number;
   // Các trường khác nếu FindPagingDto có (ví dụ city, district...)
+  idTheLoai?: number[];
+  dangChieu?: number;
+  ngonNgu?: string;
+  phanLoaiDoTuoi?: string[];
+  daoDien?: string;
+  dienVien?: string;
+  tuNgay?: Date;
+  denNgay?: Date;
 }
 
 // 2. Định nghĩa Interface cho Response Paging (tương ứng BaseResponsePagingDto bên C#)

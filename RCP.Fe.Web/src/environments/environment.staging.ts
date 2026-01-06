@@ -2,10 +2,10 @@ import { IEnvironment } from "@/shared/models/environment.models";
 
 export const environment: IEnvironment = {
     production: true,
-    baseUrl: 'https://api.yna.io.vn',
+    baseUrl: 'http://api.yna.io.vn',
     authGrantType: 'password',
     authClientId: 'client-web',
     authClientSecret: 'mBSQUHmZ4be5bQYfhwS7hjJZ2zFOCU2e',
     authScope: 'openid offline_access',
-    appUrl: 'https://app.yna.io.vn',
+    appUrl: 'http://app.yna.io.vn',
 };

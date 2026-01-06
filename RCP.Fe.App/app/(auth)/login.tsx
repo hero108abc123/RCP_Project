@@ -59,8 +59,7 @@ function Login() {
       await SecureStore.setItemAsync("accessToken", data.access_token)
       await SecureStore.setItemAsync("refreshToken", data.refresh_token)
       console.log(1111, data.access_token)
-      
-      const meResponse = await api.get('api/app/user/me')
+      const meResponse = await api.get('/api/app/users/me')
       const userData = meResponse.data
       
       dispatch(
@@ -127,16 +126,26 @@ function Login() {
             title={loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
             textColor='white'
             fontSize={20}
-            onPress={() => {
+            onPress={async ()=> {
               try {
-                console.log("🔵 Bắt đầu điều hướng...");
-                router.replace('/(bar)/bottom-bar' as any );
-                console.log("✅ Điều hướng thành công");
-              } catch (error) {
-                console.error("❌ Lỗi điều hướng:", error);
-                Alert.alert("Lỗi", JSON.stringify(error));
+                await handleLogin({
+                  username: userName,
+                  password: password,
+                });
+              } catch (e) {
+                console.log(e);
               }
             }}
+            // onPress={() => {
+            //   try {
+            //     console.log("🔵 Bắt đầu điều hướng...");
+            //     // router.replace('/(bar)/bottom-bar' as any );
+            //     console.log("✅ Điều hướng thành công");
+            //   } catch (error) {
+            //     console.error("❌ Lỗi điều hướng:", error);
+            //     Alert.alert("Lỗi", JSON.stringify(error));
+            //   }
+            // }}
           />
           
           {loading && (

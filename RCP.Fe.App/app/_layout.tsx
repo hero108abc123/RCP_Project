@@ -40,7 +40,7 @@ function RootLayoutNav() {
         setLoading(false);
         return;
       }
-      const response = await api.get("api/app/user/me");
+      const response = await api.get("/api/app/users/me");
       const userData = response.data;
       console.log("👤 userData:", userData);
       dispatch(

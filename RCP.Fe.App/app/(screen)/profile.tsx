@@ -6,15 +6,43 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons as Icon } from '@expo/vector-icons';
 import { ThemedView } from '../../components/themed-view';
 import ButtonCustom from '../../components/button';
 import { useRouter } from 'expo-router';
+import * as SecureStore from 'expo-secure-store'
 
 export default function ProfileScreen() {
   const router = useRouter();
+
+  const logout = () => {
+    Alert.alert(
+      'Log out',
+      'Are you sure you want to log out?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Log out',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await SecureStore.deleteItemAsync('accessToken')
+              await SecureStore.deleteItemAsync('refreshToken')
+              await SecureStore.deleteItemAsync('user')
+
+              router.dismissAll()
+              router.replace('/(auth)/login')
+            } catch (error) {
+              Alert.alert('Error', 'Logout failed')
+            }
+          },
+        },
+      ]
+    )
+  }
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -66,7 +94,7 @@ export default function ProfileScreen() {
             <MenuItem icon="heart-outline" label="Favorite" />
             <MenuItem icon="location-outline" label="Location" />
             <MenuItem icon="globe-outline" label="Language" />
-            <MenuItem icon="log-out-outline" label="Log out" />
+            <MenuItem icon="log-out-outline" label="Log out" onPress={logout} />
             {/* <MenuItem icon="log-out-outline" label="Log out" /> Viết thêm hàm logic để logout */}
           </View>
         </ScrollView>
@@ -75,9 +103,9 @@ export default function ProfileScreen() {
   );
 }
 
-function MenuItem({ icon, label }: { icon: React.ComponentProps<typeof Icon>['name']; label: string }) {
+function MenuItem({ icon, label, onPress }: { icon: React.ComponentProps<typeof Icon>['name']; label: string; onPress?: () => void }) {
   return (
-    <TouchableOpacity style={styles.menuItem}>
+    <TouchableOpacity style={styles.menuItem} onPress={onPress}>
       <View style={styles.menuLeft}>
         <Icon name={icon} size={22} color="#000" />
         <Text style={styles.menuText}>{label}</Text>

@@ -11,6 +11,8 @@ import {
     REHYDRATE,
 } from 'redux-persist'
 import userReducer from './slices/userSlice'
+// ✅ THÊM import movieReducer
+import movieReducer from './slices/movieSlice'
 
 const persistedReducer = persistReducer(
   {
@@ -20,6 +22,7 @@ const persistedReducer = persistReducer(
   },
   combineReducers({
     user: userReducer,
+    movies: movieReducer, // ✅ THÊM movies reducer
   }),
 )
 

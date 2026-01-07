@@ -70,11 +70,11 @@ namespace RCP.Project.Controller.Phim
         // POST: api/app/phim
         [Permission(PermissionKeys.PhimCreate)]
         [HttpPost("")]
-        public ApiResponse Create([FromBody] CreatePhimDto dto)
+        public async Task<ApiResponse> Create([FromForm] CreatePhimDto dto)
         {
             try
             {
-                var data = _phimService.CreatePhim(dto);
+                var data = await _phimService.CreatePhim(dto);
                 return new(data);
             }
             catch (Exception ex)
@@ -86,11 +86,11 @@ namespace RCP.Project.Controller.Phim
         // PUT: api/app/phim/{id}
         [Permission(PermissionKeys.PhimUpdate)]
         [HttpPut("")]
-        public ApiResponse Update([FromBody] UpdatePhimDto dto)
+        public async Task<ApiResponse> Update([FromForm] UpdatePhimDto dto)
         {
             try
             {
-                var data = _phimService.UpdatePhim( dto);
+                var data = await _phimService.UpdatePhim(dto);
                 return new(data);
             }
             catch (Exception ex)

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RCP.Shared.Constant.Constants.Phim
+﻿namespace RCP.Shared.Constant.Constants.Phim
 {
     public static class PhimConstants
     {

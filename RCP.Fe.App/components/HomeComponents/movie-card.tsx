@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
+import React from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
 
+<<<<<<< HEAD
 interface MovieCardProps {
   movie: {
     id: string;
@@ -16,10 +17,17 @@ interface MovieCardProps {
     description?: string;
   };
 }
+=======
+type Movie = {
+  id: string;
+  title: string;
+  duration: string;
+  poster: string;
+};
+>>>>>>> 52b8d0ddd65d6e9c232490c34ff8bb201e119286
 
-export default function MovieCard({ movie }: MovieCardProps) {
+export default function MovieCard({ movie }: { movie: Movie }) {
   const router = useRouter();
-  const [imageError, setImageError] = useState(false);
 
   const handlePress = () => {
     router.push({
@@ -31,6 +39,7 @@ export default function MovieCard({ movie }: MovieCardProps) {
   };
 
   return (
+<<<<<<< HEAD
     <TouchableOpacity
       style={styles.card}
       onPress={handlePress}
@@ -55,49 +64,49 @@ export default function MovieCard({ movie }: MovieCardProps) {
         </Text>
         <Text style={styles.duration}>{movie.duration}</Text>
       </View>
+=======
+    <TouchableOpacity 
+      style={styles.container} 
+      activeOpacity={0.8} 
+      onPress={() => router.push({
+        pathname: '/movie-booking',
+        params: { 
+          movie: JSON.stringify(movie),
+          movieId: movie.id, // ✅ THÊM movieId riêng để dễ lấy
+        },
+      })}>
+      <Image source={{ uri: movie.poster }} style={styles.poster} />
+
+      <Text numberOfLines={2} style={styles.title}>
+        {movie.title}
+      </Text>
+
+      <Text style={styles.duration}>{movie.duration}</Text>
+>>>>>>> 52b8d0ddd65d6e9c232490c34ff8bb201e119286
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  card: {
-    flex: 1,
-    margin: 4,
-    maxWidth: '31%',
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    overflow: 'hidden',
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+  container: {
+    width: '30%',
+    marginBottom: 16,
   },
   poster: {
     width: '100%',
     aspectRatio: 2 / 3,
-    backgroundColor: '#f0f0f0',
-  },
-  placeholder: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#e0e0e0',
-  },
-  placeholderText: {
-    color: '#999',
-    fontSize: 10,
-  },
-  info: {
-    padding: 8,
+    borderRadius: 8,
+    backgroundColor: '#E0E0E0',
   },
   title: {
-    fontSize: 12,
+    marginTop: 6,
+    fontSize: 13,
     fontWeight: '600',
-    marginBottom: 4,
-    color: '#333',
+    color: '#212121',
   },
   duration: {
-    fontSize: 10,
-    color: '#666',
+    fontSize: 11,
+    color: '#757575',
+    marginTop: 2,
   },
 });

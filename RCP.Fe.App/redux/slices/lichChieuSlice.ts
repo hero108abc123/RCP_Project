@@ -1,116 +1,77 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {
-  ILichChieu,
-  IFindLichChieuParams,
-  IPagingResponse,
-} from "@/model/cinema/lichchieu.models";
-import { getAllCinemas } from "@/api/lichchieu.service"; // Lưu ý: Tên hàm trong file service của bạn đang là getAllCinemas cho lịch chiếu
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { getAllCinemas } from '@/api/lichchieu.service';
+import { ILichChieu, IFindLichChieuParams, IPagingResponse } from '@/model/cinema/lichchieu.models';
 
-// --- 1. Async Thunk ---
-export const $getAllLichChieu = createAsyncThunk(
-  "lichChieu/getAll",
-  async (params: IFindLichChieuParams, { rejectWithValue }) => {
-    try {
-      const res = await getAllCinemas(params);
-      return res;
-    } catch (error) {
-      return rejectWithValue(error);
-    }
-  }
-);
-
-// --- 2. State Definition ---
-type LichChieuState = {
-  items: ILichChieu[];
+interface LichChieuState {
+  lichChieu: ILichChieu[];
+  loading: boolean;
+  error: string | null;
   totalItems: number;
-  $getAllLichChieu: {
-    loading: boolean;
-    error?: any;
-  };
-  // Lưu trữ bộ lọc hiện tại để dùng cho việc refresh hoặc phân trang
-  filter: IFindLichChieuParams;
-};
+  pageNumber: number;
+  pageSize: number;
+}
 
 const initialState: LichChieuState = {
-  items: [],
+  lichChieu: [],
+  loading: false,
+  error: null,
   totalItems: 0,
-  $getAllLichChieu: {
-    loading: false,
-  },
-  filter: {
-    pageNumber: 1,
-    pageSize: 10,
-  },
+  pageNumber: 1,
+  pageSize: 10,
 };
 
-// --- 3. Slice Definition ---
+// Async thunk để gọi API
+export const fetchLichChieu = createAsyncThunk<
+  IPagingResponse<ILichChieu>,        // Return type
+  IFindLichChieuParams | undefined,   // Params type
+  { rejectValue: string }
+>('lichChieu/fetchLichChieu', async (params, thunkAPI) => {
+  try {
+    const res = await getAllCinemas(params ?? { pageNumber: 1, pageSize: 10 });
+    return {
+      items: res.items ?? [],
+      totalItems: res.totalItems ?? 0,
+    };
+  } catch (err: any) {
+    return thunkAPI.rejectWithValue(err?.message ?? 'Lỗi khi lấy danh sách lịch chiếu');
+  }
+});
+
 const lichChieuSlice = createSlice({
-  name: "lichChieu",
+  name: 'lichChieu',
   initialState,
-
-  // Selectors
-  selectors: {
-    selectLichChieus: (state) => state.items,
-
-    selectLichChieuPagination: (state) => ({
-      total: state.totalItems,
-      count: state.items.length,
-    }),
-
-    isLoadingLichChieu: (state) => state.$getAllLichChieu.loading,
-
-    // Selector hỗ trợ lấy lịch chiếu theo Cinema cụ thể
-    selectLichChieuByCinemaId: (state, cinemaId: number) =>
-      state.items.filter((item) => item.cinema.idCinema === cinemaId),
-  },
-
   reducers: {
-    // Cập nhật bộ lọc (ví dụ khi người dùng chọn ngày hoặc chọn rạp khác)
-    setFilter(state, action: PayloadAction<IFindLichChieuParams>) {
-      state.filter = { ...state.filter, ...action.payload };
+    setPage: (state, action: PayloadAction<number>) => {
+      state.pageNumber = action.payload;
     },
-    // Reset dữ liệu
-    clearLichChieu(state) {
-      state.items = [];
+    setPageSize: (state, action: PayloadAction<number>) => {
+      state.pageSize = action.payload;
+    },
+    resetLichChieu: (state) => {
+      state.lichChieu = [];
       state.totalItems = 0;
-      state.$getAllLichChieu = { loading: false };
+      state.pageNumber = 1;
+      state.error = null;
+      state.loading = false;
     },
   },
-
   extraReducers: (builder) => {
     builder
-      // Pending
-      .addCase($getAllLichChieu.pending, (state) => {
-        state.$getAllLichChieu.loading = true;
-        state.$getAllLichChieu.error = undefined;
+      .addCase(fetchLichChieu.pending, (state) => {
+        state.loading = true;
+        state.error = null;
       })
-      // Fulfilled
-      .addCase(
-        $getAllLichChieu.fulfilled,
-        (state, action: PayloadAction<IPagingResponse<ILichChieu>>) => {
-          state.$getAllLichChieu.loading = false;
-          state.items = action.payload.items;
-          state.totalItems = action.payload.totalItems;
-        }
-      )
-      // Rejected
-      .addCase($getAllLichChieu.rejected, (state, action) => {
-        state.$getAllLichChieu.loading = false;
-        state.$getAllLichChieu.error = action.payload;
+      .addCase(fetchLichChieu.fulfilled, (state, action) => {
+        state.loading = false;
+        state.lichChieu = action.payload.items;
+        state.totalItems = action.payload.totalItems;
+      })
+      .addCase(fetchLichChieu.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? 'Lỗi khi lấy dữ liệu';
       });
   },
 });
 
-// Export Actions
-export const { setFilter, clearLichChieu } = lichChieuSlice.actions;
-
-// Export Selectors
-export const {
-  selectLichChieus,
-  selectLichChieuPagination,
-  isLoadingLichChieu,
-  selectLichChieuByCinemaId,
-} = lichChieuSlice.selectors;
-
-// Export Reducer
+export const { setPage, setPageSize, resetLichChieu } = lichChieuSlice.actions;
 export default lichChieuSlice.reducer;

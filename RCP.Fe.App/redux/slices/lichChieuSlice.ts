@@ -1,6 +1,10 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { getAllCinemas } from '@/api/lichchieu.service';
-import { ILichChieu, IFindLichChieuParams, IPagingResponse } from '@/model/cinema/lichchieu.models';
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { getAllCinemas } from "@/api/lichchieu.service";
+import {
+  ILichChieu,
+  IFindLichChieuParams,
+  IPagingResponse,
+} from "@/model/cinema/lichchieu.models";
 
 interface LichChieuState {
   lichChieu: ILichChieu[];
@@ -22,10 +26,10 @@ const initialState: LichChieuState = {
 
 // Async thunk để gọi API
 export const fetchLichChieu = createAsyncThunk<
-  IPagingResponse<ILichChieu>,        // Return type
-  IFindLichChieuParams | undefined,   // Params type
+  IPagingResponse<ILichChieu>, // Return type
+  IFindLichChieuParams | undefined, // Params type
   { rejectValue: string }
->('lichChieu/fetchLichChieu', async (params, thunkAPI) => {
+>("lichChieu/fetchLichChieu", async (params, thunkAPI) => {
   try {
     const res = await getAllCinemas(params ?? { pageNumber: 1, pageSize: 10 });
     return {
@@ -33,12 +37,14 @@ export const fetchLichChieu = createAsyncThunk<
       totalItems: res.totalItems ?? 0,
     };
   } catch (err: any) {
-    return thunkAPI.rejectWithValue(err?.message ?? 'Lỗi khi lấy danh sách lịch chiếu');
+    return thunkAPI.rejectWithValue(
+      err?.message ?? "Lỗi khi lấy danh sách lịch chiếu"
+    );
   }
 });
 
 const lichChieuSlice = createSlice({
-  name: 'lichChieu',
+  name: "lichChieu",
   initialState,
   reducers: {
     setPage: (state, action: PayloadAction<number>) => {
@@ -68,7 +74,7 @@ const lichChieuSlice = createSlice({
       })
       .addCase(fetchLichChieu.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload ?? 'Lỗi khi lấy dữ liệu';
+        state.error = action.payload ?? "Lỗi khi lấy dữ liệu";
       });
   },
 });

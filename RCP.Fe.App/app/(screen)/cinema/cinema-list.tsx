@@ -10,27 +10,25 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
-// Services và Models
 import { ICinema } from "@/model/cinema/cinema.models";
 import { getAllCinemas } from "@/api/cinema.service";
 import { getAllCinemas as getLichChieuAPI } from "@/api/lichchieu.service";
 import { ILichChieu } from "@/model/cinema/lichchieu.models";
 
-export default function CinemaList() {
+interface CinemaListProps {
+  movieId?: number;
+  selectedDate?: Date;
+}
+
+export default function CinemaList({ movieId, selectedDate }: CinemaListProps) {
   const router = useRouter();
 
-  // States
   const [openId, setOpenId] = useState<number | null>(null);
   const [cinemas, setCinemas] = useState<ICinema[]>([]);
   const [loading, setLoading] = useState(false);
-
-  // State quản lý suất chiếu của rạp đang mở
-  const [selectedLichChieu, setSelectedLichChieu] = useState<ILichChieu | null>(
-    null
-  );
+  const [selectedLichChieu, setSelectedLichChieu] = useState<ILichChieu | null>(null);
   const [loadingLichChieu, setLoadingLichChieu] = useState(false);
 
-  // Hàm xử lý đóng/mở rạp và gọi API lịch chiếu
   const toggle = async (id: number) => {
     if (openId === id) {
       setOpenId(null);
@@ -45,12 +43,17 @@ export default function CinemaList() {
     fetchCinemas();
   }, []);
 
-  // Lấy danh sách rạp ban đầu
+  // Re-fetch lịch chiếu khi selectedDate thay đổi (chỉ khi có rạp đang mở)
+  useEffect(() => {
+    if (openId !== null) {
+      fetchSuatChieuByCinema(openId);
+    }
+  }, [selectedDate]);
+
   const fetchCinemas = async () => {
     try {
       setLoading(true);
       const res = await getAllCinemas({ pageNumber: 1, pageSize: 20 });
-      // Kiểm tra cấu trúc res.items hoặc res.data.items tùy theo axios config
       const data = (res as any)?.items || (res as any)?.data?.items || [];
       setCinemas(data);
     } catch (error) {
@@ -60,25 +63,43 @@ export default function CinemaList() {
     }
   };
 
-  // Lấy suất chiếu cho rạp cụ thể khi mở rộng Card
   const fetchSuatChieuByCinema = async (cinemaId: number) => {
     try {
       setLoadingLichChieu(true);
-      setSelectedLichChieu(null); // Reset dữ liệu cũ để tránh nhầm rạp
+      setSelectedLichChieu(null);
 
-      const res = await getLichChieuAPI({
+      // Tính toán tuNgay và denNgay dựa trên selectedDate
+      const tuNgay = selectedDate ? new Date(selectedDate) : new Date();
+      tuNgay.setHours(0, 0, 0, 0);
+
+      const denNgay = new Date(tuNgay);
+      denNgay.setHours(23, 59, 59, 999);
+
+      const params: any = {
         pageNumber: 1,
         pageSize: 10,
         idCinema: [cinemaId],
-      });
+        tuNgay: tuNgay,
+        denNgay: denNgay,
+      };
 
-      // Fix lỗi TypeError bằng cách kiểm tra an toàn res và res.items
-      // Thử lấy từ res.items (nếu axios đã intercept) hoặc res.data.items
-      const responseData =
-        (res as any)?.items || (res as any)?.data?.items || [];
+      // Nếu có movieId thì filter theo phim cụ thể (không cần vì API đã trả movies)
+      // Nhưng để đảm bảo, ta sẽ filter sau khi nhận response
+
+      const res = await getLichChieuAPI(params);
+      const responseData = (res as any)?.items || (res as any)?.data?.items || [];
 
       if (responseData && responseData.length > 0) {
-        setSelectedLichChieu(responseData[0]);
+        let lichChieu = responseData[0];
+
+        // Filter movies theo movieId nếu có
+        if (movieId && lichChieu.movies) {
+          lichChieu.movies = lichChieu.movies.filter(
+            (movie: any) => movie.idPhim === movieId
+          );
+        }
+
+        setSelectedLichChieu(lichChieu);
       } else {
         setSelectedLichChieu(null);
       }
@@ -105,7 +126,6 @@ export default function CinemaList() {
 
         return (
           <View key={cinema.id} style={styles.card}>
-            {/* HEADER - Thông tin rạp */}
             <TouchableOpacity
               style={styles.header}
               onPress={() => toggle(cinema.id!)}
@@ -125,7 +145,6 @@ export default function CinemaList() {
               />
             </TouchableOpacity>
 
-            {/* CONTENT - Hiển thị Suất chiếu khi mở rộng */}
             {isOpen && (
               <View style={styles.content}>
                 {loadingLichChieu ? (
@@ -138,7 +157,9 @@ export default function CinemaList() {
                   selectedLichChieu.movies &&
                   selectedLichChieu.movies.length > 0 ? (
                   <View>
-                    <Text style={styles.titleSection}>Suất chiếu hôm nay:</Text>
+                    <Text style={styles.titleSection}>
+                      Suất chiếu ngày {selectedDate?.toLocaleDateString('vi-VN')}:
+                    </Text>
                     <View style={styles.timeGrid}>
                       {selectedLichChieu.movies.map((movie, mIndex) => (
                         <TouchableOpacity
@@ -156,9 +177,7 @@ export default function CinemaList() {
                         >
                           <Text style={styles.time}>
                             {movie.thoiGianBatDauChieu
-                              ? new Date(
-                                  movie.thoiGianBatDauChieu
-                                ).toLocaleTimeString([], {
+                              ? new Date(movie.thoiGianBatDauChieu).toLocaleTimeString([], {
                                   hour: "2-digit",
                                   minute: "2-digit",
                                   hour12: false,
@@ -172,7 +191,7 @@ export default function CinemaList() {
                   </View>
                 ) : (
                   <Text style={styles.note}>
-                    Hiện rạp chưa có lịch chiếu phù hợp.
+                    Hiện rạp chưa có lịch chiếu phù hợp cho ngày này.
                   </Text>
                 )}
               </View>

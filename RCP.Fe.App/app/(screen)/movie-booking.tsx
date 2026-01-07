@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import React from 'react';
+import React, { useState } from 'react';
 import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Appbar } from 'react-native-paper';
 
@@ -18,9 +18,16 @@ export default function MovieBooking() {
   const router = useRouter();
   const params = useLocalSearchParams();
   
-  // ✅ Lấy cả movie object và movieId
   const movie = params.movie ? JSON.parse(params.movie as string) : null;
   const movieId = params.movieId as string;
+
+  // State quản lý ngày được chọn
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+
+  // Callback khi user chọn ngày
+  const handleDateChange = (date: Date) => {
+    setSelectedDate(date);
+  };
 
   if (!movie || !movieId) {
     return (
@@ -59,7 +66,7 @@ export default function MovieBooking() {
             router.push({
               pathname: '/(screen)/movie-detail',
               params: {
-                movieId: movieId, // ✅ TRUYỀN movieId để fetch API
+                movieId: movieId,
               },
             })
           }
@@ -69,9 +76,9 @@ export default function MovieBooking() {
       </ImageBackground>
       
       <View>
-        <DateSelector/>
+        <DateSelector onDateChange={handleDateChange} />
         <Text style={{marginLeft: 10, fontSize: 16, fontWeight: '800'}}>Chọn rạp xem</Text>
-        <CinemaList />
+        <CinemaList movieId={Number(movieId)} selectedDate={selectedDate} />
       </View>
     </View>
   );

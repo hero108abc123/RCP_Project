@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native';
 
+interface DateSelectorProps {
+  onDateChange?: (date: Date) => void;
+}
+
 // Hàm lấy tên thứ trong tuần bằng tiếng Việt
 const getDayLabel = (date: Date, index: number) => {
   if (index === 0) return 'Hôm nay';
@@ -21,15 +25,28 @@ const generateWeekDates = () => {
     result.push({
       id: d.toISOString().slice(0,10), // YYYY-MM-DD làm id
       label: getDayLabel(d, i),
-      day: d.getDate().toString().padStart(2,'0')
+      day: d.getDate().toString().padStart(2,'0'),
+      date: d // Thêm date object để truyền callback
     });
   }
   return result;
 };
 
-export default function DateSelector() {
-  const [dates, setDates] = useState(generateWeekDates());
+export default function DateSelector({ onDateChange }: DateSelectorProps) {
+  const [dates] = useState(generateWeekDates());
   const [selected, setSelected] = useState(dates[0].id);
+
+  // Gọi callback với ngày đầu tiên khi component mount
+  useEffect(() => {
+    if (onDateChange && dates.length > 0) {
+      onDateChange(dates[0].date);
+    }
+  }, []);
+
+  const handleDateSelect = (item: typeof dates[0]) => {
+    setSelected(item.id);
+    onDateChange?.(item.date);
+  };
 
   return (
     <FlatList
@@ -42,7 +59,7 @@ export default function DateSelector() {
         const active = item.id === selected;
         return (
           <TouchableOpacity
-            onPress={() => setSelected(item.id)}
+            onPress={() => handleDateSelect(item)}
             style={styles.item}
           >
             <Text style={[styles.day, active && styles.active]}>{item.day}</Text>

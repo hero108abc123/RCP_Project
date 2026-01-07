@@ -1,6 +1,6 @@
 import { Providers } from "@/redux/providers";
 import { clearUser, setUser } from "@/redux/slices/userSlice";
-import { AppDispatch } from "@/redux/store";
+import { AppDispatch, RootState } from "@/redux/store";
 import "@/styles/global.css";
 import api from "@/utils/axios";
 import { Slot, useRouter, useSegments } from "expo-router";
@@ -9,14 +9,16 @@ import { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import Toast from "react-native-toast-message";
 import "react-native-toast-message/lib/src/Toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 function RootLayoutNav() {
   const router = useRouter();
   const segments = useSegments();
   const dispatch = useDispatch<AppDispatch>();
   const [loading, setLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  
+  // ✅ Lấy isAuthenticated từ Redux thay vì state local
+  const isAuthenticated = useSelector((state: RootState) => state.user.isAuthenticated);
 
   useEffect(() => {
     checkAuth();
@@ -24,10 +26,16 @@ function RootLayoutNav() {
 
   useEffect(() => {
     if (loading) return;
+    
     const inAuthGroup = segments[0] === "(auth)";
+    
+    console.log('🔍 Auth check:', { isAuthenticated, inAuthGroup, segments });
+    
     if (!isAuthenticated && !inAuthGroup) {
+      console.log('➡️ Redirecting to login');
       router.replace("/(auth)/login" as any);
     } else if (isAuthenticated && inAuthGroup) {
+      console.log('➡️ Redirecting to bottom-bar');
       router.replace("/(bar)/bottom-bar" as any);
     }
   }, [isAuthenticated, segments, loading]);
@@ -35,14 +43,18 @@ function RootLayoutNav() {
   const checkAuth = async () => {
     try {
       const accessToken = await SecureStore.getItemAsync("accessToken");
+      console.log('🔑 accessToken:', accessToken ? 'exists' : 'null');
+      
       if (!accessToken) {
-        setIsAuthenticated(false);
+        dispatch(clearUser());
         setLoading(false);
         return;
       }
+      
       const response = await api.get("/api/app/users/me");
       const userData = response.data;
       console.log("👤 userData:", userData);
+      
       dispatch(
         setUser({
           id: userData.id,
@@ -55,13 +67,11 @@ function RootLayoutNav() {
           $login: {},
         })
       );
-      setIsAuthenticated(true);
     } catch (error) {
       console.error("❌ Token verification failed", error);
       await SecureStore.deleteItemAsync("accessToken");
       await SecureStore.deleteItemAsync("refreshToken");
       dispatch(clearUser());
-      setIsAuthenticated(false);
     } finally {
       setLoading(false);
     }

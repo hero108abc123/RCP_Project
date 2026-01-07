@@ -14,34 +14,17 @@ import { ThemedView } from '../../components/themed-view';
 import ButtonCustom from '../../components/button';
 import { useRouter } from 'expo-router';
 import * as SecureStore from 'expo-secure-store'
-//ghép api
-import { useDispatch, useSelector } from 'react-redux'
-import { RootState, AppDispatch } from '@/redux/store'
-import { $getUserById } from '@/redux/slices/userSlice'
-import { useEffect } from 'react'
-
-
+import { clearUser } from '@/redux/slices/userSlice';
+import { useDispatch } from 'react-redux';
 
 export default function ProfileScreen() {
   const router = useRouter();
-
-  const dispatch = useDispatch<AppDispatch>()
-  const { id, fullName, email } = useSelector(
-    (state: RootState) => state.user
-  )
-
-  useEffect(() => {
-  if (id) {
-    dispatch($getUserById(id))
-  }
-}, [id])
-
-
+  const dispatch = useDispatch();
 
   const logout = () => {
     Alert.alert(
-      'Log out',
-      'Are you sure you want to log out?',
+      'Đăng xuất',
+      'Bạn chắc chắn muốn đăng xuất?',
       [
         { text: 'Cancel', style: 'cancel' },
         {
@@ -49,6 +32,7 @@ export default function ProfileScreen() {
           style: 'destructive',
           onPress: async () => {
             try {
+              dispatch(clearUser())
               await SecureStore.deleteItemAsync('accessToken')
               await SecureStore.deleteItemAsync('refreshToken')
               await SecureStore.deleteItemAsync('user')

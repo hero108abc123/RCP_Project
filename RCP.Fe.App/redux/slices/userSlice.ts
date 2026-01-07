@@ -1,5 +1,5 @@
 import { AuthServices } from "@/api/auth.service"
-import { ILogin, IMe } from "@/model/auth/auth.models"
+import { ILogin, IMe, IRegister } from "@/model/auth/auth.models"
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { UserService } from "@/api/user.service"
 import { ViewUser } from "@/model/user/users.models"
@@ -16,9 +16,25 @@ export const $login = createAsyncThunk(
   },
 )
 
+export const $register = createAsyncThunk(
+  'register',
+  async (payload: IRegister, { rejectWithValue }) => {
+    try {
+      const res = await AuthServices.register(payload)
+      return res
+    } catch (error) {
+      return rejectWithValue(error)
+    }
+  },
+)
+
 type UserState = IMe & {
   isAuthenticated: boolean
   $login: {
+    loading?: boolean
+    data?: null
+  }
+  $register: {
     loading?: boolean
     data?: null
   }
@@ -32,6 +48,7 @@ const initialState: UserState = {
   roles: [],
   isAuthenticated: false,
   $login: {},
+  $register: {},
 }
 
 const userSlice = createSlice({
@@ -77,12 +94,15 @@ const userSlice = createSlice({
       .addCase($login.rejected, (state) => {
         state.$login.loading = false
       })
-
-      //GET USER BY ID (CHO PROFILE)
-      .addCase($getUserById.fulfilled, (state, action) => {
-      state.email = action.payload.email
-      state.fullName = action.payload.fullName
-    })
+      .addCase($register.pending, (state) => {
+        state.$register.loading = true
+      })
+      .addCase($register.fulfilled, (state) => {
+        state.$register.loading = false
+      })
+      .addCase($register.rejected, (state) => {
+        state.$register.loading = false
+      })
   },
 })
 

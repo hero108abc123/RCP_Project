@@ -1,5 +1,5 @@
 import { processApiMsgError } from "@/libs/utils";
-import { IConnectToken, ILogin } from "@/model/auth/auth.models";
+import { IConnectToken, ILogin, IRegister } from "@/model/auth/auth.models";
 import api from "@/utils/axios";
 
 const login = async (body: ILogin) => {
@@ -28,6 +28,25 @@ const login = async (body: ILogin) => {
     return Promise.reject(err);
   }
 };
+const register = async (body: IRegister) => {
+  try {
+    console.log("🚀 ~ file: auth.service.ts ~ register ~ body:", body);
+    
+    const res = await api.post(`api/app/users/register`, body, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      baseURL: process.env.EXPO_PUBLIC_BASE_API_URL,
+    });
+    
+    console.log(res.data);
+    return Promise.resolve(res.data);
+  } catch (err) {
+    processApiMsgError(err, "");
+    return Promise.reject(err);
+  }
+};
 export const AuthServices = {
   login,
+  register,
 };

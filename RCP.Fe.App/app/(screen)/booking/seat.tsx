@@ -219,7 +219,7 @@ export default function SeatScreen() {
   const listIdGhe = selectedSeats.map((seat) => seat.idGhe);
 
   const dto: XacNhanDatVeByUserIdDto = {
-    listIdGhe: listIdGhe as any, // Cast vì interface định nghĩa là []
+    idGhe: listIdGhe as any, // Cast vì interface định nghĩa là []
     sessionId,
   };
 

@@ -100,7 +100,7 @@ const initialState: DatVeState = {
   listGheTrangThai: [],
   gheDangGiu: null,
   veHienTai: null,
-  timeLeft: 600, // Mặc định 10 phút
+  timeLeft: 600,
   loading: false,
 };
 
@@ -121,7 +121,7 @@ const datVeSlice = createSlice({
     resetDatVe(state) {
       state.gheDangGiu = null;
       state.veHienTai = null;
-      state.timeLeft = 600; // Reset về 10 phút
+      state.timeLeft = 600;
       state.listGheTrangThai = [];
       state.loading = false;
       state.error = undefined;
@@ -139,7 +139,6 @@ const datVeSlice = createSlice({
       .addCase($datVeTam.fulfilled, (state, action: PayloadAction<IGheTam>) => {
         state.loading = false;
         state.gheDangGiu = action.payload;
-        // Không set timeLeft từ API, giữ nguyên countdown từ FE
       })
       .addCase($datVeTam.rejected, (state, action) => {
         state.loading = false;
@@ -159,7 +158,6 @@ const datVeSlice = createSlice({
 
       .addCase($huyDatVeTamBySession.fulfilled, (state) => {
         state.gheDangGiu = null;
-        // Không reset timeLeft, để component tự xử lý
       })
 
       .addCase($xacNhanDatVeUser.pending, (state) => {
@@ -167,7 +165,6 @@ const datVeSlice = createSlice({
       })
       .addCase($xacNhanDatVeUser.fulfilled, (state) => {
         state.loading = false;
-        // Không reset timeLeft, để component tự xử lý
       })
       .addCase($xacNhanDatVeUser.rejected, (state, action) => {
         state.loading = false;

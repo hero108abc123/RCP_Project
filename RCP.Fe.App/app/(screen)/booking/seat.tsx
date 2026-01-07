@@ -26,8 +26,6 @@ import {
   $huyDatVeTamBySession,
   $xacNhanDatVeUser,
   $getChiTietVe,
-  tick,
-  setTimeLeft,
   resetDatVe,
 } from "@/redux/slices/datVeSlice";
 import { GetTrangThaiGheDto } from "@/model/datve/ghetam.models";
@@ -35,7 +33,6 @@ import { DatVeTamDto, XacNhanDatVeByUserIdDto } from "@/model/datve/ve.models";
 import { IGheInRoom } from "@/model/room/ghe.models";
 import { getAllGheInRoom } from "@/api/room.service";
 
-// Hàm sinh sessionId duy nhất
 const generateSessionId = (): string => {
   return `session_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
 };
@@ -57,10 +54,10 @@ export default function SeatScreen() {
   const listTrangThai = useSelector(
     (state: any) => state.datVe?.listGheTrangThai || []
   );
-  const timeLeft = useSelector((state: any) => state.datVe?.timeLeft ?? 600);
   const loading = useSelector((state: any) => state.datVe?.loading || false);
 
-  // Local state
+  // ✅ LOCAL STATE cho timer thay vì dùng Redux
+  const [timeLeft, setTimeLeft] = useState(600);
   const [sessionId] = useState<string>(() => generateSessionId());
   const [selectedSeats, setSelectedSeats] = useState<SelectedSeatInfo[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -73,13 +70,11 @@ export default function SeatScreen() {
     null
   );
 
-  // Parse params
   const idCinema = Number(params.idCinema) || 0;
   const idPhim = Number(params.idPhim) || 0;
   const idRoom = Number(params.idRoom) || 0;
   const idLichChieu = Number(params.idLichChieu) || 0;
 
-  // Format time từ ISO string
   const formatTime = (isoString?: string) => {
     if (!isoString) return "";
     try {
@@ -94,7 +89,6 @@ export default function SeatScreen() {
     }
   };
 
-  // Format date từ ISO string
   const formatDate = (isoString?: string) => {
     if (!isoString) return "";
     try {
@@ -105,7 +99,6 @@ export default function SeatScreen() {
     }
   };
 
-  // Hàm lấy danh sách ghế từ API room
   const fetchGhes = useCallback(async () => {
     if (!idCinema || !idRoom || !idLichChieu) return;
 
@@ -126,7 +119,6 @@ export default function SeatScreen() {
     }
   }, [idCinema, idRoom, idLichChieu]);
 
-  // Hàm lấy trạng thái ghế
   const fetchTrangThaiGhe = useCallback(() => {
     if (!idCinema || !idRoom || !idLichChieu) return;
 
@@ -139,11 +131,9 @@ export default function SeatScreen() {
     dispatch($getTrangThaiGhe(dto));
   }, [dispatch, idCinema, idRoom, idLichChieu, sessionId]);
 
-  // Merge ghế với trạng thái
   const mergedGhes = useCallback((): IGheInRoom[] => {
     if (ghes.length === 0) return [];
 
-    // Nếu có dữ liệu trạng thái từ API, merge vào
     if (listTrangThai && listTrangThai.length > 0) {
       return ghes.map((ghe) => {
         const trangThai = listTrangThai.find(
@@ -165,7 +155,6 @@ export default function SeatScreen() {
     return ghes;
   }, [ghes, listTrangThai]);
 
-  // Hàm xử lý khi chọn/bỏ chọn ghế
   const handleSeatPress = useCallback(
     async (seat: IGheInRoom) => {
       if (loading || !seat.id) return;
@@ -173,7 +162,6 @@ export default function SeatScreen() {
       const existingSeat = selectedSeats.find((s) => s.idGhe === seat.id);
 
       if (existingSeat) {
-        // Bỏ chọn ghế -> Gọi API hủy đặt vé tạm
         try {
           await dispatch($huyDatVeTam(existingSeat.idGheTamGiu)).unwrap();
           setSelectedSeats((prev) => prev.filter((s) => s.idGhe !== seat.id));
@@ -182,7 +170,6 @@ export default function SeatScreen() {
           Alert.alert("Lỗi", "Không thể hủy ghế đang giữ");
         }
       } else {
-        // Chọn ghế mới -> Gọi API đặt vé tạm
         const dto: DatVeTamDto = {
           idCinema,
           idPhim,
@@ -223,33 +210,44 @@ export default function SeatScreen() {
     ]
   );
 
-  // Hàm xử lý khi nhấn tiếp tục
+  // ✅ FIX: Xử lý response và validate idVe
   const handleContinue = useCallback(async () => {
     if (selectedSeats.length === 0 || isSubmitting) return;
 
     setIsSubmitting(true);
 
     const dto: XacNhanDatVeByUserIdDto = {
-      idGheTamGiu: selectedSeats.map((s) => s.idGheTamGiu),
       sessionId,
     };
 
     try {
+      console.log("📤 Sending DTO:", dto);
       const result = await dispatch($xacNhanDatVeUser(dto)).unwrap();
+      console.log("📥 Response:", result);
+
+      // ✅ VALIDATE idVe trước khi gọi API tiếp
+      if (!result?.idVe || result.idVe === 0) {
+        throw new Error("Không nhận được mã vé từ server");
+      }
+
       await dispatch($getChiTietVe(result.idVe)).unwrap();
 
       router.push({
         pathname: "/booking/payment",
-        params: { idVe: result.idVe.toString() },
+        params: { 
+          idVe: result.idVe.toString(),
+          sessionId: sessionId 
+        },
       } as any);
-    } catch (error) {
-      Alert.alert("Lỗi", "Xác nhận đặt vé thất bại. Vui lòng thử lại.");
+    } catch (error: any) {
+      console.error("❌ Error:", error);
+      const errorMsg = error?.message || "Xác nhận đặt vé thất bại. Vui lòng thử lại.";
+      Alert.alert("Lỗi", errorMsg);
     } finally {
       setIsSubmitting(false);
     }
-  }, [dispatch, selectedSeats, sessionId, router, isSubmitting]);
+  }, [dispatch, sessionId, router, isSubmitting, selectedSeats.length]);
 
-  // Hàm xử lý khi thoát màn hình
   const handleExit = useCallback(() => {
     if (selectedSeats.length > 0) {
       Alert.alert("Xác nhận", "Bạn có chắc muốn hủy đặt vé không?", [
@@ -261,7 +259,7 @@ export default function SeatScreen() {
             try {
               await dispatch($huyDatVeTamBySession(sessionId)).unwrap();
             } catch (error) {
-              // Vẫn cho thoát dù có lỗi
+              console.error("Error cancelling seats:", error);
             }
             dispatch(resetDatVe());
             router.back();
@@ -275,7 +273,6 @@ export default function SeatScreen() {
     return true;
   }, [dispatch, selectedSeats, sessionId, router]);
 
-  // Hàm xử lý khi hết thời gian
   const handleTimeExpired = useCallback(() => {
     Alert.alert(
       "Hết phiên đặt vé",
@@ -283,33 +280,31 @@ export default function SeatScreen() {
       [
         {
           text: "OK",
-          onPress: () => {
+          onPress: async () => {
+            try {
+              await dispatch($huyDatVeTamBySession(sessionId)).unwrap();
+            } catch (error) {
+              console.error("Error cancelling seats:", error);
+            }
             dispatch(resetDatVe());
             router.back();
           },
         },
-      ]
+      ],
+      { cancelable: false }
     );
-  }, [dispatch, router]);
+  }, [dispatch, router, sessionId]);
 
-  // Effect: Set timeLeft = 600 (10 phút) khi vào màn hình
-  useEffect(() => {
-    dispatch(setTimeLeft(600));
-  }, [dispatch]);
-
-  // Effect: Load danh sách ghế lần đầu
   useEffect(() => {
     fetchGhes();
   }, [fetchGhes]);
 
-  // Effect: Load trạng thái ghế sau khi có danh sách ghế
   useEffect(() => {
     if (ghes.length > 0) {
       fetchTrangThaiGhe();
     }
   }, [ghes.length, fetchTrangThaiGhe]);
 
-  // Effect: Refresh trạng thái ghế mỗi 5 giây
   useEffect(() => {
     if (ghes.length === 0) return;
 
@@ -324,27 +319,36 @@ export default function SeatScreen() {
     };
   }, [ghes.length, fetchTrangThaiGhe]);
 
-  // Effect: Countdown timer - chạy ngay khi vào màn hình
+  // ✅ FIX: Timer dùng local state
   useEffect(() => {
+    console.log("🚀 Starting countdown timer");
+
     timerRef.current = setInterval(() => {
-      dispatch(tick());
+      setTimeLeft((prev) => {
+        const newTime = prev > 0 ? prev - 1 : 0;
+        console.log("⏰ Time left:", newTime);
+        return newTime;
+      });
     }, 1000);
 
     return () => {
+      console.log("🛑 Clearing countdown timer");
       if (timerRef.current) {
         clearInterval(timerRef.current);
       }
     };
-  }, [dispatch]);
+  }, []);
 
-  // Effect: Kiểm tra hết thời gian
+  // ✅ Check hết thời gian
   useEffect(() => {
     if (timeLeft === 0 && selectedSeats.length > 0) {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
       handleTimeExpired();
     }
   }, [timeLeft, selectedSeats.length, handleTimeExpired]);
 
-  // Effect: Handle hardware back button (Android)
   useFocusEffect(
     useCallback(() => {
       const subscription = BackHandler.addEventListener(
@@ -355,7 +359,6 @@ export default function SeatScreen() {
     }, [handleExit])
   );
 
-  // Effect: Cleanup khi unmount
   useEffect(() => {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
@@ -363,7 +366,6 @@ export default function SeatScreen() {
     };
   }, []);
 
-  // Convert selectedSeats sang format cho SeatFooter
   const selectedSeatsForFooter = selectedSeats.map((s) => ({
     id: s.idGhe,
     hang: s.hang,

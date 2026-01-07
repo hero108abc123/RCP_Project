@@ -5,6 +5,7 @@ import {
   IHuyVe,
   IVe,
   XacNhanDatVeByUserIdDto,
+  XacNhanDatVeByUserIdResponseDto,
   XacNhanDatVeByUserInfor,
 } from "@/model/datve/ve.models";
 import api from "@/utils/axios";
@@ -80,7 +81,7 @@ export const huyDatVeTam = async (idGheTamGiu: number): Promise<void> => {
  */
 export const xacNhanDatVeByUserId = async (
   dto: XacNhanDatVeByUserIdDto
-): Promise<{ idVe: number }> => {
+): Promise<XacNhanDatVeByUserIdResponseDto> => {
   try {
     const res = await api.post(`api/app/dat-ve/xac-nhan-by-user-id`, dto, {
       baseURL: process.env.EXPO_PUBLIC_BASE_API_URL,

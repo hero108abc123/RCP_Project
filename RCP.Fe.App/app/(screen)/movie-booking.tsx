@@ -16,9 +16,25 @@ type MovieParams = {
 
 export default function MovieBooking() {
   const router = useRouter();
-  const { movie } = useLocalSearchParams();
+  const params = useLocalSearchParams();
+  
+  // ✅ Lấy cả movie object và movieId
+  const movie = params.movie ? JSON.parse(params.movie as string) : null;
+  const movieId = params.movieId as string;
 
-  const data = JSON.parse(movie as string);
+  if (!movie || !movieId) {
+    return (
+      <View style={{ flex: 1 }}>
+        <Appbar.Header style={{ backgroundColor: '#0B4A8B' }}>
+          <Appbar.BackAction onPress={() => router.back()} color='white'/>
+          <Appbar.Content title="ĐẶT VÉ THEO PHIM" titleStyle={{ color: '#fff', fontWeight: '700' }} />
+        </Appbar.Header>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Text>Không tìm thấy thông tin phim</Text>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -29,14 +45,13 @@ export default function MovieBooking() {
       </Appbar.Header>
 
       {/* ---------- Banner ---------- */}
-{/* BANNER */}
       <ImageBackground
-        source={{ uri: data.poster }}
+        source={{ uri: movie.poster }}
         style={styles.banner}
         blurRadius={2}
       >
-        <Text style={styles.movieTitle}>{data.title}</Text>
-        <Text style={styles.movieInfo}>{data.duration}</Text>
+        <Text style={styles.movieTitle}>{movie.title}</Text>
+        <Text style={styles.movieInfo}>{movie.duration}</Text>
 
         <TouchableOpacity
           style={styles.detailBtn}
@@ -44,16 +59,7 @@ export default function MovieBooking() {
             router.push({
               pathname: '/(screen)/movie-detail',
               params: {
-                movie: JSON.stringify({
-                  ...data,
-                  director: 'James Cameron',
-                  cast: 'Sam Worthington, Zoe Saldaña',
-                  genre: 'Khoa học viễn tưởng',
-                  language: 'Tiếng Anh',
-                  releaseDate: '19/12/2025',
-                  description:
-                    'Sau nỗi đau mất đi đứa con trưởng, Jake Sully và Neytiri tiếp tục cuộc sống...',
-                }),
+                movieId: movieId, // ✅ TRUYỀN movieId để fetch API
               },
             })
           }
@@ -62,7 +68,7 @@ export default function MovieBooking() {
         </TouchableOpacity>
       </ImageBackground>
       
-      <View >
+      <View>
         <DateSelector/>
         <Text style={{marginLeft: 10, fontSize: 16, fontWeight: '800'}}>Chọn rạp xem</Text>
         <CinemaList />

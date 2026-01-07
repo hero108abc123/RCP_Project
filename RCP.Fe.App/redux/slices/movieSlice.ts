@@ -14,6 +14,10 @@ interface MovieState {
   totalItems: number;
   pageNumber: number;
   pageSize: number;
+  // ✅ THÊM state cho chi tiết phim
+  movieDetail: IMovie | null;
+  loadingDetail: boolean;
+  errorDetail: string | null;
 }
 
 const initialState: MovieState = {
@@ -23,6 +27,10 @@ const initialState: MovieState = {
   totalItems: 0,
   pageNumber: 1,
   pageSize: 10,
+  // ✅ THÊM initial state
+  movieDetail: null,
+  loadingDetail: false,
+  errorDetail: null,
 };
 
 // Async thunk để gọi API
@@ -76,9 +84,16 @@ const movieSlice = createSlice({
       state.error = null;
       state.loading = false;
     },
+    // ✅ THÊM action reset movieDetail
+    resetMovieDetail: (state) => {
+      state.movieDetail = null;
+      state.loadingDetail = false;
+      state.errorDetail = null;
+    },
   },
   extraReducers: (builder) => {
     builder
+      // fetchMovies
       .addCase(fetchMovies.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -91,9 +106,22 @@ const movieSlice = createSlice({
       .addCase(fetchMovies.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload ?? "Lỗi khi lấy dữ liệu";
+      })
+      // ✅ THÊM xử lý fetchMovieDetail
+      .addCase(fetchMovieDetail.pending, (state) => {
+        state.loadingDetail = true;
+        state.errorDetail = null;
+      })
+      .addCase(fetchMovieDetail.fulfilled, (state, action) => {
+        state.loadingDetail = false;
+        state.movieDetail = action.payload;
+      })
+      .addCase(fetchMovieDetail.rejected, (state, action) => {
+        state.loadingDetail = false;
+        state.errorDetail = action.payload ?? "Lỗi khi lấy chi tiết phim";
       });
   },
 });
 
-export const { setPage, setPageSize, resetMovies } = movieSlice.actions;
+export const { setPage, setPageSize, resetMovies, resetMovieDetail } = movieSlice.actions;
 export default movieSlice.reducer;

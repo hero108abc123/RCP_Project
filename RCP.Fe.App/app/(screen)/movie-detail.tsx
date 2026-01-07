@@ -6,17 +6,99 @@ import {
   ScrollView,
   TouchableOpacity,
   ImageBackground,
+  ActivityIndicator,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Appbar } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+// ✅ IMPORT đúng path theo structure của bạn
+import { fetchMovieDetail, resetMovieDetail } from '@/redux/slices/movieSlice';
+import { AppDispatch, RootState } from '@/redux/store';
+import { IViewTheLoai } from '@/model/movie/movie.models';
 
 export default function MovieDetailScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
+  const dispatch = useDispatch<AppDispatch>();
 
-  // movie được stringify từ màn trước
-  const movie = JSON.parse(params.movie as string);
+  // ✅ Lấy movieDetail từ Redux store
+  const { movieDetail, loadingDetail, errorDetail } = useSelector(
+    (state: RootState) => state.movies
+  );
+
+  // ✅ Lấy movieId từ params
+  const movieId = params.movieId ? Number(params.movieId) : null;
+
+  // ✅ Fetch data khi component mount
+  useEffect(() => {
+    if (movieId) {
+      dispatch(fetchMovieDetail(movieId));
+    }
+
+    // Cleanup khi unmount
+    return () => {
+      dispatch(resetMovieDetail());
+    };
+  }, [movieId]);
+
+  // ✅ Hiển thị loading
+  if (loadingDetail) {
+    return (
+      <View style={{ flex: 1 }}>
+        <Appbar.Header style={styles.header}>
+          <Appbar.BackAction onPress={() => router.back()} color='white'/>
+          <Appbar.Content title="Chi tiết phim" titleStyle={{ color: 'white' }} />
+        </Appbar.Header>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color="#0B4A8B" />
+          <Text style={{ marginTop: 10, color: '#757575' }}>Đang tải...</Text>
+        </View>
+      </View>
+    );
+  }
+
+  // ✅ Hiển thị lỗi
+  if (errorDetail || !movieDetail) {
+    return (
+      <View style={{ flex: 1 }}>
+        <Appbar.Header style={styles.header}>
+          <Appbar.BackAction onPress={() => router.back()} color='white'/>
+          <Appbar.Content title="Chi tiết phim" titleStyle={{ color: 'white' }} />
+        </Appbar.Header>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
+          <Ionicons name="alert-circle-outline" size={64} color="#757575" />
+          <Text style={{ marginTop: 10, color: '#757575', textAlign: 'center' }}>
+            {errorDetail || 'Không tìm thấy thông tin phim'}
+          </Text>
+          <TouchableOpacity 
+            onPress={() => router.back()} 
+            style={{ marginTop: 20, paddingHorizontal: 20, paddingVertical: 10, backgroundColor: '#0B4A8B', borderRadius: 8 }}
+          >
+            <Text style={{ color: '#fff', fontWeight: '600' }}>Quay lại</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
+
+  // ✅ Map data từ BE sang format hiển thị - Fixed type annotation
+  const movie = {
+    banner: movieDetail.anhBia || '',
+    poster: movieDetail.anhBia || '',
+    title: movieDetail.tenPhim || 'Chưa có tên',
+    director: movieDetail.daoDien || 'Chưa cập nhật',
+    cast: movieDetail.dienVien || 'Chưa cập nhật',
+    genre: movieDetail.theLoais?.map((t: IViewTheLoai) => t.tenTheLoai).join(', ') || 'Chưa cập nhật',
+    duration: movieDetail.thoiLuongPhut ? `${movieDetail.thoiLuongPhut} phút` : 'Chưa cập nhật',
+    language: movieDetail.ngonNgu || 'Chưa cập nhật',
+    releaseDate: movieDetail.ngayKhoiChieu 
+      ? new Date(movieDetail.ngayKhoiChieu).toLocaleDateString('vi-VN')
+      : 'Chưa cập nhật',
+    description: movieDetail.moTa || 'Chưa có mô tả',
+    age: movieDetail.phanLoaiDoTuoi || 'Chưa phân loại',
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -43,7 +125,7 @@ export default function MovieDetailScreen() {
 
           <View style={{ flex: 1, marginLeft: 12 }}>
             <Text style={styles.title}>{movie.title}</Text>
-            <Text style={styles.age}>Chỉ dành cho người trên 13 tuổi</Text>
+            <Text style={styles.age}>{movie.age}</Text>
           </View>
         </View>
 

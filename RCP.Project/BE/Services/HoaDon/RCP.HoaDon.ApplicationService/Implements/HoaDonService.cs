@@ -67,5 +67,25 @@ namespace RCP.HoaDon.ApplicationService.Implements
                 TongTien = hoaDon.TongTien
             };
         }
+        public void UpdateTrangThaiHoaDon(UpdateTrangThaiHoaDonDto dto)
+        {
+            _logger.LogInformation($"{nameof(UpdateTrangThaiHoaDon)} dto = {JsonSerializer.Serialize(dto)}");
+
+            var currentUserId = getCurrentUserId();
+            var vietNamNow = GetVietnamTime();
+
+            var hoaDon = _hoaDonDbContext.HoaDons
+                .FirstOrDefault(x => x.SessionId == dto.SessionId && !x.Deleted)
+                ?? throw new UserFriendlyException(ErrorCodes.NotFound, "Không tìm thấy hóa đơn");
+
+            hoaDon.TrangThaiThanhToan = dto.TrangThai;
+            hoaDon.ModifiedBy = currentUserId;
+            hoaDon.ModifiedDate = vietNamNow;
+
+            _hoaDonDbContext.HoaDons.Update(hoaDon);
+            _hoaDonDbContext.SaveChanges();
+
+            _logger.LogInformation($"Updated HoaDon Id={hoaDon.Id}, SessionId={dto.SessionId}, TrangThai={dto.TrangThai}");
+        }
     }
 }

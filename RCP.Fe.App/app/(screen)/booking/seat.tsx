@@ -31,20 +31,27 @@ export default function SeatScreen() {
   );
 
   useEffect(() => {
-    if (params.idRoom && params.idCinema) {
+    // Kiểm tra kỹ các tham số từ params truyền sang
+    const { idRoom, idCinema, idLichChieu } = params;
+
+    if (idRoom && idCinema && idLichChieu) {
       dispatch(
         $getAllGheInRoom({
-          idRoom: Number(params.idRoom),
-          idCinema: Number(params.idCinema),
+          idRoom: Number(idRoom),
+          idCinema: Number(idCinema),
+          idLichChieu: Number(idLichChieu), // Tham số bắt buộc theo Interface mới
           pageNumber: 1,
-          pageSize: 500, // PageSize phải đủ lớn để hiện hết sơ đồ
+          pageSize: 500, // Đảm bảo lấy hết sơ đồ ghế trong 1 lần gọi
         })
       );
+    } else {
+      console.warn("Missing params:", { idRoom, idCinema, idLichChieu });
     }
+
     return () => {
       dispatch(clearGheData());
     };
-  }, [params.idRoom, params.idCinema]);
+  }, [params.idRoom, params.idCinema, params.idLichChieu]);
 
   const handleSeatPress = useCallback((seat: IGheInRoom) => {
     setSelectedSeats((prev) => {

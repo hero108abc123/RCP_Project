@@ -26,7 +26,9 @@ export default function CinemaList({ movieId, selectedDate }: CinemaListProps) {
   const [openId, setOpenId] = useState<number | null>(null);
   const [cinemas, setCinemas] = useState<ICinema[]>([]);
   const [loading, setLoading] = useState(false);
-  const [selectedLichChieu, setSelectedLichChieu] = useState<ILichChieu | null>(null);
+  const [selectedLichChieu, setSelectedLichChieu] = useState<ILichChieu | null>(
+    null
+  );
   const [loadingLichChieu, setLoadingLichChieu] = useState(false);
 
   const toggle = async (id: number) => {
@@ -68,44 +70,41 @@ export default function CinemaList({ movieId, selectedDate }: CinemaListProps) {
       setLoadingLichChieu(true);
       setSelectedLichChieu(null);
 
-      // Tính toán tuNgay và denNgay dựa trên selectedDate
       const tuNgay = selectedDate ? new Date(selectedDate) : new Date();
       tuNgay.setHours(0, 0, 0, 0);
-
       const denNgay = new Date(tuNgay);
       denNgay.setHours(23, 59, 59, 999);
 
-      const params: any = {
+      const params = {
         pageNumber: 1,
-        pageSize: 10,
+        pageSize: 50,
         idCinema: [cinemaId],
         tuNgay: tuNgay,
         denNgay: denNgay,
       };
 
-      // Nếu có movieId thì filter theo phim cụ thể (không cần vì API đã trả movies)
-      // Nhưng để đảm bảo, ta sẽ filter sau khi nhận response
-
       const res = await getLichChieuAPI(params);
-      const responseData = (res as any)?.items || (res as any)?.data?.items || [];
+      const responseData =
+        (res as any)?.items || (res as any)?.data?.items || [];
 
       if (responseData && responseData.length > 0) {
-        let lichChieu = responseData[0];
+        // ✅ Sửa logic tìm rạp dựa trên cinema.idCinema
+        let lichChieu = responseData.find(
+          (item: ILichChieu) => item.cinema?.idCinema === cinemaId
+        );
 
-        // Filter movies theo movieId nếu có
-        if (movieId && lichChieu.movies) {
-          lichChieu.movies = lichChieu.movies.filter(
+        if (!lichChieu) lichChieu = responseData[0];
+
+        let filteredLichChieu = { ...lichChieu };
+        if (movieId && filteredLichChieu.movies) {
+          filteredLichChieu.movies = filteredLichChieu.movies.filter(
             (movie: any) => movie.idPhim === movieId
           );
         }
-
-        setSelectedLichChieu(lichChieu);
-      } else {
-        setSelectedLichChieu(null);
+        setSelectedLichChieu(filteredLichChieu);
       }
     } catch (error) {
       console.log("Fetch lich chieu error:", error);
-      setSelectedLichChieu(null);
     } finally {
       setLoadingLichChieu(false);
     }
@@ -126,6 +125,7 @@ export default function CinemaList({ movieId, selectedDate }: CinemaListProps) {
 
         return (
           <View key={cinema.id} style={styles.card}>
+            {/* Header rạp */}
             <TouchableOpacity
               style={styles.header}
               onPress={() => toggle(cinema.id!)}
@@ -137,7 +137,6 @@ export default function CinemaList({ movieId, selectedDate }: CinemaListProps) {
                   {cinema.district}, {cinema.city}
                 </Text>
               </View>
-
               <MaterialIcons
                 name={isOpen ? "keyboard-arrow-up" : "keyboard-arrow-down"}
                 size={24}
@@ -145,6 +144,7 @@ export default function CinemaList({ movieId, selectedDate }: CinemaListProps) {
               />
             </TouchableOpacity>
 
+            {/* Phần hiển thị suất chiếu khi mở rộng */}
             {isOpen && (
               <View style={styles.content}>
                 {loadingLichChieu ? (
@@ -158,26 +158,47 @@ export default function CinemaList({ movieId, selectedDate }: CinemaListProps) {
                   selectedLichChieu.movies.length > 0 ? (
                   <View>
                     <Text style={styles.titleSection}>
-                      Suất chiếu ngày {selectedDate?.toLocaleDateString('vi-VN')}:
+                      Suất chiếu ngày{" "}
+                      {selectedDate?.toLocaleDateString("vi-VN")}:
                     </Text>
                     <View style={styles.timeGrid}>
                       {selectedLichChieu.movies.map((movie, mIndex) => (
                         <TouchableOpacity
                           key={mIndex}
                           style={styles.timeItem}
-                          onPress={() =>
-                            router.push({
-                              pathname: "/booking/seat",
-                              params: {
-                                cinemaId: cinema.id,
-                                suatChieuId: movie.idPhim,
-                              },
-                            })
-                          }
+                          onPress={() => {
+                            // ✅ Đảm bảo selectedLichChieu tồn tại trước khi push
+                            if (selectedLichChieu) {
+                              router.push({
+                                pathname: "/booking/seat",
+                                params: {
+                                  // ID của chính bản ghi lịch chiếu này
+                                  idLichChieu: selectedLichChieu.id,
+
+                                  // ID Rạp lấy từ đối tượng cinema
+                                  idCinema: selectedLichChieu.cinema?.idCinema,
+
+                                  // ID Phòng lấy từ đối tượng room
+                                  idRoom: selectedLichChieu.room?.idRoom,
+
+                                  // Các thông tin hiển thị UI
+                                  movieTitle: movie.tenPhim,
+                                  cinemaName: cinema.name,
+                                  time: movie.thoiGianBatDauChieu
+                                    ? new Date(
+                                        movie.thoiGianBatDauChieu
+                                      ).toISOString()
+                                    : "",
+                                },
+                              });
+                            }
+                          }}
                         >
                           <Text style={styles.time}>
                             {movie.thoiGianBatDauChieu
-                              ? new Date(movie.thoiGianBatDauChieu).toLocaleTimeString([], {
+                              ? new Date(
+                                  movie.thoiGianBatDauChieu
+                                ).toLocaleTimeString([], {
                                   hour: "2-digit",
                                   minute: "2-digit",
                                   hour12: false,

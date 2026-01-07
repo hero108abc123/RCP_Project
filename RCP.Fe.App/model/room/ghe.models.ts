@@ -4,11 +4,16 @@ export interface IGheInRoom {
   hang?: string;
   hangGhe?: number;
   giave?: IGiaVeCuaGhe;
+  trangThaiDatVe?: TrangThaiDatVe;
 }
 
 export interface IGiaVeCuaGhe {
   id?: number;
   giaVe?: string;
+}
+
+export interface TrangThaiDatVe {
+  trangThaiDatVe?: number;
 }
 
 export interface IFindGheParams {
@@ -18,6 +23,7 @@ export interface IFindGheParams {
   // Các trường khác nếu FindPagingDto có (ví dụ city, district...)
   idCinema: number;
   idRoom: number;
+  idLichChieu: number;
 }
 
 // 2. Định nghĩa Interface cho Response Paging (tương ứng BaseResponsePagingDto bên C#)

@@ -70,7 +70,7 @@ namespace RCP.Project.Controller.Phim
         // POST: api/app/phim
         [Permission(PermissionKeys.PhimCreate)]
         [HttpPost("")]
-        public ApiResponse Create([FromBody] CreatePhimDto dto)
+        public ApiResponse Create([FromForm] CreatePhimDto dto)
         {
             try
             {
@@ -86,7 +86,7 @@ namespace RCP.Project.Controller.Phim
         // PUT: api/app/phim/{id}
         [Permission(PermissionKeys.PhimUpdate)]
         [HttpPut("")]
-        public ApiResponse Update([FromBody] UpdatePhimDto dto)
+        public ApiResponse Update([FromForm] UpdatePhimDto dto)
         {
             try
             {

@@ -180,6 +180,7 @@ export default function CinemaList({ movieId, selectedDate }: CinemaListProps) {
 
                                   // ID Phòng lấy từ đối tượng room
                                   idRoom: selectedLichChieu.room?.idRoom,
+                                  idPhim: movie.idPhim,
 
                                   // Các thông tin hiển thị UI
                                   movieTitle: movie.tenPhim,

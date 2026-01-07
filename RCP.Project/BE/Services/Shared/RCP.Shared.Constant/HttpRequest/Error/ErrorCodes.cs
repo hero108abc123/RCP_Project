@@ -66,6 +66,7 @@
         public const int GheTamGiuNotFound = 6007;
         public const int SuatChieuNotFound = 6008;
         public const int VeNotFound = 6009;
+        public const int DanhSachGheKhongHopLe = 6010;
 
     }
 }

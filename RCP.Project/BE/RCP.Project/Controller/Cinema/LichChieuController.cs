@@ -67,7 +67,7 @@ namespace RCP.Project.Controller.Cinema
             }
         }
 
-        [Permission(PermissionKeys.LichChieuView)]
+        //[Permission(PermissionKeys.LichChieuView)]
         [HttpGet("")]
         public ApiResponse FindPagingPhimRoomCinema([FromQuery] FindPagingCinemaRoomPhimDto dto)
         {
@@ -82,7 +82,7 @@ namespace RCP.Project.Controller.Cinema
             }
         }
 
-        [Permission(PermissionKeys.LichChieuView)]
+        //[Permission(PermissionKeys.LichChieuView)]
         [HttpGet("{id}")]
         public ApiResponse GetById([FromRoute] int id)
         {

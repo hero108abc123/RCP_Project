@@ -39,7 +39,7 @@ namespace RCP.Project.Controller.Cinema
             }
         }
 
-        [Permission(PermissionKeys.CinemaView)]
+        //[Permission(PermissionKeys.CinemaView)]
         [HttpGet("")]
         public ApiResponse Find([FromQuery] FindPagingDto dto)
         {
@@ -54,7 +54,7 @@ namespace RCP.Project.Controller.Cinema
             }
         }
 
-        [Permission(PermissionKeys.CinemaView)]
+        //[Permission(PermissionKeys.CinemaView)]
         [HttpGet("{id}")]
         public ApiResponse FindById([FromRoute] int id)
         {

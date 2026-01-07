@@ -5,22 +5,25 @@ import {
 } from "./../model/cinema/cinema.models";
 import { processApiMsgError } from "@/libs/utils";
 import api from "@/utils/axios";
+import * as SecureStore from 'expo-secure-store';
 
 export const getAllCinemas = async (
   params: IFindCinemaParams
 ): Promise<IPagingResponse<ICinema>> => {
   try {
-    // Lưu ý: api.get tham số thứ 2 là config object, params nằm trong đó
+
+    const token = await SecureStore.getItemAsync('accessToken');
+    
     const res = await api.get(`api/app/cinema`, {
-      params: params, // Axios sẽ tự convert object này thành query string (?keyword=...&pageNumber=...)
+      params: params,
       headers: {
-        "Content-Type": "application/json", // GET request thường không dùng x-www-form-urlencoded
+        "Content-Type": "application/json",
+        ...(token && { "Authorization": `Bearer ${token}` }), // ✅ THÊM TOKEN VÀO HEADER
       },
       baseURL: process.env.EXPO_PUBLIC_BASE_API_URL,
     });
 
-     const data = res.data?.data;
-    // Giả sử res.data trả về đúng cấu trúc { items: [], totalItems: 0 }
+    const data = res.data?.data;
     return Promise.resolve(data);
   } catch (err) {
     processApiMsgError(err, "Lỗi khi lấy danh sách rạp");

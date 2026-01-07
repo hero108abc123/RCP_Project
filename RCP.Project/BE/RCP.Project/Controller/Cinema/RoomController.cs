@@ -37,7 +37,7 @@ namespace RCP.Project.Controller.Room
             }
         }
 
-        [Permission(PermissionKeys.RoomView)]
+        //[Permission(PermissionKeys.RoomView)]
         [HttpGet("")]
         public ApiResponse Find([FromQuery]FindPagingRoomDto dto)
         {
@@ -67,7 +67,7 @@ namespace RCP.Project.Controller.Room
             }
         }
 
-        [Permission(PermissionKeys.RoomView)]
+        //[Permission(PermissionKeys.RoomView)]
         [HttpGet("ghe")]
         public ApiResponse FindPagingGhe([FromQuery] FindPagingGheInRoomDto dto)
         {
@@ -82,7 +82,7 @@ namespace RCP.Project.Controller.Room
             }
         }
 
-        [Permission(PermissionKeys.RoomView)]
+        //[Permission(PermissionKeys.RoomView)]
         [HttpGet("{id}/cinema/{idCinema}")]
         public ApiResponse FindById([FromRoute]int idCinema, [FromRoute]int id)
         {

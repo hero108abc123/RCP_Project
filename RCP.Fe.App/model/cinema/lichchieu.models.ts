@@ -1,4 +1,5 @@
 export interface ILichChieu {
+  id: number,
   cinema: ICinemaLichChieu;
   room: IRoomLichChieu;
   movies: IMovieLichChieu[];

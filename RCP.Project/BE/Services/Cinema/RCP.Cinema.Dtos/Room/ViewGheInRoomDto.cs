@@ -16,6 +16,7 @@ namespace RCP.Cinema.Dtos.Cinema
         //public string GiaVe { get; set; } = string.Empty;
         public int HangGhe { get; set; }
         public ViewGiaVeCuaGheDto? Giave { get; set; } = new ViewGiaVeCuaGheDto();
+        public TrangThaiDatVeDto TrangThaiDatVe { get; set; } = new TrangThaiDatVeDto();
     }
 
     public class ViewGiaVeCuaGheDto
@@ -23,6 +24,10 @@ namespace RCP.Cinema.Dtos.Cinema
         public int Id { get; set; }
         public string GiaVe { get; set; } = String.Empty;
         
+    }
+    public class TrangThaiDatVeDto
+    {
+        public int TrangThaiDatVe { get; set; }
     }
 
 

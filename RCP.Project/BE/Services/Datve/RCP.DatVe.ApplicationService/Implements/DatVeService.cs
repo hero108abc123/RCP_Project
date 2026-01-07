@@ -65,12 +65,9 @@ namespace RCP.DatVe.ApplicationService.Implements
                     && !x.Deleted)
                 .ToListAsync();
 
-            // FIX: Load vào memory trước khi SelectMany
-            var vesInRoom = await _datVeDbContext.Ves
-                .Where(x => x.IdRoom == dto.IdRoom && !x.Deleted)
+            var gheLichChieus = await _cinemaDbContext.GheLichChieus
+                .Where(x => x.IdLichChieu == dto.IdSuatChieu && !x.Deleted)
                 .ToListAsync();
-
-            var ghesDaDat = vesInRoom.SelectMany(x => x.IdGhe).ToList();
 
             var ghesDangGiu = await _datVeDbContext.GheTamGius
                 .Where(x => x.IdRoom == dto.IdRoom
@@ -106,7 +103,9 @@ namespace RCP.DatVe.ApplicationService.Implements
                 int trangThai;
                 DateTime? ngayGioHetHan = null;
 
-                if (ghesDaDat.Contains(ghe.Id))
+                var gheLichChieu = gheLichChieus.FirstOrDefault(x => x.IdGhe == ghe.Id);
+
+                if (gheLichChieu != null && gheLichChieu.TrangThaiDatGhe == 1)
                 {
                     trangThai = 1;
                 }
@@ -170,15 +169,13 @@ namespace RCP.DatVe.ApplicationService.Implements
                 throw new UserFriendlyException(ErrorCodes.GheNotFound);
             }
 
-            // FIX: Load vào memory trước khi SelectMany và Where
-            var vesInRoom = await _datVeDbContext.Ves
-                .Where(x => x.IdRoom == dto.IdRoom && !x.Deleted)
+            var gheLichChieus = await _cinemaDbContext.GheLichChieus
+                .Where(x => gheIds.Contains(x.IdGhe)
+                    && x.IdLichChieu == dto.IdSuatChieu
+                    && !x.Deleted)
                 .ToListAsync();
 
-            var ghesDaDat = vesInRoom
-                .SelectMany(x => x.IdGhe)
-                .Where(idGhe => gheIds.Contains(idGhe))
-                .ToList();
+            var ghesDaDat = gheLichChieus.Where(x => x.TrangThaiDatGhe == 1).Select(x => x.IdGhe).ToList();
 
             if (ghesDaDat.Any())
             {
@@ -360,15 +357,15 @@ namespace RCP.DatVe.ApplicationService.Implements
                 }
 
                 var gheIds = gheTamGius.Select(x => x.IdGhe).ToList();
+                var idLichChieu = gheTamGius[0].IdLichChieu;
 
-                // FIX: Load vào memory trước khi SelectMany và AnyAsync
-                var vesInRoom = await _datVeDbContext.Ves
-                    .Where(x => x.IdRoom == gheTamGius[0].IdRoom && !x.Deleted)
+                var gheLichChieus = await _cinemaDbContext.GheLichChieus
+                    .Where(x => gheIds.Contains(x.IdGhe)
+                        && x.IdLichChieu == idLichChieu
+                        && !x.Deleted)
                     .ToListAsync();
 
-                var ghesDaDat = vesInRoom
-                    .SelectMany(x => x.IdGhe)
-                    .Any(idGhe => gheIds.Contains(idGhe));
+                var ghesDaDat = gheLichChieus.Where(x => x.TrangThaiDatGhe == 1).Any();
 
                 if (ghesDaDat)
                 {
@@ -418,6 +415,30 @@ namespace RCP.DatVe.ApplicationService.Implements
 
                 _datVeDbContext.Ves.Add(ve);
                 await _datVeDbContext.SaveChangesAsync();
+
+                foreach (var gheId in gheIds)
+                {
+                    var gheLichChieu = gheLichChieus.FirstOrDefault(x => x.IdGhe == gheId);
+                    if (gheLichChieu != null)
+                    {
+                        gheLichChieu.TrangThaiDatGhe = 1;
+                        gheLichChieu.ModifiedBy = currentUserId;
+                        gheLichChieu.ModifiedDate = vietNamNow;
+                    }
+                    else
+                    {
+                        _cinemaDbContext.GheLichChieus.Add(new RCP.Cinema.Domain.GheLichChieu
+                        {
+                            IdGhe = gheId,
+                            IdLichChieu = idLichChieu,
+                            TrangThaiDatGhe = 1,
+                            CreatedBy = currentUserId,
+                            CreatedDate = vietNamNow
+                        });
+                    }
+                }
+
+                await _cinemaDbContext.SaveChangesAsync();
 
                 var hoaDon = new RCP.HoaDon.Domain.HoaDon
                 {
@@ -494,15 +515,15 @@ namespace RCP.DatVe.ApplicationService.Implements
                 }
 
                 var gheIds = gheTamGius.Select(x => x.IdGhe).ToList();
+                var idLichChieu = gheTamGius[0].IdLichChieu;
 
-                // FIX: Load vào memory trước khi SelectMany và AnyAsync
-                var vesInRoom = await _datVeDbContext.Ves
-                    .Where(x => x.IdRoom == gheTamGius[0].IdRoom && !x.Deleted)
+                var gheLichChieus = await _cinemaDbContext.GheLichChieus
+                    .Where(x => gheIds.Contains(x.IdGhe)
+                        && x.IdLichChieu == idLichChieu
+                        && !x.Deleted)
                     .ToListAsync();
 
-                var ghesDaDat = vesInRoom
-                    .SelectMany(x => x.IdGhe)
-                    .Any(idGhe => gheIds.Contains(idGhe));
+                var ghesDaDat = gheLichChieus.Where(x => x.TrangThaiDatGhe == 1).Any();
 
                 if (ghesDaDat)
                 {
@@ -557,6 +578,30 @@ namespace RCP.DatVe.ApplicationService.Implements
 
                 _datVeDbContext.Ves.Add(ve);
                 await _datVeDbContext.SaveChangesAsync();
+
+                foreach (var gheId in gheIds)
+                {
+                    var gheLichChieu = gheLichChieus.FirstOrDefault(x => x.IdGhe == gheId);
+                    if (gheLichChieu != null)
+                    {
+                        gheLichChieu.TrangThaiDatGhe = 1;
+                        gheLichChieu.ModifiedBy = currentUserId;
+                        gheLichChieu.ModifiedDate = vietNamNow;
+                    }
+                    else
+                    {
+                        _cinemaDbContext.GheLichChieus.Add(new RCP.Cinema.Domain.GheLichChieu
+                        {
+                            IdGhe = gheId,
+                            IdLichChieu = idLichChieu,
+                            TrangThaiDatGhe = 1,
+                            CreatedBy = currentUserId,
+                            CreatedDate = vietNamNow
+                        });
+                    }
+                }
+
+                await _cinemaDbContext.SaveChangesAsync();
 
                 var hoaDon = new RCP.HoaDon.Domain.HoaDon
                 {
@@ -734,6 +779,31 @@ namespace RCP.DatVe.ApplicationService.Implements
                 var ve = await _datVeDbContext.Ves
                     .FirstOrDefaultAsync(x => x.SessionId == dto.SessionId && !x.Deleted)
                     ?? throw new UserFriendlyException(ErrorCodes.VeNotFound);
+
+                var lichChieu = await _cinemaDbContext.CinemaRoomMovieInfor
+                    .FirstOrDefaultAsync(x => x.IdCinema == ve.IdCinema
+                        && x.IdRoom == ve.IdRoom
+                        && x.IdPhim == ve.IdPhim
+                        && !x.Deleted);
+
+                if (lichChieu != null)
+                {
+                    var gheLichChieus = await _cinemaDbContext.GheLichChieus
+                        .Where(x => ve.IdGhe.Contains(x.IdGhe)
+                            && x.IdLichChieu == lichChieu.Id
+                            && !x.Deleted)
+                        .ToListAsync();
+
+                    foreach (var gheLichChieu in gheLichChieus)
+                    {
+                        gheLichChieu.TrangThaiDatGhe = 0;
+                        gheLichChieu.ModifiedBy = currentUserId;
+                        gheLichChieu.ModifiedDate = vietNamNow;
+                    }
+
+                    _cinemaDbContext.GheLichChieus.UpdateRange(gheLichChieus);
+                    await _cinemaDbContext.SaveChangesAsync();
+                }
 
                 ve.Deleted = true;
                 ve.DeletedBy = currentUserId;

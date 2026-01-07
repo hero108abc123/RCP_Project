@@ -10,6 +10,7 @@ using RCP.Project.HttpRequest.AppException;
 using RCP.Project.HttpRequest.BaseRequest;
 using RCP.Shared.Constant.HttpRequest.Error;
 using RCP.Shared.Constant.Constants.Phim;
+using RCP.Shared.Constant.Constants.Cinema;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,7 +40,6 @@ namespace RCP.Cinema.ApplicationServices.Cinema.Implements
             var vietNamNow = GetVietnamTime();
             var currentUserId = getCurrentUserId();
 
-
             var cinema = _cinemaDbContext.Cinemas.FirstOrDefault(c => c.Id == dto.IdCinema && !c.Deleted)
                 ?? throw new UserFriendlyException(ErrorCodes.CinemaErrorNotFound);
             var room = _cinemaDbContext.Rooms.FirstOrDefault(r => r.Id == dto.IdRoom && !r.Deleted)
@@ -59,7 +59,28 @@ namespace RCP.Cinema.ApplicationServices.Cinema.Implements
             };
             _cinemaDbContext.CinemaRoomMovieInfor.Add(infor);
             _cinemaDbContext.SaveChanges();
+
+            var ghesInRoom = _cinemaDbContext.Ghes
+                .Where(g => g.IdRoom == dto.IdRoom && g.IdCinema == dto.IdCinema && !g.Deleted)
+                .ToList();
+
+            var gheLichChieus = new List<Domain.GheLichChieu>();
+            foreach (var ghe in ghesInRoom)
+            {
+                gheLichChieus.Add(new Domain.GheLichChieu
+                {
+                    IdGhe = ghe.Id,
+                    IdLichChieu = infor.Id,
+                    TrangThaiDatGhe = TrangThaiDatGheConstants.ChuaDat,
+                    CreatedBy = currentUserId,
+                    CreatedDate = vietNamNow
+                });
+            }
+
+            _cinemaDbContext.GheLichChieus.AddRange(gheLichChieus);
+            _cinemaDbContext.SaveChanges();
         }
+
         public void UpdatePhimToCinemaRoom(UpdatePhimToCinemaRoomDto dto)
         {
             _logger.LogInformation($"{nameof(UpdatePhimToCinemaRoom)}  dto = {JsonSerializer.Serialize(dto)}");
@@ -79,19 +100,48 @@ namespace RCP.Cinema.ApplicationServices.Cinema.Implements
             infor.ThoiGianBatDauChieu = dto.ThoiGianBatDauChieu;
             infor.ThoiGianKetThucChieu = dto.ThoiGianKetThucChieu;
 
-
             _cinemaDbContext.CinemaRoomMovieInfor.Update(infor);
+            _cinemaDbContext.SaveChanges();
+
+            var oldGheLichChieus = _cinemaDbContext.GheLichChieus
+                .Where(g => g.IdLichChieu == dto.Id && !g.Deleted)
+                .ToList();
+
+            foreach (var oldGhe in oldGheLichChieus)
+            {
+                oldGhe.Deleted = true;
+                oldGhe.DeletedBy = currentUserId;
+                oldGhe.DeletedDate = vietNamNow;
+            }
+            _cinemaDbContext.GheLichChieus.UpdateRange(oldGheLichChieus);
+            _cinemaDbContext.SaveChanges();
+
+            var ghesInRoom = _cinemaDbContext.Ghes
+                .Where(g => g.IdRoom == dto.IdRoom && g.IdCinema == dto.IdCinema && !g.Deleted)
+                .ToList();
+
+            var gheLichChieus = new List<Domain.GheLichChieu>();
+            foreach (var ghe in ghesInRoom)
+            {
+                gheLichChieus.Add(new Domain.GheLichChieu
+                {
+                    IdGhe = ghe.Id,
+                    IdLichChieu = infor.Id,
+                    TrangThaiDatGhe = TrangThaiDatGheConstants.ChuaDat,
+                    CreatedBy = currentUserId,
+                    CreatedDate = vietNamNow
+                });
+            }
+
+            _cinemaDbContext.GheLichChieus.AddRange(gheLichChieus);
             _cinemaDbContext.SaveChanges();
         }
 
         public void DeletePhimToCinemaRoom(int id)
         {
-
             _logger.LogInformation($"{nameof(DeletePhimToCinemaRoom)} ");
             var vietNamNow = GetVietnamTime();
             var currentUserId = getCurrentUserId();
-
-
 
             var infor = _cinemaDbContext.CinemaRoomMovieInfor.FirstOrDefault(i => i.Id == id && !i.Deleted)
                 ?? throw new UserFriendlyException(ErrorCodes.NotFound);
@@ -100,8 +150,8 @@ namespace RCP.Cinema.ApplicationServices.Cinema.Implements
             infor.DeletedDate = vietNamNow;
             _cinemaDbContext.CinemaRoomMovieInfor.Update(infor);
             _cinemaDbContext.SaveChanges();
-
         }
+
         public GetByIdLichChieuDto GetById(int id)
         {
             _logger.LogInformation($"{nameof(GetById)} id = {id}");

@@ -11,5 +11,6 @@ namespace RCP.Cinema.Dtos.Cinema
     {
         public int IdCinema {  get; set; }
         public int IdRoom { get; set; }
+        public int IdLichChieu { get; set; }
     }
 }

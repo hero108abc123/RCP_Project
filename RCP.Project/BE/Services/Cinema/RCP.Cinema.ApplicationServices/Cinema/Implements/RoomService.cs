@@ -485,6 +485,8 @@ namespace RCP.Cinema.ApplicationServices.Cinema.Implements
                         from ggv in ggvGroup.Where(x => !x.Deleted).DefaultIfEmpty()
                         join gv in _cinemaDbContext.GiaVes on ggv.IdGiaVe equals gv.Id into gvGroup
                         from gv in gvGroup.Where(x => !x.Deleted).DefaultIfEmpty()
+                        join glc in _cinemaDbContext.GheLichChieus on new { IdGhe = g.Id, IdLichChieu = dto.IdLichChieu } equals new { glc.IdGhe, glc.IdLichChieu } into glcGroup
+                        from glc in glcGroup.Where(x => !x.Deleted).DefaultIfEmpty()
                         orderby g.Hang, g.Id
                         select new ViewGheInRoomDto
                         {
@@ -499,21 +501,19 @@ namespace RCP.Cinema.ApplicationServices.Cinema.Implements
                               : gv.TrangThaiNgay == GiaVeConstants.NgayLe ? gv.GiaNgayLe
                               : gv.TrangThaiNgay == GiaVeConstants.CuoiTuan ? gv.GiaCuoiTuan
                               : "0",
-                            } : null 
-
+                            } : null,
+                            TrangThaiDatVe = new TrangThaiDatVeDto
+                            {
+                                TrangThaiDatVe = glc != null ? glc.TrangThaiDatGhe : 0
+                            }
                         };
-
             var data = query.Paging(dto).ToList();
-
             var response = new BaseResponsePagingDto<ViewGheInRoomDto>()
             {
                 Items = data,
                 TotalItems = query.Count(),
             };
-
             return response;
-
-
         }
 
         public void UpdateTrangThaiNgayBangTay ( UpdateTrangThaiNgayBangTayDto dto)

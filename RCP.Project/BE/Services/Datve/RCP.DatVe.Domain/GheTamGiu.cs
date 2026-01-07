@@ -19,6 +19,7 @@ namespace RCP.DatVe.Domain
         public int IdRoom { get; set; }
         public int IdCinema { get; set; }
         public int IdPhim { get; set; }
+        public int IdLichChieu { get; set; }
         public string? IdUser { get; set; }
         public string SessionId { get; set; } = string.Empty; // Để track session người dùng
 

@@ -20,6 +20,7 @@ namespace RCP.Cinema.Infrastructure
         public DbSet<Cinema.Domain.Ghe> Ghes { get; set; }
         public DbSet<Cinema.Domain.GiaVe> GiaVes { get; set; }
         public DbSet<Cinema.Domain.GheGiaVe> GheGiaVes { get; set; }
+        public DbSet<Cinema.Domain.GheLichChieu> GheLichChieus { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -55,6 +56,12 @@ namespace RCP.Cinema.Infrastructure
 
             });
             modelBuilder.Entity<Cinema.Domain.GheGiaVe>(entity =>
+            {
+                entity.Property(e => e.Deleted).HasDefaultValue(0);
+                entity.Property(e => e.CreatedDate).HasDefaultValueSql("getdate()");
+
+            });
+            modelBuilder.Entity<Cinema.Domain.GheLichChieu>(entity =>
             {
                 entity.Property(e => e.Deleted).HasDefaultValue(0);
                 entity.Property(e => e.CreatedDate).HasDefaultValueSql("getdate()");

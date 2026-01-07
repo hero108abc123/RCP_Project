@@ -5,38 +5,46 @@ import { useRouter } from 'expo-router';
 
 import { ICinema } from '@/model/cinema/cinema.models';
 import { getAllCinemas } from '@/api/cinema.service';
-
+import { ILichChieu, IMovieLichChieu } from '@/model/cinema/lichchieu.models';
+import { getAllCinemas as getSchedules } from '@/api/lichchieu.service';
+import ShowtimeRow from '@/components/bookingComponents/showtime-row';
 
 export default function CinemaList() {
-
   const router = useRouter();
   const [openId, setOpenId] = useState<string | null>(null);
-
   const [cinemas, setCinemas] = useState<ICinema[]>([]);
   const [loading, setLoading] = useState(false);
-
-  const toggle = (id: string) => {
-    setOpenId(openId === id.toString() ? null : id.toString());
-  };
+  const [schedules, setSchedules] = useState<Record<string, ILichChieu[]>>({}); // key = cinemaId
 
   useEffect(() => {
     fetchCinemas();
   }, []);
 
   const fetchCinemas = async () => {
-  try {
-    setLoading(true);
-    const res = await getAllCinemas({ pageNumber: 1, pageSize: 20 });
-    console.log('API response:', res);
+    try {
+      setLoading(true);
+      const res = await getAllCinemas({ pageNumber: 1, pageSize: 20 });
+      setCinemas(res.items ?? []);
+    } catch (err) {
+      console.log('Fetch cinema error', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    setCinemas(res?.items ?? []);
-  } catch (error) {
-    console.log('Fetch cinema error', error);
-  } finally {
-    setLoading(false);
-  }
-};
+  const toggle = async (cinemaId: string) => {
+    setOpenId(openId === cinemaId ? null : cinemaId);
 
+    // Load lịch chiếu nếu chưa có
+    if (!schedules[cinemaId]) {
+      try {
+        const res = await getSchedules({ pageNumber: 1, pageSize: 50, idCinema: [Number(cinemaId)] });
+        setSchedules(prev => ({ ...prev, [cinemaId]: res.items ?? [] }));
+      } catch (err) {
+        console.log('Fetch schedules error', err);
+      }
+    }
+  };
 
   if (loading) {
     return (
@@ -46,19 +54,19 @@ export default function CinemaList() {
     );
   }
 
-
-
   return (
     <View style={styles.container}>
-      {cinemas.map((cinema) => {
-        const isOpen = openId === cinema.id?.toString();
+      {cinemas.map(cinema => {
+        const cinemaId = cinema.id?.toString() ?? '';
+        const isOpen = openId === cinemaId;
+        const cinemaSchedules = schedules[cinemaId] ?? [];
 
         return (
-          <View key={cinema.id} style={styles.card}>
+          <View key={cinemaId} style={styles.card}>
             {/* HEADER */}
             <TouchableOpacity
               style={styles.header}
-              onPress={() => toggle(cinema.id!.toString())}
+              onPress={() => toggle(cinemaId)}
               activeOpacity={0.8}
             >
               <View>
@@ -67,7 +75,6 @@ export default function CinemaList() {
                   {cinema.district}, {cinema.city}
                 </Text>
               </View>
-
               <MaterialIcons
                 name={isOpen ? 'keyboard-arrow-up' : 'keyboard-arrow-down'}
                 size={24}
@@ -81,19 +88,39 @@ export default function CinemaList() {
                   • Số phòng chiếu: {cinema.soLuongPhongChieu ?? 'Đang cập nhật'}
                 </Text>
 
-                <TouchableOpacity
-                  style={{ marginTop: 10 }}
-                  onPress={() =>
-                    router.push({
-                      pathname: '/booking/seat',
-                      params: { cinemaId: cinema.id },
-                    })
-                  }
-                >
-                  <Text style={{ color: '#1976D2', fontWeight: '600' }}>
-                    Xem lịch chiếu →
+                {/* Nếu không có lịch chiếu */}
+                {cinemaSchedules.length === 0 ? (
+                  <Text style={{ marginTop: 10, fontStyle: 'italic', color: '#777' }}>
+                    Không có lịch chiếu
                   </Text>
-                </TouchableOpacity>
+                ) : (
+                  cinemaSchedules.map(schedule =>
+                    schedule.movies.map((movie: IMovieLichChieu) => {
+                      const times = movie.thoiGianBatDauChieu
+                        ? [
+                            {
+                              time: new Date(movie.thoiGianBatDauChieu).toLocaleTimeString([], {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                              }),
+                              seat: 0,
+                            },
+                          ]
+                        : [];
+
+                      return (
+                        <ShowtimeRow
+                          key={movie.idPhim}
+                          label={movie.tenPhim ?? ''}
+                          times={times}
+                          cinemaName={cinema.name ?? ''}
+                          movieId={movie.idPhim!.toString()}
+                          date={movie.ngayKhoiChieu?.toString() ?? ''}
+                        />
+                      );
+                    })
+                  )
+                )}
               </View>
             )}
           </View>
@@ -104,72 +131,11 @@ export default function CinemaList() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-  },
-
-  card: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    marginBottom: 12,
-    elevation: 2,
-  },
-
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 14,
-    alignItems: 'center',
-  },
-
-  name: {
-    fontSize: 15,
-    fontWeight: '600',
-  },
-
-  distance: {
-    fontSize: 12,
-    color: '#1976D2',
-    marginTop: 2,
-  },
-
-  content: {
-    paddingHorizontal: 14,
-    paddingBottom: 14,
-  },
-
-  type: {
-    fontWeight: '700',
-    marginBottom: 8,
-  },
-
-  timeGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 10,
-  },
-
-  timeItem: {
-    backgroundColor: '#EEEEEE',
-    borderRadius: 20,
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    alignItems: 'center',
-    minWidth: 72,
-  },
-
-  time: {
-    fontWeight: '600',
-  },
-
-  seat: {
-    fontSize: 11,
-    color: '#757575',
-  },
-
-  note: {
-    fontSize: 11,
-    color: '#757575',
-    marginTop: 6,
-  },
+  container: { padding: 16 },
+  card: { backgroundColor: '#fff', borderRadius: 12, marginBottom: 12, elevation: 2 },
+  header: { flexDirection: 'row', justifyContent: 'space-between', padding: 14, alignItems: 'center' },
+  name: { fontSize: 15, fontWeight: '600' },
+  distance: { fontSize: 12, color: '#1976D2', marginTop: 2 },
+  content: { paddingHorizontal: 14, paddingBottom: 14 },
+  note: { fontSize: 11, color: '#757575', marginTop: 6 },
 });

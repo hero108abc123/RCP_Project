@@ -8,6 +8,12 @@ interface MovieCardProps {
     title: string;
     duration: string;
     poster: string;
+    genre?: string;
+    director?: string;
+    cast?: string;
+    language?: string;
+    releaseDate?: string;
+    description?: string;
   };
 }
 
@@ -15,10 +21,19 @@ export default function MovieCard({ movie }: MovieCardProps) {
   const router = useRouter();
   const [imageError, setImageError] = useState(false);
 
+  const handlePress = () => {
+    router.push({
+      pathname: '/(screen)/movie-booking',
+      params: {
+        movie: JSON.stringify(movie), // Truyền toàn bộ object phim
+      },
+    });
+  };
+
   return (
     <TouchableOpacity
       style={styles.card}
-      onPress={() => router.push(`/movie/${movie.id}` as any)}
+      onPress={handlePress}
       activeOpacity={0.8}
     >
       {movie.poster && !imageError ? (
@@ -26,17 +41,14 @@ export default function MovieCard({ movie }: MovieCardProps) {
           source={{ uri: movie.poster }}
           style={styles.poster}
           resizeMode="cover"
-          onError={() => {
-            console.log('Image load error:', movie.poster);
-            setImageError(true);
-          }}
+          onError={() => setImageError(true)}
         />
       ) : (
         <View style={[styles.poster, styles.placeholder]}>
           <Text style={styles.placeholderText}>Không có ảnh</Text>
         </View>
       )}
-      
+
       <View style={styles.info}>
         <Text style={styles.title} numberOfLines={2}>
           {movie.title}

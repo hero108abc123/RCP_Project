@@ -24,7 +24,7 @@ namespace RCP.Project.Controller.Phim
         }
 
         // GET: api/app/phim
-        [Permission(PermissionKeys.PhimView)]
+        //[Permission(PermissionKeys.PhimView)]
         [HttpGet("")]
         public ApiResponse Find([FromQuery] FindPhimDto dto)
         {
@@ -38,7 +38,7 @@ namespace RCP.Project.Controller.Phim
                 return OkException(ex);
             }
         }
-        [Permission(PermissionKeys.PhimView)]
+        //[Permission(PermissionKeys.PhimView)]
         [HttpGet("the-loai/dropdown")]
         public ApiResponse FindTheLoai()
         {
@@ -52,7 +52,7 @@ namespace RCP.Project.Controller.Phim
                 return OkException(ex);
             }
         }
-        [Permission(PermissionKeys.PhimView)]
+        //[Permission(PermissionKeys.PhimView)]
         [HttpGet("dropdown")]
         public ApiResponse GetDropDown()
         {
@@ -113,7 +113,7 @@ namespace RCP.Project.Controller.Phim
                 return OkException(ex);
             }
         }
-        [Permission(PermissionKeys.PhimView)]
+        //[Permission(PermissionKeys.PhimView)]
         [HttpGet("{id}")]
         public ApiResponse FindById([FromRoute] int id)
         {

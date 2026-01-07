@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   Text,
@@ -7,46 +7,47 @@ import {
   StyleSheet,
   ScrollView,
   Alert,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons as Icon } from '@expo/vector-icons';
-import { ThemedView } from '../../components/themed-view';
-import ButtonCustom from '../../components/button';
-import { useRouter } from 'expo-router';
-import * as SecureStore from 'expo-secure-store'
-import { clearUser } from '@/redux/slices/userSlice';
-import { useDispatch } from 'react-redux';
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Ionicons as Icon } from "@expo/vector-icons";
+import { ThemedView } from "../../components/themed-view";
+import ButtonCustom from "../../components/button";
+import { useRouter } from "expo-router";
+import * as SecureStore from "expo-secure-store";
+import { clearUser } from "@/redux/slices/userSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function ProfileScreen() {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const logout = () => {
-    Alert.alert(
-      'Đăng xuất',
-      'Bạn chắc chắn muốn đăng xuất?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Log out',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              dispatch(clearUser())
-              await SecureStore.deleteItemAsync('accessToken')
-              await SecureStore.deleteItemAsync('refreshToken')
-              await SecureStore.deleteItemAsync('user')
+  /** * LẤY THÔNG TIN TỪ REDUX
+   * Kết nối trực tiếp với user slice để lấy data realtime
+   */
+  const user = useSelector((state: any) => state.user);
 
-              router.dismissAll()
-              router.replace('/(auth)/login')
-            } catch (error) {
-              Alert.alert('Error', 'Logout failed')
-            }
-          },
+  const logout = () => {
+    Alert.alert("Đăng xuất", "Bạn chắc chắn muốn đăng xuất?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Log out",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            dispatch(clearUser());
+            await SecureStore.deleteItemAsync("accessToken");
+            await SecureStore.deleteItemAsync("refreshToken");
+            await SecureStore.deleteItemAsync("user");
+
+            router.dismissAll();
+            router.replace("/(auth)/login");
+          } catch (error) {
+            Alert.alert("Error", "Logout failed");
+          }
         },
-      ]
-    )
-  }
+      },
+    ]);
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -54,56 +55,56 @@ export default function ProfileScreen() {
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()}>
-            <Icon name="arrow-back" size={24} color="#000000ff" />
+            <Icon name="arrow-back" size={24} color="#000" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>My Profile</Text>
-          <View style={{ width: 24 }} /> {/* giữ cân đối */}
+          <View style={{ width: 24 }} />
         </View>
 
         <ScrollView contentContainerStyle={styles.content}>
-          {/* Avatar + Info */}
           <View style={styles.profileSection}>
-            <Image
-              source={{ uri: "https://i.pravatar.cc/100" }}
-              style={styles.avatar}
-            />
-            <TouchableOpacity style={styles.editIcon} onPress={() => router.push('/edit')}>
-              <Icon name="pencil" size={14} color="#000000ff" />
-            </TouchableOpacity>
-            <View style={{ width: 30 }} />
-            <View >
-              <Text style={styles.name}>
-                {fullName || '—'}
+            <View style={styles.avatarContainer}>
+              <Image
+                source={{ uri: "https://i.pravatar.cc/100" }}
+                style={styles.avatar}
+              />
+              <TouchableOpacity
+                style={styles.editIcon}
+                onPress={() => router.push("/edit")}
+              >
+                <Icon name="pencil" size={14} color="#000" />
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.infoContainer}>
+              {/* GÁN FULL NAME TỪ REDUX */}
+              <Text style={styles.name} numberOfLines={1}>
+                {user.fullName || user.userName || "Người dùng"}
               </Text>
 
-              <Text style={styles.email}>
-                {email || '—'}
+              {/* GÁN EMAIL TỪ REDUX */}
+              <Text style={styles.email} numberOfLines={1}>
+                {user.email || "Chưa cập nhật email"}
               </Text>
-                  
-              <TouchableOpacity  >
-                <ButtonCustom title="Edit Profile" 
-                backgroundColor="#5786ee"
-                textColor="#fff"
-                borderRadius={10}
-                paddingVertical={7}
-                marginHorizontal={20}
-                
-                onPress={() => {
-                  router.push('/edit');
-                  console.log('Edit Profile pressed');
-                }}
+
+              <View style={styles.buttonWrapper}>
+                <ButtonCustom
+                  title="Edit Profile"
+                  backgroundColor="#5786ee"
+                  textColor="#fff"
+                  borderRadius={10}
+                  paddingVertical={7}
+                  onPress={() => router.push("/edit")}
                 />
-              </TouchableOpacity>
+              </View>
             </View>
           </View>
 
-          {/* Menu */}
           <View style={styles.menuSection}>
             <MenuItem icon="heart-outline" label="Favorite" />
             <MenuItem icon="location-outline" label="Location" />
             <MenuItem icon="globe-outline" label="Language" />
             <MenuItem icon="log-out-outline" label="Log out" onPress={logout} />
-            {/* <MenuItem icon="log-out-outline" label="Log out" /> Viết thêm hàm logic để logout */}
           </View>
         </ScrollView>
       </ThemedView>
@@ -111,7 +112,7 @@ export default function ProfileScreen() {
   );
 }
 
-function MenuItem({ icon, label, onPress }: { icon: React.ComponentProps<typeof Icon>['name']; label: string; onPress?: () => void }) {
+function MenuItem({ icon, label, onPress }: any) {
   return (
     <TouchableOpacity style={styles.menuItem} onPress={onPress}>
       <View style={styles.menuLeft}>
@@ -126,97 +127,94 @@ function MenuItem({ icon, label, onPress }: { icon: React.ComponentProps<typeof 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#393f4e',
+    backgroundColor: "#393f4e",
   },
   header: {
-    backgroundColor: '#ffffffff',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    backgroundColor: "#fff",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 20,
+    paddingVertical: 15,
   },
   headerTitle: {
     fontSize: 18,
-    color: '#000000ff',
-    fontWeight: 'bold',
+    color: "#000",
+    fontWeight: "bold",
   },
   content: {
-    alignItems: 'center',
     paddingBottom: 30,
-      
   },
   profileSection: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 40,
-    // backgroundColor: '#ffffffff',
-    paddingBottom: 40,
-
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    marginVertical: 30,
+  },
+  avatarContainer: {
+    position: "relative",
   },
   avatar: {
     width: 90,
     height: 90,
     borderRadius: 45,
     borderWidth: 2,
-    borderColor: '#fff',
-    marginBottom: 8,
+    borderColor: "#fff",
   },
   editIcon: {
-    position: 'absolute',
-    bottom: 50,
-    right: 185,
-    backgroundColor: '#ffffffff',
-    borderRadius: 10,
-    padding: 4,
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 6,
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1,
+  },
+  infoContainer: {
+    flex: 1,
+    marginLeft: 20,
   },
   name: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '600',
-    marginTop: 8,
+    color: "#fff",
+    fontSize: 20,
+    fontWeight: "bold",
   },
   email: {
-    color: '#ccc',
+    color: "#ccc",
     fontSize: 14,
+    marginBottom: 10,
   },
-  editButton: {
-    backgroundColor: '#4F8EF7',
-    paddingHorizontal: 16,
-    paddingVertical: 6,
-    borderRadius: 10,
-    marginTop: 10,
-  },
-  editButtonText: {
-    color: '#fff',
-    fontWeight: '500',
+  buttonWrapper: {
+    width: "80%",
   },
   menuSection: {
-    backgroundColor: '#E5E5E5',
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25,
-    minWidth: '100%',
-    minHeight: '100%',
-    paddingVertical: 10,
+    backgroundColor: "#E5E5E5",
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    flex: 1,
+    minHeight: 500,
+    paddingTop: 20,
   },
   menuItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 15,
-    paddingHorizontal: 16,
-    borderBottomColor: '#999',
-    borderBottomWidth: 0.5,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 18,
+    paddingHorizontal: 25,
+    borderBottomColor: "#d1d1d1",
+    borderBottomWidth: 1,
   },
   menuLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
+    flexDirection: "row",
+    alignItems: "center",
   },
   menuText: {
     fontSize: 16,
-    color: '#000',
+    color: "#000",
+    marginLeft: 15,
   },
 });

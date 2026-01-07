@@ -1,6 +1,8 @@
 import { AuthServices } from "@/api/auth.service"
 import { ILogin, IMe, IRegister } from "@/model/auth/auth.models"
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { UserService } from "@/api/user.service"
+import { ViewUser } from "@/model/user/users.models"
 
 export const $login = createAsyncThunk(
   'login',
@@ -103,6 +105,18 @@ const userSlice = createSlice({
       })
   },
 })
+
+export const $getUserById = createAsyncThunk(
+  'user/getById',
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const res = await UserService.getById(id)
+      return res
+    } catch (error) {
+      return rejectWithValue(error)
+    }
+  }
+)
 
 export const { setUser, clearUser } = userSlice.actions
 export default userSlice.reducer

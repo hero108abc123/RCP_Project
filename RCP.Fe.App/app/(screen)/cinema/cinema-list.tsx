@@ -1,41 +1,71 @@
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import { cinemas } from '../../app/(screen)/cinema/data';
+
+import { ICinema } from '@/model/cinema/cinema.models';
+import { getAllCinemas } from '@/api/cinema.service';
+
 
 export default function CinemaList() {
 
   const router = useRouter();
   const [openId, setOpenId] = useState<string | null>(null);
 
+  const [cinemas, setCinemas] = useState<ICinema[]>([]);
+  const [loading, setLoading] = useState(false);
+
   const toggle = (id: string) => {
-    setOpenId(openId === id ? null : id);
+    setOpenId(openId === id.toString() ? null : id.toString());
   };
+
+  useEffect(() => {
+    fetchCinemas();
+  }, []);
+
+  const fetchCinemas = async () => {
+  try {
+    setLoading(true);
+    const res = await getAllCinemas({ pageNumber: 1, pageSize: 20 });
+    console.log('API response:', res);
+
+    setCinemas(res?.items ?? []);
+  } catch (error) {
+    console.log('Fetch cinema error', error);
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center' }}>
+        <ActivityIndicator size="large" color="#0B4A8B" />
+      </View>
+    );
+  }
+
+
 
   return (
     <View style={styles.container}>
       {cinemas.map((cinema) => {
-        const isOpen = openId === cinema.id;
+        const isOpen = openId === cinema.id?.toString();
 
         return (
           <View key={cinema.id} style={styles.card}>
             {/* HEADER */}
             <TouchableOpacity
               style={styles.header}
-              onPress={() =>(
-                toggle(cinema.id)
-              )}
+              onPress={() => toggle(cinema.id!.toString())}
               activeOpacity={0.8}
             >
               <View>
                 <Text style={styles.name}>{cinema.name}</Text>
-                <Text style={styles.distance}>{cinema.distance}</Text>
+                <Text style={styles.distance}>
+                  {cinema.district}, {cinema.city}
+                </Text>
               </View>
 
               <MaterialIcons
@@ -47,37 +77,23 @@ export default function CinemaList() {
             {/* CONTENT */}
             {isOpen && (
               <View style={styles.content}>
-                {cinema.schedules.map((schedule) => (
-                  <View key={schedule.type} style={{ marginBottom: 12 }}>
-                    <Text style={styles.type}>{schedule.type}</Text>
+                <Text style={styles.note}>
+                  • Số phòng chiếu: {cinema.soLuongPhongChieu ?? 'Đang cập nhật'}
+                </Text>
 
-                    <View style={styles.timeGrid}>
-                      {schedule.times.map((t) => (
-                        <TouchableOpacity
-                          key={t.time}
-                          style={styles.timeItem}
-                          onPress={() =>
-                            (
-                              router.push('/booking/seat'),
-                              console.log(
-                              cinema.name,
-                              schedule.type,
-                              t.time
-                            )
-                            )
-                          }
-                        >
-                          <Text style={styles.time}>{t.time}</Text>
-                          <Text style={styles.seat}>{t.seat} trống</Text>
-                        </TouchableOpacity>
-                      ))}
-                    </View>
-
-                    <Text style={styles.note}>
-                      • Suất chiếu muộn từ 22h00
-                    </Text>
-                  </View>
-                ))}
+                <TouchableOpacity
+                  style={{ marginTop: 10 }}
+                  onPress={() =>
+                    router.push({
+                      pathname: '/booking/seat',
+                      params: { cinemaId: cinema.id },
+                    })
+                  }
+                >
+                  <Text style={{ color: '#1976D2', fontWeight: '600' }}>
+                    Xem lịch chiếu →
+                  </Text>
+                </TouchableOpacity>
               </View>
             )}
           </View>
@@ -86,6 +102,7 @@ export default function CinemaList() {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     padding: 16,

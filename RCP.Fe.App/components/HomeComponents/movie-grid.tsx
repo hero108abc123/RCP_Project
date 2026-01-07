@@ -1,56 +1,88 @@
-import React from 'react';
-import { FlatList } from 'react-native';
+import React, { useEffect } from 'react';
+import { FlatList, ActivityIndicator, View, Text } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import MovieCard from './movie-card';
-
-const movies = [
-  {
-    id: '1',
-    title: 'Avatar: Dòng Chảy Của Nước',
-    duration: '197 phút',
-    poster: 'https://i.imgur.com/2nCt3Sbl.jpg',
-  },
-  {
-    id: '2',
-    title: 'Hoàng Tử Quỷ',
-    duration: '117 phút',
-    poster: 'https://i.imgur.com/DvpvklR.png',
-  },
-  {
-    id: '3',
-    title: 'Phi Vụ Động Trời 2',
-    duration: '107 phút',
-    poster: 'https://i.imgur.com/KZsmUi2l.jpg',
-  },
-  {
-    id: '4',
-    title: 'Fast & Furious 10',
-    duration: '141 phút',
-    poster: 'https://i.imgur.com/jT0bG4H.jpg',
-  },
-  {
-    id: '5',
-    title: 'Dune: Part Two',
-    duration: '165 phút',
-    poster: 'https://i.imgur.com/J5LVHEL.jpg',
-  },
-  {
-    id: '6',
-    title: 'Inside Out 2',
-    duration: '102 phút',
-    poster: 'https://i.imgur.com/0y8Ftya.jpg',
-  },
-];
+import { IMovie } from '@/model/movie/movie.models';
+import { getAllMovie } from '@/api/movie.service';
+import { useState } from 'react';
 
 export default function MovieGrid() {
+  const [movies, setMovies] = useState<IMovie[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchMovies();
+  }, []);
+
+  const fetchMovies = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const res = await getAllMovie({
+        pageNumber: 1,
+        pageSize: 20,
+      });
+
+      // Log toàn bộ response để debug
+      console.log('API response:', res);
+      console.log('Items:', res.items);
+      console.log('Total items:', res.totalItems);
+
+      setMovies(res?.items ?? []);
+    } catch (err: any) {
+      console.log('Fetch movies error:', err);
+      setError(err?.message ?? 'Lỗi khi lấy danh sách phim');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#0B4A8B" />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={{ padding: 20 }}>
+        <Text style={{ color: 'red' }}>{error}</Text>
+      </View>
+    );
+  }
+
+  if (!movies || movies.length === 0) {
+    return (
+      <View style={{ padding: 20 }}>
+        <Text>Chưa có phim nào</Text>
+      </View>
+    );
+  }
+
   return (
     <FlatList
       data={movies}
       numColumns={3}
-      keyExtractor={(item) => item.id}
-      renderItem={({ item }) => <MovieCard movie={item} />}
+      keyExtractor={(item) => item.id?.toString() ?? Math.random().toString()}
+      renderItem={({ item }) => (
+        <MovieCard
+          movie={{
+            id: item.id?.toString() ?? '',
+            title: item.tenPhim ?? '',
+            duration: item.thoiLuongPhut ? `${item.thoiLuongPhut} phút` : 'Đang cập nhật',
+            poster: item.anhBia ?? '',
+          }}
+        />
+      )}
       columnWrapperStyle={{ justifyContent: 'space-between' }}
       contentContainerStyle={{ padding: 12 }}
       showsVerticalScrollIndicator={false}
     />
+
   );
 }

@@ -72,10 +72,14 @@ export default function ProfileScreen() {
             </TouchableOpacity>
             <View style={{ width: 30 }} />
             <View >
-              <Text style={styles.name}>Đoàn Trần Hải</Text>
-              <Text style={styles.email}>haitrandoan@gmail.com</Text>
+              <Text style={styles.name}>
+                {fullName || '—'}
+              </Text>
 
-
+              <Text style={styles.email}>
+                {email || '—'}
+              </Text>
+                  
               <TouchableOpacity  >
                 <ButtonCustom title="Edit Profile" 
                 backgroundColor="#5786ee"

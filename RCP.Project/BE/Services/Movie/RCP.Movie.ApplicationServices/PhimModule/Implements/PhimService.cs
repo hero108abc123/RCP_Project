@@ -40,6 +40,8 @@ namespace RCP.Movie.ApplicationServices.PhimModule.Implements
         {
             _logger.LogInformation($"{nameof(FindPaging)} => dto = {JsonSerializer.Serialize(dto)}");
             var phimQuery = _phimDbContext.Phims
+                .Include(p => p.AnhList)
+                .Include(p => p.VideoList)
                 .Where(p => !p.Deleted &&
                     (string.IsNullOrEmpty(dto.Keyword) || p.TenPhim.Contains(dto.Keyword)))
                 .AsQueryable();

@@ -79,6 +79,7 @@ export class UpdateLichChieu extends BaseComponent{
         }
     onSubmitUpdate() {
                     const body: IUpdateLichChieu = {
+                        id: this.id,
                         idPhim: this.form.value.idPhim,
                         idCinema: this.form.value.idCinema,
                         idRoom : this.form.value.idRoom,

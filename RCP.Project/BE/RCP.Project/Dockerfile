@@ -13,6 +13,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["RCP.Project/RCP.Project.csproj", "RCP.Project/"]
+COPY ["RCP.ThanhToan.Dtos/RCP.ThanhToan.Dtos.csproj", "RCP.ThanhToan.Dtos/"]
 COPY ["Services/Asset/RCP.Asset.ApplicationServices/RCP.Asset.ApplicationServices.csproj", "Services/Asset/RCP.Asset.ApplicationServices/"]
 COPY ["Services/Shared/RCP.Shared.ApplicationService/RCP.Shared.ApplicationService.csproj", "Services/Shared/RCP.Shared.ApplicationService/"]
 COPY ["Services/Shared/RCP.Shared.Constant/RCP.Shared.Constant.csproj", "Services/Shared/RCP.Shared.Constant/"]

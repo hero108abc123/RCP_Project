@@ -36,7 +36,7 @@ export interface ICreatePhim {
 }
 
 export interface IUpdatePhim{
-    id?: number;
+    id: number;
     tenPhim?: string;
     moTa?: string;
     daoDien?: string;

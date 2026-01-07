@@ -29,6 +29,7 @@
     <PackageReference Include="NLog.Web.AspNetCore" Version="6.0.4" />
 	<PackageReference Include="OpenIddict.AspNetCore" Version="7.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+    <PackageReference Include="VNPAY.NET" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -41,6 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RCP.ThanhToan.Dtos\RCP.ThanhToan.Dtos.csproj" />
     <ProjectReference Include="..\Services\Asset\RCP.Asset.ApplicationServices\RCP.Asset.ApplicationServices.csproj" />
     <ProjectReference Include="..\Services\Asset\RCP.Asset.Dtos\RCP.Asset.Dtos.csproj" />
     <ProjectReference Include="..\Services\Asset\RCP.Asset.Infrastructure\RCP.Asset.Infrastructure.csproj" />

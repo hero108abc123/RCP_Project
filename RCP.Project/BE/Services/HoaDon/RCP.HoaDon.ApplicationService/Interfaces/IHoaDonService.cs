@@ -10,5 +10,6 @@ namespace RCP.HoaDon.ApplicationService.Interfaces
     public interface IHoaDonService
     {
         public UpdateHoaDonResponseDto Update(UpdateHoaDonDto dto);
+        void UpdateTrangThaiHoaDon(UpdateTrangThaiHoaDonDto dto);
     }
 }

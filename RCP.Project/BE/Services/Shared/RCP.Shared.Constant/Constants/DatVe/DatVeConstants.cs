@@ -10,6 +10,7 @@ namespace RCP.Shared.Constant.Constants.DatVe
     {
         public const int ChuaThanhToan = 1;
         public const int DaThanhToan = 2;
+        public const int Loi = 3;
         
     }
 }

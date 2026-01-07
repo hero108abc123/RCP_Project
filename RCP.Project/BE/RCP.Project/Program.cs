@@ -39,6 +39,7 @@ using RCP.Movie.Infrastructure;
 using RCP.Shared.ApplicationService.Database;
 using RCP.Shared.Constant.Constants.Auth;
 using System.Text;
+using VNPAY.Extensions;
 
 
 var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
@@ -235,6 +236,20 @@ builder.Services.AddAuthorization();
 #endregion
 #region hangfire
 builder.Services.ConfigureHangfire(hangfireConnectionString);
+#endregion
+
+#region vnpay
+var vnpayConfig = builder.Configuration.GetSection("VNPAY");
+
+builder.Services.AddVnpayClient(config =>
+{
+    config.TmnCode = vnpayConfig["TmnCode"]!;
+    config.HashSecret = vnpayConfig["HashSecret"]!;
+    config.CallbackUrl = vnpayConfig["CallbackUrl"]!;
+    config.BaseUrl = vnpayConfig["BaseUrl"]!; 
+    config.Version = vnpayConfig["Version"]!; 
+    config.OrderType = vnpayConfig["OrderType"]!;
+});
 #endregion
 
 #region service

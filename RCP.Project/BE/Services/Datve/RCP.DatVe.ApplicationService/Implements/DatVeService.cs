@@ -326,9 +326,8 @@ namespace RCP.DatVe.ApplicationService.Implements
             _datVeDbContext.GheTamGius.Update(gheTamGiu);
             await _datVeDbContext.SaveChangesAsync();
         }
-
         // ==================== API 5: XÁC NHẬN ĐẶT VÉ - USER ====================
-        public async Task<int> XacNhanDatVeByUserId(XacNhanDatVeByUserIdDto dto)
+        public async Task<XacNhanDatVeByUserIdResposneDto> XacNhanDatVeByUserId(XacNhanDatVeByUserIdDto dto)
         {
             _logger.LogInformation($"{nameof(XacNhanDatVeByUserId)} dto = {JsonSerializer.Serialize(dto)}");
 
@@ -338,26 +337,37 @@ namespace RCP.DatVe.ApplicationService.Implements
             using var transaction = await _datVeDbContext.Database.BeginTransactionAsync();
             try
             {
-                var gheTamGiuIds = dto.IdGheTamGius.Distinct().ToList();
-
+                // ✅ Lấy ghế tạm giữ theo SessionId
                 var gheTamGius = await _datVeDbContext.GheTamGius
-                    .Where(x => gheTamGiuIds.Contains(x.Id)
+                    .Where(x => x.SessionId == dto.SessionId
                         && !x.Deleted
                         && x.NgayGioHetHan > vietNamNow)
                     .ToListAsync();
 
-                if (gheTamGius.Count != gheTamGiuIds.Count)
+                // ✅ Kiểm tra có ghế nào được giữ không
+                if (!gheTamGius.Any())
                 {
-                    throw new UserFriendlyException(ErrorCodes.GheTamGiuKhongHopLe);
+                    throw new UserFriendlyException(ErrorCodes.GheTamGiuKhongHopLe, "Không tìm thấy ghế tạm giữ hợp lệ");
                 }
 
+                // ✅ Kiểm tra quyền sở hữu
                 if (gheTamGius.Any(x => x.IdUser != currentUserId && !string.IsNullOrEmpty(x.IdUser)))
                 {
                     throw new UserFriendlyException(ErrorCodes.KhongCoQuyenXacNhan);
                 }
 
                 var gheIds = gheTamGius.Select(x => x.IdGhe).ToList();
-                var idLichChieu = gheTamGius[0].IdLichChieu;
+
+                // ✅ FIX: Lấy IdLichChieu từ GheTamGiu đầu tiên
+                var gheTamGiuDauTien = gheTamGius.First();
+                var suatChieu = await _cinemaDbContext.CinemaRoomMovieInfor
+                    .FirstOrDefaultAsync(x => x.IdCinema == gheTamGiuDauTien.IdCinema
+                        && x.IdRoom == gheTamGiuDauTien.IdRoom
+                        && x.IdPhim == gheTamGiuDauTien.IdPhim
+                        && !x.Deleted)
+                    ?? throw new UserFriendlyException(ErrorCodes.SuatChieuNotFound);
+
+                var idLichChieu = suatChieu.Id;
 
                 var gheLichChieus = await _cinemaDbContext.GheLichChieus
                     .Where(x => gheIds.Contains(x.IdGhe)
@@ -466,7 +476,7 @@ namespace RCP.DatVe.ApplicationService.Implements
                 var otherGheTamGiu = await _datVeDbContext.GheTamGius
                     .Where(x => gheIds.Contains(x.IdGhe)
                         && x.IdRoom == gheTamGius[0].IdRoom
-                        && !gheTamGiuIds.Contains(x.Id)
+                        && x.SessionId != dto.SessionId
                         && !x.Deleted)
                     .ToListAsync();
 
@@ -481,7 +491,10 @@ namespace RCP.DatVe.ApplicationService.Implements
                 await _datVeDbContext.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-                return ve.Id;
+                return new XacNhanDatVeByUserIdResposneDto
+                {
+                    IdVe = ve.Id
+                };
             }
             catch
             {
@@ -489,7 +502,6 @@ namespace RCP.DatVe.ApplicationService.Implements
                 throw;
             }
         }
-
         // ==================== API 6: XÁC NHẬN ĐẶT VÉ - GUEST ====================
         public async Task<int> XacNhanDatVeByUserInfor(XacNhanDatVeByUserInfor dto)
         {

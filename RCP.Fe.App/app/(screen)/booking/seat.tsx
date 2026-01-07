@@ -210,43 +210,46 @@ export default function SeatScreen() {
     ]
   );
 
-  // ✅ FIX: Xử lý response và validate idVe
   const handleContinue = useCallback(async () => {
-    if (selectedSeats.length === 0 || isSubmitting) return;
+  if (selectedSeats.length === 0 || isSubmitting) return;
 
-    setIsSubmitting(true);
+  setIsSubmitting(true);
 
-    const dto: XacNhanDatVeByUserIdDto = {
-      sessionId,
-    };
+  // ✅ Lấy danh sách idGhe từ selectedSeats
+  const listIdGhe = selectedSeats.map((seat) => seat.idGhe);
 
-    try {
-      console.log("📤 Sending DTO:", dto);
-      const result = await dispatch($xacNhanDatVeUser(dto)).unwrap();
-      console.log("📥 Response:", result);
+  const dto: XacNhanDatVeByUserIdDto = {
+    listIdGhe: listIdGhe as any, // Cast vì interface định nghĩa là []
+    sessionId,
+  };
 
-      // ✅ VALIDATE idVe trước khi gọi API tiếp
-      if (!result?.idVe || result.idVe === 0) {
-        throw new Error("Không nhận được mã vé từ server");
-      }
+  try {
+    console.log("📤 Sending DTO:", dto);
+    const result = await dispatch($xacNhanDatVeUser(dto)).unwrap();
+    console.log("📥 Response:", result);
 
-      await dispatch($getChiTietVe(result.idVe)).unwrap();
-
-      router.push({
-        pathname: "/booking/payment",
-        params: { 
-          idVe: result.idVe.toString(),
-          sessionId: sessionId 
-        },
-      } as any);
-    } catch (error: any) {
-      console.error("❌ Error:", error);
-      const errorMsg = error?.message || "Xác nhận đặt vé thất bại. Vui lòng thử lại.";
-      Alert.alert("Lỗi", errorMsg);
-    } finally {
-      setIsSubmitting(false);
+    // ✅ VALIDATE idVe trước khi gọi API tiếp
+    if (!result?.idVe || result.idVe === 0) {
+      throw new Error("Không nhận được mã vé từ server");
     }
-  }, [dispatch, sessionId, router, isSubmitting, selectedSeats.length]);
+
+    await dispatch($getChiTietVe(result.idVe)).unwrap();
+
+    router.push({
+      pathname: "/booking/payment",
+      params: { 
+        idVe: result.idVe.toString(),
+        sessionId: sessionId 
+      },
+    } as any);
+  } catch (error: any) {
+    console.error("❌ Error:", error);
+    const errorMsg = error?.message || "Xác nhận đặt vé thất bại. Vui lòng thử lại.";
+    Alert.alert("Lỗi", errorMsg);
+  } finally {
+    setIsSubmitting(false);
+  }
+}, [dispatch, sessionId, router, isSubmitting, selectedSeats]);
 
   const handleExit = useCallback(() => {
     if (selectedSeats.length > 0) {

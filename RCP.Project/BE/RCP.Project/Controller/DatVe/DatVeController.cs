@@ -135,7 +135,7 @@ namespace RCP.Project.Controller.DatVe
             try
             {
                 var veId = await _datVeService.XacNhanDatVeByUserId(dto);
-                return new(new { IdVe = veId });
+                return new(veId);
             }
             catch (Exception ex)
             {

@@ -67,7 +67,7 @@ export interface XacNhanDatVeByUserInfor {
 }
 
 export interface XacNhanDatVeByUserIdDto {
-  listIdGhe :[];
+   idGhe: number[]; 
   sessionId?: string;
 }
 export interface XacNhanDatVeByUserIdResponseDto {

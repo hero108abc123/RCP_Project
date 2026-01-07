@@ -1,9 +1,9 @@
+// redux/slices/datVeSlice.ts
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   IVe,
   DatVeTamDto,
   XacNhanDatVeByUserIdDto,
-  XacNhanDatVeByUserInfor,
 } from "@/model/datve/ve.models";
 import { IGheTam, GetTrangThaiGheDto } from "@/model/datve/ghetam.models";
 import {
@@ -12,11 +12,10 @@ import {
   huyDatVeTam,
   huyDatVeTamBySession,
   xacNhanDatVeByUserId,
-  xacNhanDatVeByUserInfor,
   getVeById,
 } from "@/api/datve.service";
 
-// --- 1. Async Thunks ---
+// --- Async Thunks ---
 
 export const $getTrangThaiGhe = createAsyncThunk(
   "datVe/getTrangThaiGhe",
@@ -34,6 +33,30 @@ export const $datVeTam = createAsyncThunk(
   async (dto: DatVeTamDto, { rejectWithValue }) => {
     try {
       return await datVeTam(dto);
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const $huyDatVeTam = createAsyncThunk(
+  "datVe/huyDatVeTam",
+  async (idGheTamGiu: number, { rejectWithValue }) => {
+    try {
+      await huyDatVeTam(idGheTamGiu);
+      return idGheTamGiu;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const $huyDatVeTamBySession = createAsyncThunk(
+  "datVe/huyDatVeTamBySession",
+  async (sessionId: string, { rejectWithValue }) => {
+    try {
+      await huyDatVeTamBySession(sessionId);
+      return sessionId;
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -62,13 +85,13 @@ export const $getChiTietVe = createAsyncThunk(
   }
 );
 
-// --- 2. State Definition ---
+// --- State ---
 
-type DatVeState = {
-  listGheTrangThai: any[]; // Trạng thái 0,1,2,3
-  gheDangGiu: IGheTam | null; // Thông tin phản hồi từ API đặt vé tạm
-  veHienTai: IVe | null; // Thông tin vé sau khi xác nhận
-  timeLeft: number; // Đếm ngược giữ ghế (giây)
+export type DatVeState = {
+  listGheTrangThai: any[];
+  gheDangGiu: IGheTam | null;
+  veHienTai: IVe | null;
+  timeLeft: number;
   loading: boolean;
   error?: any;
 };
@@ -77,83 +100,86 @@ const initialState: DatVeState = {
   listGheTrangThai: [],
   gheDangGiu: null,
   veHienTai: null,
-  timeLeft: 0,
+  timeLeft: 600, // Mặc định 10 phút
   loading: false,
 };
 
-// --- 3. Slice Definition ---
+// --- Slice ---
 
 const datVeSlice = createSlice({
   name: "datVe",
   initialState,
-  selectors: {
-    selectListGhe: (state) => state.listGheTrangThai,
-    selectGheDangGiu: (state) => state.gheDangGiu,
-    selectTimeLeft: (state) => state.timeLeft,
-    selectVeHienTai: (state) => state.veHienTai,
-    isProcessing: (state) => state.loading,
-  },
   reducers: {
-    // Cập nhật countdown mỗi giây từ UI
     tick(state) {
       if (state.timeLeft > 0) {
         state.timeLeft -= 1;
       }
     },
-    // Xóa sạch dữ liệu khi kết thúc luồng hoặc hết hạn
+    setTimeLeft(state, action: PayloadAction<number>) {
+      state.timeLeft = action.payload;
+    },
     resetDatVe(state) {
       state.gheDangGiu = null;
       state.veHienTai = null;
-      state.timeLeft = 0;
+      state.timeLeft = 600; // Reset về 10 phút
       state.listGheTrangThai = [];
+      state.loading = false;
+      state.error = undefined;
     },
   },
   extraReducers: (builder) => {
     builder
-      // --- Lấy trạng thái ghế ---
       .addCase($getTrangThaiGhe.fulfilled, (state, action) => {
         state.listGheTrangThai = action.payload;
       })
 
-      // --- Giữ ghế tạm thời (DatVeTam) ---
       .addCase($datVeTam.pending, (state) => {
         state.loading = true;
       })
       .addCase($datVeTam.fulfilled, (state, action: PayloadAction<IGheTam>) => {
         state.loading = false;
         state.gheDangGiu = action.payload;
-        // Cập nhật thời gian đếm ngược từ Server (thường là 600 giây)
-        state.timeLeft = action.payload.soGiayConLai ?? 0;
+        // Không set timeLeft từ API, giữ nguyên countdown từ FE
       })
       .addCase($datVeTam.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
 
-      // --- Xác nhận đặt vé ---
-      .addCase($xacNhanDatVeUser.fulfilled, (state) => {
+      .addCase($huyDatVeTam.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase($huyDatVeTam.fulfilled, (state) => {
         state.loading = false;
-        // Sau khi xác nhận, thường xóa thời gian giữ ghế vì đã tạo hóa đơn
-        state.timeLeft = 0;
+      })
+      .addCase($huyDatVeTam.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       })
 
-      // --- Lấy chi tiết vé ---
+      .addCase($huyDatVeTamBySession.fulfilled, (state) => {
+        state.gheDangGiu = null;
+        // Không reset timeLeft, để component tự xử lý
+      })
+
+      .addCase($xacNhanDatVeUser.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase($xacNhanDatVeUser.fulfilled, (state) => {
+        state.loading = false;
+        // Không reset timeLeft, để component tự xử lý
+      })
+      .addCase($xacNhanDatVeUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
       .addCase($getChiTietVe.fulfilled, (state, action: PayloadAction<IVe>) => {
         state.veHienTai = action.payload;
       });
   },
 });
 
-// Export Actions
-export const { tick, resetDatVe } = datVeSlice.actions;
-
-// Export Selectors
-export const {
-  selectListGhe,
-  selectGheDangGiu,
-  selectTimeLeft,
-  selectVeHienTai,
-  isProcessing,
-} = datVeSlice.selectors;
+export const { tick, setTimeLeft, resetDatVe } = datVeSlice.actions;
 
 export default datVeSlice.reducer;

@@ -1,44 +1,29 @@
+// components/seatComponents/footer-ghe.tsx
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
-import { IGheInRoom } from "@/model/room/ghe.models"; // Import interface ghế
+import { IGheInRoom } from "@/model/room/ghe.models";
 
 type Props = {
-  selectedSeats: IGheInRoom[]; // Thay đổi từ string[] sang IGheInRoom[]
-  timeLeft: number; // Prop này sẽ nhận từ SeatScreen
+  selectedSeats: IGheInRoom[];
+  timeLeft: number;
+  onContinue?: () => void;
 };
 
 export default function SeatFooter({
   selectedSeats,
-  timeLeft: initialTime,
+  timeLeft,
+  onContinue,
 }: Props) {
   const router = useRouter();
 
-  // Sử dụng timeLeft truyền từ cha hoặc tự quản lý nội bộ
-  const [timeLeft, setTimeLeft] = useState(initialTime);
-
-  // Tính tổng tiền dựa trên thuộc tính giave.giaVe của từng ghế
   const totalPrice = selectedSeats.reduce((sum, seat) => {
     const price = seat.giave?.giaVe ? parseInt(seat.giave.giaVe) : 0;
     return sum + price;
   }, 0);
 
-  // Hiển thị tên ghế kết hợp Hàng + Số (Ví dụ: A1, B5)
   const seatLabels = selectedSeats
     .map((s) => `${s.hang}${s.hangGhe}`)
     .join(", ");
-
-  useEffect(() => {
-    setTimeLeft(initialTime);
-  }, [initialTime]);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -72,13 +57,17 @@ export default function SeatFooter({
           style={[styles.button, selectedSeats.length === 0 && styles.disabled]}
           disabled={selectedSeats.length === 0}
           onPress={() => {
-            router.push({
-              pathname: "/booking/payment",
-              params: {
-                selectedSeats: JSON.stringify(selectedSeats),
-                totalPrice: totalPrice,
-              },
-            } as any);
+            if (onContinue) {
+              onContinue();
+            } else {
+              router.push({
+                pathname: "/booking/payment",
+                params: {
+                  selectedSeats: JSON.stringify(selectedSeats),
+                  totalPrice: totalPrice,
+                },
+              } as any);
+            }
           }}
         >
           <Text style={styles.buttonText}>Tiếp tục</Text>
@@ -93,7 +82,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderTopWidth: 1,
     borderTopColor: "#EEE",
-    paddingBottom: 20, // Padding cho các dòng máy có tai thỏ/home bar
+    paddingBottom: 20,
   },
   timerSection: {
     paddingHorizontal: 16,

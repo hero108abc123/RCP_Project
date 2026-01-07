@@ -16,6 +16,7 @@ export interface IRoomLichChieu {
 }
 
 export interface IMovieLichChieu {
+  idCinemaRoomMovie ?: number,
   idPhim?: number;
   tenPhim?: string;
   moTa?: string;

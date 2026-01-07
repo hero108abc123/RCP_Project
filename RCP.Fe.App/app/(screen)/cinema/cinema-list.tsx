@@ -173,7 +173,7 @@ export default function CinemaList({ movieId, selectedDate }: CinemaListProps) {
                                 pathname: "/booking/seat",
                                 params: {
                                   // ID của chính bản ghi lịch chiếu này
-                                  idLichChieu: selectedLichChieu.id,
+                                  idLichChieu: movie.idCinemaRoomMovie,
 
                                   // ID Rạp lấy từ đối tượng cinema
                                   idCinema: selectedLichChieu.cinema?.idCinema,

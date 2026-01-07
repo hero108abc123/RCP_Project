@@ -14,14 +14,17 @@ import { ThemedView } from '../../components/themed-view';
 import ButtonCustom from '../../components/button';
 import { useRouter } from 'expo-router';
 import * as SecureStore from 'expo-secure-store'
+import { clearUser } from '@/redux/slices/userSlice';
+import { useDispatch } from 'react-redux';
 
 export default function ProfileScreen() {
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const logout = () => {
     Alert.alert(
-      'Log out',
-      'Are you sure you want to log out?',
+      'Đăng xuất',
+      'Bạn chắc chắn muốn đăng xuất?',
       [
         { text: 'Cancel', style: 'cancel' },
         {
@@ -29,6 +32,7 @@ export default function ProfileScreen() {
           style: 'destructive',
           onPress: async () => {
             try {
+              dispatch(clearUser())
               await SecureStore.deleteItemAsync('accessToken')
               await SecureStore.deleteItemAsync('refreshToken')
               await SecureStore.deleteItemAsync('user')

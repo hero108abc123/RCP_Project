@@ -13,7 +13,14 @@ export type ILogin = {
   username: string
   password: string
 }
-
+export type IRegister ={
+  username: string
+  fullName: string
+  email: string
+  phoneNumber: string
+  birthDay: Date
+  password: string
+}
 export type IMe = {
     id?: string | null
     userName?: string | null

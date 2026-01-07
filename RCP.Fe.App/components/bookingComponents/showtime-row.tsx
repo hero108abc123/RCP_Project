@@ -38,14 +38,6 @@ export default function ShowtimeRow({ label, times, cinemaName, movieId, date }:
 
 const styles = StyleSheet.create({
   container: { marginTop: 12 },
-  label: {
-    fontWeight: '700',
-    fontSize: 14,
-    marginBottom: 8,
-    color: '#333',
-  },
-  row: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
+  label: { fontWeight: '700', fontSize: 14, marginBottom: 8, color: '#333' },
+  row: { flexDirection: 'row', flexWrap: 'wrap' },
 });

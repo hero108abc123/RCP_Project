@@ -66,27 +66,25 @@ const initialState: RoomState = {
 
 // --- 3. Slice Definition ---
 
+// --- 3. Slice Definition ---
+
 const roomSlice = createSlice({
   name: "room",
   initialState,
 
-  // Selectors
   selectors: {
     selectRooms: (state) => state.rooms,
     selectGhes: (state) => state.ghes,
 
-    // Loading states
     isLoadingRooms: (state) => state.$getAllRooms.loading,
     isLoadingGhes: (state) => state.$getAllGheInRoom.loading,
 
-    // Room options cho Dropdown
     selectRoomOptions: (state) =>
       state.rooms.map((r) => ({
         label: r.name,
         value: r.id,
       })),
 
-    // Thông tin phân trang phòng
     selectRoomPagination: (state) => ({
       total: state.totalRooms,
       count: state.rooms.length,
@@ -117,8 +115,9 @@ const roomSlice = createSlice({
         $getAllRooms.fulfilled,
         (state, action: PayloadAction<IPagingResponse<IRoom>>) => {
           state.$getAllRooms.loading = false;
-          state.rooms = action.payload.items;
-          state.totalRooms = action.payload.totalItems;
+          // Đảm bảo items luôn là mảng để không lỗi hàm .map() hoặc .reduce() ở UI
+          state.rooms = action.payload?.items ?? [];
+          state.totalRooms = action.payload?.totalItems ?? 0;
         }
       )
       .addCase($getAllRooms.rejected, (state, action) => {
@@ -135,8 +134,9 @@ const roomSlice = createSlice({
         $getAllGheInRoom.fulfilled,
         (state, action: PayloadAction<IPagingResponse<IGheInRoom>>) => {
           state.$getAllGheInRoom.loading = false;
-          state.ghes = action.payload.items;
-          state.totalGhes = action.payload.totalItems;
+          // Gán mảng ghế từ service đã được bóc tách lớp .data
+          state.ghes = action.payload?.items ?? [];
+          state.totalGhes = action.payload?.totalItems ?? 0;
         }
       )
       .addCase($getAllGheInRoom.rejected, (state, action) => {

@@ -12,19 +12,21 @@ export const getAllRoom = async (
   params: IFindRoomParams
 ): Promise<IPagingResponse<IRoom>> => {
   try {
-    // Lưu ý: api.get tham số thứ 2 là config object, params nằm trong đó
     const res = await api.get(`api/app/room`, {
-      params: params, // Axios sẽ tự convert object này thành query string (?keyword=...&pageNumber=...)
-      headers: {
-        "Content-Type": "application/json", // GET request thường không dùng x-www-form-urlencoded
-      },
+      params: params,
       baseURL: process.env.EXPO_PUBLIC_BASE_API_URL,
     });
 
-    // Giả sử res.data trả về đúng cấu trúc { items: [], totalItems: 0 }
-    return Promise.resolve(res.data);
+    // Backend bọc kết quả trong lớp ApiResponse, thuộc tính 'data'
+    // Cấu trúc mong đợi: { success: true, data: { items: [], totalItems: 0 } }
+    const responseData = res.data?.data;
+
+    return {
+      items: responseData?.items ?? [],
+      totalItems: responseData?.totalItems ?? 0,
+    };
   } catch (err) {
-    processApiMsgError(err, "Lỗi khi lấy danh sách phong chiếu");
+    processApiMsgError(err, "Lỗi khi lấy danh sách phòng chiếu");
     return Promise.reject(err);
   }
 };
@@ -33,17 +35,18 @@ export const getAllGheInRoom = async (
   params: IFindGheParams
 ): Promise<IPagingResponse<IGheInRoom>> => {
   try {
-    // Lưu ý: api.get tham số thứ 2 là config object, params nằm trong đó
     const res = await api.get(`api/app/room/ghe`, {
-      params: params, // Axios sẽ tự convert object này thành query string (?keyword=...&pageNumber=...)
-      headers: {
-        "Content-Type": "application/json", // GET request thường không dùng x-www-form-urlencoded
-      },
+      params: params,
       baseURL: process.env.EXPO_PUBLIC_BASE_API_URL,
     });
 
-    // Giả sử res.data trả về đúng cấu trúc { items: [], totalItems: 0 }
-    return Promise.resolve(res.data);
+    // Tương tự, lấy dữ liệu từ res.data.data
+    const responseData = res.data?.data;
+
+    return {
+      items: responseData?.items ?? [],
+      totalItems: responseData?.totalItems ?? 0,
+    };
   } catch (err) {
     processApiMsgError(err, "Lỗi khi lấy danh sách ghế trong phòng chiếu");
     return Promise.reject(err);

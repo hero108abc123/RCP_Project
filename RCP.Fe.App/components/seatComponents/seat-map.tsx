@@ -1,124 +1,82 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ScrollView,
+} from "react-native";
+import { IGheInRoom } from "@/model/room/ghe.models";
 
 type Props = {
-  selectedSeats: string[];
-  onChange: (seats: string[]) => void;
+  ghes: IGheInRoom[];
+  selectedSeats: IGheInRoom[];
+  onSeatPress: (seat: IGheInRoom) => void;
 };
 
-const rows = ['A','B','C','D','E','F','G','H','I'];
+export default function SeatMap({ ghes, selectedSeats, onSeatPress }: Props) {
+  // Nhóm ghế theo thuộc tính 'hang' từ backend
+  const groupedGhes = ghes.reduce((acc, current) => {
+    const row = current.hang || "Unknown";
+    if (!acc[row]) acc[row] = [];
+    acc[row].push(current);
+    return acc;
+  }, {} as Record<string, IGheInRoom[]>);
 
-const seatsPerRow: Record<string, number> = {
-  A: 8, B: 8, C: 8,
-  D: 8, E: 8, F: 8,
-  G: 8, H: 8, I: 8,
-  J:8
-};
-
-const seatStatusMap: Record<string, 'available' | 'sold'> = {
-  F7: 'sold'
-};
-
-export default function SeatMap({ selectedSeats, onChange }: Props) {
-
-  const toggleSeat = (seatId: string) => {
-    if (selectedSeats.includes(seatId)) {
-      onChange(selectedSeats.filter(id => id !== seatId));
-    } else {
-      onChange([...selectedSeats, seatId]);
-    }
-  };
-
-  const getSeatStatus = (seatId: string) => {
-    if (selectedSeats.includes(seatId)) return 'selected';
-    return seatStatusMap[seatId] ?? 'available';
-  };
+  const rowLabels = Object.keys(groupedGhes).sort();
 
   return (
-    <View style={styles.container}>
-      {rows.map(row => {
-        const numSeats = seatsPerRow[row];
-        const isLastRow = row === 'L';
-
-        return (
-          <View key={row} style={styles.row}>
-            <Text style={styles.rowLabel}>{row}</Text>
-
-            <View style={styles.seats}>
-              {Array.from({ length: numSeats }, (_, i) => {
-                const seatNumber = i + 1;
-                const seatId = `${row}${seatNumber}`;
-                const status = getSeatStatus(seatId);
-
-                return (
-                  <TouchableOpacity
-                    key={seatId}
-                    disabled={status === 'sold'}
-                    onPress={() => toggleSeat(seatId)}
-                    style={[
-                      styles.seat,
-                      isLastRow && styles.largeSeat,
-                      status === 'selected' && styles.selected,
-                      status === 'sold' && styles.sold
-                    ]}
-                  >
-                    <Text style={styles.seatText}>{seatNumber}</Text>
-                  </TouchableOpacity>
-                );
-              })}
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <View style={styles.container}>
+          {rowLabels.map((row) => (
+            <View key={row} style={styles.row}>
+              <Text style={styles.rowLabel}>{row}</Text>
+              <View style={styles.seats}>
+                {groupedGhes[row]
+                  .sort((a, b) => (a.hangGhe || 0) - (b.hangGhe || 0)) // Sắp xếp ghế 1, 2, 3...
+                  .map((seat) => (
+                    <TouchableOpacity
+                      key={seat.id}
+                      onPress={() => onSeatPress(seat)}
+                      style={[
+                        styles.seat,
+                        selectedSeats.some((s) => s.id === seat.id) &&
+                          styles.selected,
+                      ]}
+                    >
+                      <Text style={styles.seatText}>{seat.hangGhe}</Text>
+                    </TouchableOpacity>
+                  ))}
+              </View>
+              <Text style={styles.rowLabel}>{row}</Text>
             </View>
-
-            <Text style={styles.rowLabel}>{row}</Text>
-          </View>
-        );
-      })}
-    </View>
+          ))}
+        </View>
+      </ScrollView>
+    </ScrollView>
   );
 }
+
 const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-    justifyContent: 'center',
-  },
+  container: { padding: 20, alignItems: "center" },
+  row: { flexDirection: "row", alignItems: "center", marginBottom: 10 },
   rowLabel: {
-    width: 24,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize: 12,
-    color: '#666',
+    width: 25,
+    textAlign: "center",
+    fontWeight: "bold",
+    color: "#999",
   },
-  seats: {
-    flexDirection: 'row',
-    gap: 6,
-    marginHorizontal: 8,
-  },
+  seats: { flexDirection: "row", gap: 8, marginHorizontal: 10 },
   seat: {
-    width: 28,
-    height: 28,
-    borderRadius: 6,
-    backgroundColor: '#E0E0E0',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  largeSeat: {
     width: 32,
     height: 32,
+    borderRadius: 4,
+    backgroundColor: "#fff",
+    borderWidth: 1,
+    borderColor: "#DDD",
+    alignItems: "center",
+    justifyContent: "center",
   },
-  selected: {
-    backgroundColor: '#1976D2',
-  },
-  sold: {
-    backgroundColor: '#9E9E9E',
-  },
-  vip: {
-    backgroundColor: '#FFD54F',
-  },
-  seatText: {
-    fontSize: 11,
-    fontWeight: '600',
-  },
+  selected: { backgroundColor: "#1976D2", borderColor: "#1976D2" },
+  seatText: { fontSize: 10, fontWeight: "bold" },
 });

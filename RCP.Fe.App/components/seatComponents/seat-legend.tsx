@@ -11,10 +11,8 @@ export default function SeatLegend() {
   return (
     <View style={styles.container}>
       <Item color="#ccc" label="Ghế trống" />
-      <Item color="#4FC3F7" label="Ghế đang giữ" />
       <Item color="#1976D2" label="Ghế đang chọn" />
       <Item color="#F44336" label="Ghế đã bán" />
-      <Item color="#FFC107" label="Ghế đặt trước" />
     </View>
   );
 }

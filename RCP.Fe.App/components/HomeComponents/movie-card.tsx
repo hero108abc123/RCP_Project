@@ -36,7 +36,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
 
 const styles = StyleSheet.create({
   container: {
-    width: '30%', // ⭐ quan trọng cho grid 3 cột
+    width: '30%',
     marginBottom: 16,
   },
   poster: {

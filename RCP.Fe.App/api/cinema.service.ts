@@ -19,8 +19,9 @@ export const getAllCinemas = async (
       baseURL: process.env.EXPO_PUBLIC_BASE_API_URL,
     });
 
+     const data = res.data?.data;
     // Giả sử res.data trả về đúng cấu trúc { items: [], totalItems: 0 }
-    return Promise.resolve(res.data);
+    return Promise.resolve(data);
   } catch (err) {
     processApiMsgError(err, "Lỗi khi lấy danh sách rạp");
     return Promise.reject(err);

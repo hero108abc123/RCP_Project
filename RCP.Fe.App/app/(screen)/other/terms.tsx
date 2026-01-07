@@ -9,7 +9,7 @@ export default function TermsScreen() {
   return (
     <View style={{ flex: 1 }}>
       <Appbar.Header style={{ backgroundColor: '#0B4A8B' }}>
-        <Appbar.BackAction onPress={() => router.back()} />
+        <Appbar.BackAction color='white' onPress={() => router.back()} />
         <Appbar.Content
           title="ĐIỀU KHOẢN SỬ DỤNG"
           titleStyle={{ color: '#fff', fontWeight: '700' }}

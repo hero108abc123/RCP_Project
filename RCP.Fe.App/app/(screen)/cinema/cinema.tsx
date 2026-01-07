@@ -1,4 +1,4 @@
-import CinemaList from '@/components/HomeComponents/cinema-list';
+import CinemaList from '@/app/(screen)/cinema/cinema-list';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Appbar } from 'react-native-paper';

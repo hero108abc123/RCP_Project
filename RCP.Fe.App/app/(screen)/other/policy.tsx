@@ -9,7 +9,7 @@ export default function PolicyScreen() {
   return (
     <View style={{ flex: 1 }}>
       <Appbar.Header style={{ backgroundColor: '#0B4A8B' }}>
-        <Appbar.BackAction onPress={() => router.back()} />
+        <Appbar.BackAction color='white' onPress={() => router.back()} />
         <Appbar.Content
           title="Chính sách bảo mật"
           titleStyle={{ color: '#fff', fontWeight: '700' }}

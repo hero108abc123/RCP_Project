@@ -1,6 +1,8 @@
 import { AuthServices } from "@/api/auth.service"
 import { ILogin, IMe } from "@/model/auth/auth.models"
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { UserService } from "@/api/user.service"
+import { ViewUser } from "@/model/user/users.models"
 
 export const $login = createAsyncThunk(
   'login',
@@ -75,8 +77,26 @@ const userSlice = createSlice({
       .addCase($login.rejected, (state) => {
         state.$login.loading = false
       })
+
+      //GET USER BY ID (CHO PROFILE)
+      .addCase($getUserById.fulfilled, (state, action) => {
+      state.email = action.payload.email
+      state.fullName = action.payload.fullName
+    })
   },
 })
+
+export const $getUserById = createAsyncThunk(
+  'user/getById',
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const res = await UserService.getById(id)
+      return res
+    } catch (error) {
+      return rejectWithValue(error)
+    }
+  }
+)
 
 export const { setUser, clearUser } = userSlice.actions
 export default userSlice.reducer

@@ -1,29 +1,45 @@
+import React from 'react';
+import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Chip } from 'react-native-paper';
 
 type Props = {
   time: string;
   seats: number;
   cinemaName: string;
+  movieId: string;
+  date: string;
 };
 
-export default function ShowtimeChip({ time, seats, cinemaName }: Props) {
+export default function ShowtimeChip({ time, seats, cinemaName, movieId, date }: Props) {
   const router = useRouter();
 
   return (
-    <Chip
-      style={{ marginRight: 8, marginBottom: 8 }}
+    <TouchableOpacity
+      style={styles.container}
       onPress={() =>
         router.push({
-          pathname: '/cinema/seat',
-          params: {
-            cinemaName,
-            time,
-          },
+          pathname: '/booking/seat',
+          params: { cinemaName, movieId, time, date },
         })
       }
     >
-      {time} • {seats} trống
-    </Chip>
+      <Text style={styles.time}>{time}</Text>
+      <Text style={styles.seats}>{seats} trống</Text>
+    </TouchableOpacity>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 12,
+    backgroundColor: '#EEE',
+    alignItems: 'center',
+    marginRight: 8,
+    marginBottom: 8,
+    minWidth: 72,
+  },
+  time: { fontWeight: '600', fontSize: 14 },
+  seats: { fontSize: 11, color: '#555' },
+});

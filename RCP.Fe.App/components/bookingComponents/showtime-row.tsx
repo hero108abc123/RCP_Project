@@ -14,22 +14,12 @@ type Props = {
   date: string;
 };
 
-export default function ShowtimeRow({
-  label,
-  times,
-  cinemaName,
-  movieId,
-  date,
-}: Props) {
-  // Validate data
-  if (!times || !Array.isArray(times) || times.length === 0) {
-    return null;
-  }
+export default function ShowtimeRow({ label, times, cinemaName, movieId, date }: Props) {
+  if (!times || times.length === 0) return null;
 
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
-
       <View style={styles.row}>
         {times.map((t, index) => (
           <ShowtimeChip
@@ -47,9 +37,7 @@ export default function ShowtimeRow({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: 12,
-  },
+  container: { marginTop: 12 },
   label: {
     fontWeight: '700',
     fontSize: 14,

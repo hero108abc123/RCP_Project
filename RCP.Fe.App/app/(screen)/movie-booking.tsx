@@ -3,7 +3,7 @@ import React from 'react';
 import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Appbar } from 'react-native-paper';
 
-import CinemaList from '@/components/HomeComponents/cinema-list';
+import CinemaList from '@/app/(screen)/cinema/cinema-list';
 import DateSelector from '@/components/bookingComponents/date-selector';
 
 type MovieParams = {

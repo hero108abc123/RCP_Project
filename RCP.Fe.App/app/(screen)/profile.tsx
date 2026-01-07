@@ -14,9 +14,29 @@ import { ThemedView } from '../../components/themed-view';
 import ButtonCustom from '../../components/button';
 import { useRouter } from 'expo-router';
 import * as SecureStore from 'expo-secure-store'
+//ghép api
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState, AppDispatch } from '@/redux/store'
+import { $getUserById } from '@/redux/slices/userSlice'
+import { useEffect } from 'react'
+
+
 
 export default function ProfileScreen() {
   const router = useRouter();
+
+  const dispatch = useDispatch<AppDispatch>()
+  const { id, fullName, email } = useSelector(
+    (state: RootState) => state.user
+  )
+
+  useEffect(() => {
+  if (id) {
+    dispatch($getUserById(id))
+  }
+}, [id])
+
+
 
   const logout = () => {
     Alert.alert(
@@ -68,10 +88,14 @@ export default function ProfileScreen() {
             </TouchableOpacity>
             <View style={{ width: 30 }} />
             <View >
-              <Text style={styles.name}>Đoàn Trần Hải</Text>
-              <Text style={styles.email}>haitrandoan@gmail.com</Text>
+              <Text style={styles.name}>
+                {fullName || '—'}
+              </Text>
 
-
+              <Text style={styles.email}>
+                {email || '—'}
+              </Text>
+                  
               <TouchableOpacity  >
                 <ButtonCustom title="Edit Profile" 
                 backgroundColor="#5786ee"

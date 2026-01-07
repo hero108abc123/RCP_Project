@@ -26,7 +26,7 @@ export default function FAQScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: '#F5F5F5' }}>
       <Appbar.Header style={{ backgroundColor: '#0B4A8B' }}>
-        <Appbar.BackAction onPress={() => router.back()} />
+        <Appbar.BackAction color='white' onPress={() => router.back()} />
         <Appbar.Content title="HỎI ĐÁP" titleStyle={{ color: '#fff' }} />
       </Appbar.Header>
 

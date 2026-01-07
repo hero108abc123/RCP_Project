@@ -3,7 +3,7 @@ import { processApiMsgError } from "@/libs/utils";
 import { ApiResponse } from "@/model/user/api-response";
 import { ViewUser } from "@/model/user/users.models";
 
-export const userService = {
+export const UserService = {
   getById: async (id: string): Promise<ViewUser> => {
     const res = await api.get<ApiResponse<ViewUser>>(`/users/${id}`);
     return res.data.data;
